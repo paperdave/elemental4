@@ -1,9 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const gamedir = path.resolve(__dirname, 'game');
-// const Fiber = require('fibers');
-const dotenv = require('dotenv');
-const env = dotenv.parse(require('fs').readFileSync('./.env'));
 const {execSync} = require('child_process');
 
 module.exports = (prod = false) => ({
