@@ -24,6 +24,7 @@ export function serverCreate() {
     app.use((req,res,next) => {
         res.removeHeader("X-Powered-By");
         res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Headers", "*");
         res.setHeader("Access-Control-Expose-Headers", "Content-Length,Elem4-Entry-Length");
 
         next();
