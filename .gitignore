@@ -1,0 +1,6 @@
+node_modules
+.env
+keys
+data
+.gcloud.json
+dist_*

@@ -1,0 +1,13 @@
+{
+  "type": "pack",
+  "id": "elemental2",
+  "name": "Elemental 2",
+  "description": "The four starting points of Air, Earth, Fire, and Water, from which everything else is built upon.",
+  "format": "lite",
+  "files": [
+    "./pack.txt"
+  ],
+  "dependencies": {
+    "base": "/packs/base"
+  }
+}

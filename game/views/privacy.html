@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elemental 4: Remake Revival</title>
+  
+  <style>
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: sans-serif; }
+    body.launching #CONTENT {
+      display: none;
+    }
+    .animateFadeAway #CONTENT {
+      opacity: 0;
+      transition: opacity 350ms;
+    }
+    h1 { margin: 0 auto; padding-top: 48px; width: max-content }
+
+    #CONTENT {
+      max-width: 500px;
+      margin: auto;
+      width: 100%;
+      text-align: left;
+    }
+    a {
+      color: cornflowerblue;
+      text-decoration: none;
+    }
+    a:hover {
+      color: blue;
+      text-decoration: underline;
+    }
+    a:active {
+      color: red;
+      text-decoration: underline;
+    }
+    button {
+      margin: auto;
+      border: 1px solid #888;
+      background: #DEDEDE;
+      border-radius: 4px;
+      padding: 8px;
+    }
+    button.huge {
+      font-size: 18px;
+      padding: 10px;
+    }
+    button:not([disabled]):hover {
+      outline: none;
+      background: #e0bcad;
+      border: 1px solid #b96643;
+    }
+    button:not([disabled]):active {
+      outline: none;
+      background: #ff9d7a;
+    }
+    button:not([disabled]):focus {
+      outline: none;
+      border: 1px solid coral;
+    }
+    button[disabled] {
+      border: 1px solid #AAA;
+      background: #FAFAFA;
+      color: #555;
+    }
+    #GAME {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #GAME.animate-in {
+      pointer-events: all;
+      opacity: 1;
+      transition: opacity 0s 10ms;
+    }
+  </style>
+</head>
+<body>
+  <section id='CONTENT'>
+    <h1>
+      <img src="/logo.svg" alt="Elemental 4" height="72" draggable="false">
+    </h1>
+    <h2>Privacy Policy</h2>
+    <p>
+      This is an informal piece of writing, since I'm not a fancy legal person.
+    </p>
+    <h3>Third Party Servers</h3>
+    <p>
+      By using a third party server, you agree to their rules. I don't know them. There are some third party servers added
+      in the main game, but they are not enabled by default.
+    </p>
+    <h3>Voting and IP Addresses</h3>
+    <p>
+      When voting, you IP Address is used as a check to see if you have voted before. We pass this
+      through an external service to see if it is potentially fraudulent (For example, using a vpn). The score from the
+      external service is stored indefinitely along with a <a href="https://en.wikipedia.org/wiki/SHA-2">hashed</a> version of your IP. Due to how a
+      hash works, we can not get your IP back from the hash, but are able to calculate the hash again and see if it is stored. This storage is only
+      used to reduce usage of the external service as it is extremely limited. The hashed IP will remain in the database for up a month.
+    </p>
+    <h3>Your Suggestion</h3>
+    <p>
+      Anything you send in a suggestion will be stored on the server, and if voted into the game, it will remain there forever, attached to your screen name. You can change your screen name at a later point, and it will update accordingly.
+    </p>
+    <h3>Screen Names</h3>
+    <p>
+      When sending a suggestion, you are prompted to type in a Screen Name. This name appears on elements you suggested, and is visible to all players. To allow name changes, a separate user ID is generated and associated with elements. You cannot change that ID without losing ownership of it. To remove your name and account, set your name to "" or "Anonymous" and the info page will not provide a name.
+    </p>
+    <h3>Selling your information</h3>
+    <p>
+      We don't.
+    </p>
+    <p>
+      The current list of elements and combinations is given for free to all players. The entire list of user IDs to Screen Names are given out as well.
+      Changing your Screen Name, others may not see the changes for up to 48 hours, and your old name is not saved on our server.
+    </p>
+  </section>
+</body>
+</html>

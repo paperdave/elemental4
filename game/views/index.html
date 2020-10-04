@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="Elemental 4">
+  <meta property="og:site_name" content="Elemental 4">
+  <meta property="og:description" content="Combine two elements to make a new element, if a combination doesn't currently create any element, you can suggest what element it should create. ">
+  <meta property="og:type" content="website">
+  <meta property="description" content="Combine two elements to make a new element, if a combination doesn't currently create any element, you can suggest what element it should create. ">
+  <meta property="author" content="Dave Caruso">
+
+  <link rel="icon" type="image/png"  href="/icon/android-icon-192x192.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Elemental 4: Remake Revival</title>
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114357124-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-114357124-2');
+  </script>
+
+  <style>
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: sans-serif; }
+    body.launching #CONTENT {
+      display: none;
+    }
+    h1 { margin: 0 auto; padding-top: 48px; width: 349px; }
+
+    #CONTENT {
+      max-width: 500px;
+      margin: auto;
+      width: 100%;
+      text-align: left;
+    }
+    a {
+      color: rgb(192, 63, 16);
+      text-decoration: none;
+    }
+    a:hover {
+      color: coral;
+      text-decoration: underline;
+    }
+    a:active {
+      color: red;
+      text-decoration: underline;
+    }
+    button, select, input:not([type=range]) {
+      margin: auto;
+      border: 1px solid #888;
+      background: #DEDEDE;
+      border-radius: 4px;
+      padding: 8px;
+      position: relative;
+      overflow: hidden;
+      color: black;
+    }
+    .progress {
+      height: 6px;
+      position: absolute;
+      background: coral;
+      bottom: -2px;
+      left: 0;
+    }
+    button.huge, select.huge {
+      font-size: 18px;
+      padding: 10px;
+    }
+    button:not([disabled]):hover, select:not([disabled]):hover {
+      outline: none;
+      background: #e0bcad;
+      border: 1px solid #b96643;
+    }
+    button:not([disabled]):active, select:not([disabled]):active {
+      outline: none;
+      background: #ff9d7a;
+    }
+    button:not([disabled]):focus, select:not([disabled]):focus {
+      outline: none;
+      border: 1px solid coral;
+    }
+    button[disabled], select[disabled] {
+      border: 1px solid #AAA;
+      background: #FAFAFA;
+      color: #555;
+    }
+    #GAME {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+      font-family: Roboto;
+    }
+    #GAME.animate-in {
+      pointer-events: all;
+      opacity: 1;
+      transition: opacity 0s 10ms;
+    }
+    #support {
+      text-align: center;
+      color: red;
+    }
+    #support ~ .X, #support ~ .X * {
+      display: none;
+    }
+    .quick-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quick-loader main {
+      width: 300px;
+      height: 50px;
+      position: relative;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: white;
+      padding: 15px;
+      border: 1px solid coral;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    #suggest{
+      transform: translateY(100%);
+    }
+    input[type='text'], input[type='password'], input[type='email'] {
+      background-color: white;
+      padding-left: 0;
+      text-indent: 10px;
+    }
+  </style>
+</head>
+<body>
+  <script>window.localStorage&&localStorage.cache&&document.body.classList.add('launching')</script>
+  <section id='CONTENT'>
+    <h1>
+      <img src="/logo.svg" alt="Elemental 4" height="72" draggable="false">
+    </h1>
+    <p>
+      Combine two elements to make a new element, if a combination doesn't currently create any element, you can suggest what
+      element it should create. It is exactly how Elemental 3 worked, but it is not running anymore, so I created my own
+      version.
+    </p>
+    <p id="support">
+      You need JavaScript enabled to run this game.
+    </p>
+    <script>
+      window.s=document.getElementById('support');
+      window.supported=s.remove&&(s.remove(),1)&&window.localStorage?1:(s.innerHTML="Device or Browser not supported.<br>Please upgrade to a modern web browser.",false)</script>
+    <div class="X" style='display:flex;align-items:center;margin-top:50px;'>
+      <button id='launch' class="huge" style="padding:10px 20px">Play Game</button>
+    </div>
+    <p class="X" style="margin-bottom:50px;font-size:0.75rem;text-align:center;">
+      (Approximate Download: 8mb)
+    </p>
+    <p>
+      Developed by <a href="https://davecode.me">Dave Caruso</a>, hosted by <a href="https://filipkin.com">Filip Kin</a>.
+      <br>
+      We also have a <a href="https://discord.gg/X9VyN42">Discord Server</a>.
+      <br>
+      By suggesting elements, you agree to the <a href="/privacy">Data Collection Policy</a>
+    </p>
+    <br>
+    <br>
+    <p>
+      &lt;3
+    </p>
+  </section>
+  <section id='GAME'></section>
+  <script>
+    supported&&(() => {
+      let launch = document.querySelector("#launch"); 
+      let head = document.querySelector('head');
+      let gameHTML;
+      let autoStart = !!localStorage.cache;
+      let cache = localStorage.cache || 'resolve';
+
+      function link(uri) {
+          return new Promise((d, e) => {
+              var link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.type = 'text/css';
+              link.href = uri;
+              link.onload = d;
+              link.onerror = (x) => e(x);
+              head.appendChild(link);
+          });
+      }
+      let allLoaded = new Promise(function(d) {
+        window.onload = function() {
+          Promise.all([
+            new Promise(async function(d, e){
+              if(cache === 'resolve') {
+                cache = (await fetch('/version').then(x => x.text())) + '-' + Math.random().toFixed(6).substr(2);
+              }
+              // fetch the elemental resources
+              var script = document.createElement('script');
+              script.src = "/elemental.js?v=" + cache;
+              script.onload = d
+              script.onerror = function(x) {e(x)}
+              head.appendChild(script);
+            }),
+            link("/font.css"),
+            fetch("/game.html").then((x) => {
+              if(x.status !== 200) throw 'game.html not found!';
+              else return x.text()
+            }).then((text) => {
+              gameHTML = text;
+            }),
+            new Promise((done) => {
+              if(localStorage.getItem('clear_idb')) {
+                const req = indexedDB.deleteDatabase('ELEMENTAL');
+                req.onsuccess = done;
+                req.onerror = done;
+                req.onblocked = done;
+                localStorage.clear();
+                if(window.navigator && navigator.serviceWorker) {
+                  navigator.serviceWorker.getRegistrations()
+                  .then(function(registrations) {
+                    for(let registration of registrations) {
+                      registration.unregister();
+                    }
+                  });
+                }
+              } else done();
+            }),
+            new Promise((done) => {
+              let timer;
+              localStorage.singleton_time = Date.now();
+              const handler = (e) => {
+                if(e.key == "singleton_available"){
+                  clearInterval(timer);
+                  document.body.classList.remove('launching')
+                  document.querySelector('#CONTENT').innerHTML = '<h1>Unfortunately, you cannot run elemental in more than one browser tab at a time.</h1>'
+                  window.close();
+                }
+              };
+              window.addEventListener('storage', handler, false);
+              timer = setTimeout(() => {
+                window.removeEventListener('storage', handler, false);
+                window.addEventListener('storage', function(e){
+                  if(e.key == "singleton_time"){
+                    localStorage.singleton_available = Date.now();
+                  }
+                }, false);
+                done();
+              }, 100);
+            })
+          ]).then(function(){
+            d();
+          }).catch(function(e){
+            console.error(e)
+            launch.innerHTML = "Error Loading, Check Console.";
+            launch.setAttribute("disabled", "true");
+            launch.blur();
+            launch.onclick = function() {};
+            document.body.classList.remove('launching');
+          })
+        }
+      });
+      let isResolved = false;
+      allLoaded.then(function () {
+        isResolved = true;
+      });
+
+      function go() {
+        launch.setAttribute("disabled", "true");
+        launch.blur();
+        launch.onclick = function() {};
+
+        // wait for stuff to load
+        function start() {
+          launch.innerHTML = "Play Game";
+          var GAME = document.getElementById('GAME');
+          GAME.innerHTML = gameHTML;
+
+          $elemental4(autoStart ? { cache } : {
+            cache,
+            status: function(text, progress) {
+              launch.innerHTML = text + (progress !== undefined ? '<div class="progress" style="width:' + (progress * 100) + '%"></div>' : '');
+            },
+            showGame: () => {
+              document.body.classList.add('animateFadeAway');
+              setTimeout(function() {
+                document.getElementById('CONTENT').remove();
+                document.body.classList.remove('launching');
+              }, 500);
+            }
+          });
+        }
+        if(isResolved) start(); else {
+          launch.innerHTML = "Loading...";
+          allLoaded.then(start);
+        }
+      }
+
+      launch.onclick = go;
+
+      if(autoStart) {
+        go();
+      }
+    })()
+  </script>
+  <div id="THEME_SWAP_OVERLAY" style="display:block!important;position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;background:black!important;z-index:2147483647!important;opacity:0;transition:opacity 100ms linear!important;pointer-events:none!important;"></div>
+</body>
+</html>

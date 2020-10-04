@@ -1,0 +1,81 @@
+:root {
+  --text-main: #FFFFFF;
+  --background-main: #000000;
+  --background-element-game: #151515;
+  --background-top-bar: #FFF;
+  --text-top-bar: #000000;
+  --background-dialog: #111;
+  --background-hover: rgba(127,127,127,0.15);
+  --background-active: rgba(127,127,127,0.4);
+  --background-selected: rgba(127,127,127,0.3);
+  --text-hover: rgba(127,127,127,0.15);
+  --text-active: rgba(127,127,127,0.4);
+  --text-selected: rgba(127,127,127,0.3);
+}
+
+.color-btn,
+.suggest-content,
+.dialog-content {
+  border-color: white;
+}
+
+#GAME button {
+  border: 1px solid #aaaaaa;
+  background: #222222;
+  color: white;
+}
+#GAME button:not([disabled]):hover {
+  background: #753506;
+}
+#GAME button:not([disabled]):active {
+  background: rgb(194, 73, 29);
+}
+#GAME button[disabled] {
+  border: 1px solid #999;
+  background: #555;
+  color: #888;
+}
+#GAME input[type="range"] {
+  background: #888;
+}
+
+::-webkit-scrollbar {
+  background: var(--background-element-game);
+}
+::-webkit-scrollbar-thumb {
+  background: #999999;
+  border: 2px solid var(--background-element-game);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A8A8A8;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #CCCCCC;
+}
+
+::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNSAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEgOUg0VjhINVY3SDZWNkg3VjVIOFY2SDlWN0gxMFY4SDExVjlaIiBmaWxsPSIjOTk5OTk5Ii8+PC9zdmc+);
+}
+::-webkit-scrollbar-button:vertical:decrement:active {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNSAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEgOUg0VjhINVY3SDZWNkg3VjVIOFY2SDlWN0gxMFY4SDExVjlaIiBmaWxsPSIjNTU1NTU1Ii8+PC9zdmc+);
+}
+
+::-webkit-scrollbar-button:vertical:increment {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNSAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNCA1TDExIDVMMTEgNkwxMCA2TDEwIDdMOSA3TDkgOEw4IDhMOCA5TDcgOUw3IDhMNiA4TDYgN0w1IDdMNSA2TDQgNkw0IDVaIiBmaWxsPSIjOTk5OTk5Ii8+PC9zdmc+);
+}
+::-webkit-scrollbar-button:vertical:increment:active {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNSAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNCA1TDExIDVMMTEgNkwxMCA2TDEwIDdMOSA3TDkgOEw4IDhMOCA5TDcgOUw3IDhMNiA4TDYgN0w1IDdMNSA2TDQgNkw0IDVaIiBmaWxsPSIjNTU1NTU1Ii8+PC9zdmc+);
+}
+
+::-webkit-scrollbar-button {
+  height: 15px;
+}
+::-webkit-scrollbar-button:hover {
+  background-color: #666666;
+}
+::-webkit-scrollbar-button:active {
+  background-color: #CCCCCC;
+}
+::-webkit-scrollbar-corner {
+  background-color: var(--background-element-game);
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * { background-color: transparent }
+    canvas { position: fixed; top: 0; left: 0; animation: x 1s ease-out; }
+    @keyframes x { 0% { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <script>
+    const scriptElement = document.createElement('script');
+    scriptElement.src = new URLSearchParams(location.search).get('sketch');
+    document.body.appendChild(scriptElement)
+    scriptElement.onload = () => {
+      window.setup = ((f) => () => {
+        const c = createCanvas(windowWidth, windowHeight);
+        window.createCanvas = () => c;
+        f && f();
+      })(window.setup);
+      window.windowResized = ((f) => () => {
+        resizeCanvas(windowWidth, windowHeight);
+        f && f();
+      })(window.windowResized);
+
+      const scriptElement = document.createElement('script');
+      scriptElement.src = '/p5.min.js';
+      document.body.appendChild(scriptElement)
+    }
+  </script>
+</body>
+</html>

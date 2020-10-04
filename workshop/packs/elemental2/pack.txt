@@ -1,0 +1,324 @@
+# Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
+#
+# This file serves as the "format guide/example" for elements, as it's not
+# the same as the one in Elemental 2
+#
+# Some key things to note:
+#  - You can use multiple spaces to separate things to make it line up.
+#  - Add comments by placing # at a start of a line.
+#  - You can redefine colors and elements which will have no effect.
+#
+
+# Display Name In-Game
+Id=elemental2
+Title=Elemental 2
+Description=Elemental 2 Raw Data by Cary Huang
+
+# The base pack includes the four classical elements.
+Import base
+
+# Colors
+Space:                     #4C4C4C
+Beverages:                 #B77093
+Materials:                 #EAD4B2
+Clothing:                  #707070
+Electricity:               #FFFF4C
+Chemicals:                 #93FF4C
+Cells:                     #8791AC
+Plants:                    #4CDB4C
+Animals:                   #D9C470
+Landforms:                 #B6C78F
+Weirdos:                   #9900FF
+Disasters:                 #800000
+Eyesore Buildings:         #808080
+Machinery:                 #6090A0
+Writing:                   #FFE0C0
+Tools:                     #B0B0B0
+Beauties:                  #FF40FF
+Existential Crisis Causes: #400080
+People:                    #C6995B
+Events:                    #E0E0E0
+Civilization:              #907070
+
+# Elements
+Air + Earth = Dust (Air)
+Air + Fire = Sun (Space)
+Air + Water = Steam (Air)
+Earth + Fire = Lava (Fire)
+Earth + Water = Mud (Earth)
+Fire + Water = Acid (Water)
+Water + Acid = Alcohol (Beverages)
+Water + Alcohol = Vodka (Beverages)
+Air + Lava = Rock (Earth)
+Lava + Earth = Volcano (Landforms)
+Lava + Mud = Volcano (Landforms)
+Lava + Rock = Volcano (Landforms)
+Water + Lava = Rock (Earth)
+Rock + Water = Sand (Earth)
+Air + Steam = Cloud (Air)
+Cloud + Water = Rain (Water)
+Earth + Rain = Mud (Earth)
+Fire + Rock = Lava (Fire)
+Fire + Mud = Lava (Fire)
+Sand + Fire = Glass (Materials)
+Water + Glass = Ice (Water)
+Ice + Fire = Steam (Air)
+Ice + Air = Snow (Water)
+Sun + Glass = Sunglasses (Clothing)
+Sun + Air = Wind (Air)
+Cloud + Air = Wind (Air)
+Wind + Cloud = Storm (Disasters)
+Storm + Cloud = Lightning (Fire)
+Fire + Rock = Metal (Earth)
+Lightning + Metal = Electricity (Electricity)
+Mud + Earth = Clay (Earth)
+Mud + Water = Swamp (Earth)
+Clay + Fire = Bricks (Materials)
+Wind + Rock = Sand (Earth)
+Lightning + Swamp = Chemical (Chemicals)
+Electricity + Swamp = Chemical (Chemicals)
+Clay + Water = Slip (Earth)
+Swamp + Earth = Mud (Earth)
+Chemical + Chemical = Polymer (Chemicals)
+Polymer + Lightning = DNA (Chemicals)
+Polymer + Electricity = DNA (Chemicals)
+Polymer + Chemical = DNA (Chemicals)
+Acid + Rain = Acid Rain (Water)
+Sand + Air = Dust (Air)
+DNA + Swamp = Bacterium (Cells)
+DNA + Chemical = Bacterium (Cells)
+Bacterium + Water = Plankton (Cells)
+Bacterium + Lightning = Jellyfish (Cells)
+Bacterium + Electricity = Jellyfish (Cells)
+Plankton + Lightning = Jellyfish (Cells)
+Plankton + Electricity = Jellyfish (Cells)
+DNA + Water = Plankton (Cells)
+Plankton + Swamp = Bacterium (Cells)
+Storm + Water = Rain (Water)
+Fire + Dust = Ash (Earth)
+Ash + Air = Smoke (Air)
+Smoke + Cloud = Smog (Air)
+Rock + Plankton = Shell (Cells)
+Bacterium + Swamp = Worm (Cells)
+Plankton + Mud = Worm (Cells)
+Bacterium + Mud = Worm (Cells)
+Plankton + Air = Worm (Cells)
+Bacterium + Air = Worm (Cells)
+Lightning + Mud = Chemical (Chemicals)
+Water + Water = Ocean (Landforms)
+Sand + Ocean = Island (Landforms)
+Earth + Ocean = Island (Landforms)
+Mud + Ocean = Island (Landforms)
+Clay + Ocean = Island (Landforms)
+Swamp + Ocean = Island (Landforms)
+Rock + Rock = Mountain (Landforms)
+Rock + Earth = Mountain (Landforms)
+Rock + Bacterium = Shell (Cells)
+Rock + Jellyfish = Shell (Cells)
+Clay + Air = Dust (Air)
+Volcano + Ocean = Island (Landforms)
+Rain + Lightning = Storm (Disasters)
+Rock + Rain = Sand (Earth)
+Sun + Bacterium = Chlorophyll (Plants)
+Sun + Plankton = Chlorophyll (Plants)
+Chlorophyll + Bacterium = Algae (Plants)
+Chlorophyll + Plankton = Algae (Plants)
+Algae + Swamp = Moss (Plants)
+Moss + Earth = Grass (Plants)
+Moss + Mud = Grass (Plants)
+Worm + Rock = Shell (Cells)
+Algae + Mud = Moss (Plants)
+Worm + Lightning = Jellyfish (Cells)
+Worm + Electricity = Jellyfish (Cells)
+Rain + Cloud = Storm (Disasters)
+Acid Rain + Cloud = Storm (Disasters)
+Chlorophyll + Mud = Algae (Plants)
+Chlorophyll + Swamp = Algae (Plants)
+Chlorophyll + Water = Algae (Plants)
+Chlorophyll + Ocean = Algae (Plants)
+Sand + Water = Beach (Landforms)
+Bacterium + Earth = Worm (Cells)
+Plankton + Earth = Worm (Cells)
+Algae + Earth = Grass (Plants)
+Snail + Water = Crab (Animals)
+Snail + Ocean = Crab (Animals)
+Shell + Water = Crab (Animals)
+Shell + Ocean = Crab (Animals)
+Shell + Beach = Crab (Animals)
+Snail + Beach = Crab (Animals)
+Island + Island = Continent (Landforms)
+Island + Mountain = Continent (Landforms)
+Mountain + Mountain = Continent (Landforms)
+Water + Mountain = River (Landforms)
+Ocean + Mountain = River (Landforms)
+Water + Island = River (Landforms)
+River + Rock = Sand (Earth)
+River + Earth = Mud (Earth)
+River + Mud = Swamp (Earth)
+Alcohol + Worm = Tequila (Beverages)
+Vodka + Worm = Tequila (Beverages)
+DNA + Mud = Bacterium (Cells)
+Continent + Continent = Planet (Space)
+Continent + Ocean = Planet (Space)
+Rock + Ice = Cosmic Dust (Space)
+Cosmic Dust + Planet = Rings (Space)
+Planet + Planet = Solar System (Space)
+Planet + Sun = Solar System (Space)
+Sun + Sun = Stars (Space)
+Stars + Sun = Galaxy (Space)
+Stars + Stars = Galaxy (Space)
+Stars + Rock = Meteoroid (Space)
+Galaxy + Rock = Meteoroid (Space)
+Sun + Rock = Meteoroid (Space)
+Sun + Fire = Supernova (Space)
+Supernova + Cosmic Dust = Nebula (Space)
+Dust + Rock = Cosmic Dust (Space)
+Dust + Ice = Cosmic Dust (Space)
+Nebula + Water = Sun (Space)
+Worm + Earth = Slug (Cells)
+Worm + Mud = Slug (Cells)
+Worm + Swamp = Slug (Cells)
+Worm + Rock = Slug (Cells)
+Worm + Moss = Slug (Cells)
+Slug + Shell = Snail (Cells)
+Mud + Rain = Swamp (Earth)
+Clay + Rain = Mud (Earth)
+Storm + Mud = Chemical (Chemicals)
+Storm + Swamp = Chemical (Chemicals)
+Rain + Mud = Chemical (Chemicals)
+Rain + Swamp = Chemical (Chemicals)
+Water + Storm = Hurricane (Disasters)
+Snow + Storm = Snowstorm (Disasters)
+Sand + Storm = Sandstorm (Disasters)
+Electricity + Acid = Battery (Electricity)
+River + Water = Lake (Landforms)
+Ice + Glass = Frost (Water)
+Alcohol + Glass = Drink (Beverages)
+Water + Mountain = Canyon (Landforms)
+Blood + DNA = Vampire (Weirdos)
+Galaxy + Galaxy = Galactic Cluster (Space)
+Tree + Tree = Forest (Landforms)
+Jellyfish + DNA = Fish (Animals)
+Fish + Earth = Mammal (Animals)
+Forest + Fire = Forest Fire (Disasters)
+Water + Metal = Rust (Chemicals)
+Mud + Sun = Dirt (Earth)
+Dirt + Rain = Plant (Plants)
+Plant + Earth = Cotton Plant (Plants)
+Cotton Plant + Machine = Cotton (Clothing)
+Cotton + Cotton = Shirt (Clothing)
+Plant + Water = Tree (Plants)
+Tree + Wind = Wood (Materials)
+Sand + Wind = Cement (Materials)
+Bricks + Cement = House (Eyesore Buildings)
+Plant + Sun = Flower (Plants)
+Electricity + Metal = Machine (Machinery)
+Ice + Meteoroid = Comet (Space)
+Metal + Steam = Base (Chemicals)
+Acid + Base = Salt (Chemicals)
+Acid + Glass = Test Tube (Tools)
+Tree + Machine = Paper (Materials)
+Squid + Knife = Ink (Materials)
+Paper + Ink = Text (Writing)
+Text + Text = Pages (Writing)
+Pages + Leather = Book (Writing)
+Planet + Rings = Gas Giant Planet (Space)
+Book + Book = Library (Eyesore Buildings)
+Brick + Glass = House (Eyesore Buildings)
+House + House = Big Building (Eyesore Buildings)
+Crab + Crab = Lobster (Animals)
+Lava + Mountain = Volcano (Landforms)
+Tree + Tree = Wood (Materials)
+Wood + Metal = Knife (Tools)
+Rain + Sun = Rainbow (Beauties)
+House + People = Shop (Eyesore Buildings)
+Shop + House = Hotel (Eyesore Buildings)
+Hotel + House = Condo (Eyesore Buildings)
+Big Building + Book = School (Eyesore Buildings)
+Sand + Glass = Hourglass (Tools)
+Hourglass + Human = Time (Existential Crisis Causes)
+Human + Human = Baby (People)
+Baby + Time = Child  (People)
+Child + School = Student (People)
+Child + Time = Teenager (People)
+Teenager + Ciggarette = Smoker (People)
+Smoker + Time = Death (Existential Crisis Causes)
+Death + Time = Funeral (Events)
+Funeral + Human = Sadness (Existential Crisis Causes)
+Sadness + Time = Death (Existential Crisis Causes)
+Wood + Knife = Stick (Materials)
+Earth + Wood = Stone (Earth)
+Stick + Stone = Tool (Tools)
+Earth + Tool = Ground (Earth)
+Ground + Tool = Gravel (Earth)
+Stone + Tool = Mineral (Earth)
+Gravel + Tool = Flint (Earth)
+Flint + Mineral = Fire (Fire)
+Fire + House = Ash (Fire)
+House + People = Civilization (Civilization)
+
+# Extras to make everything create-able
+Mammal + Fire = Human (People)
+
+# Community Provided Element Descriptions
+Air - Contains Oxygen, Carbon Dioxide, some Nitrogen, and More!
+Fire - Invented by cavemen to kill each other with.
+Earth - We live on it, yet we keep trying to kill it.
+Water - Required you drink at least 8 glasses a day.
+Sun - A great big ball of fire floating up above.
+Ocean - What doesn't make you live, makes you salty.
+Vampire - If you use the light theme, this element is dead.
+Dust - Just some ol' dusty dust.
+Crab - IT'S TIME TO RAAAVEEEE!
+Chemical - What type of chemical could this be? No one will ever know for sure...
+Acid - Don't drink it (We are not responsible for any deaths after reading these words)
+Salt - Don't have too much of this, you'll be salty if you do.
+DNA - One of the fundamentals for life.
+Worm - It's slimly and gross but, helps with the earth.
+Lava - Can be very hot like VERY hot.
+Alcohol - MaKe sHoUrE YoU dOn,T dRiNk ThIs.
+Vodka - Why is everything backwords?
+Swamp - You might want to get out of his swamp.
+Death - The End.
+Rainbow - Make sure you find the gold at the end!
+Comet - You might want to move like ALOT.
+Plankton - He will never find the recipe.
+Ice - It's cold and its solid!
+Fish - Flip Flop
+Battery - I GOT THE POWER!!!
+Snail - Wait for it...
+Solar System - Its like 1cm not toooooo big.
+Hourglass - Wait. That's it.
+Knife - stab stab stab
+Library - You can read here!
+Flint - ...and steel
+Supernova - big boom
+Bricks - Make a house now.
+Smog - Smell that fresh air!
+Shell - Sally sells shells by the seashore I think.
+Stars - ...so it's made by 2 suns HMMMMMM.
+Chlorophyll - It's in plants like this leaf you can't see.
+Algae - It's like chlorophyll but more water.
+House - Here's is your taxes!
+Student - F MINUS
+Baby - Don't throw it.
+Sadness - Everyone has it yay?
+Tool - Cool
+Human - Life.
+Dirt - The yummy thing on the floor
+Sand - It's coarse and rough and irritating and it gets everywhere.
+Ice - The other hard water.
+Salt - A known byproduct of playing competitive Smash.
+Knife - Useful for cutting through the hearts of your enemies. And ham.
+Continent - We don't know how to define it, but we know there's 7 continents, or 6, or 5, or 4
+Acid - “Do like you oughta, add acid to water.” -Nethack
+Smoker - smokeng isof teh bad, kiddies
+Rust - Remember kids, don't touch rusty tools or you'll get Tetanus
+Vampire - The second edgiest element.
+Swamp - Like the forest, except this time you drown.
+Death - Life sucks and then you die.
+Hourglass - Redundant, yet oddly symbolic.
+Swamp - The home of Shrek
+Mud - less yummy than dirt but still nic
+Crab - Obama is gone
+Flower - I'm so beautiful, noobs
