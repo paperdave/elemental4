@@ -8,17 +8,15 @@
 #    typing else into it (i.e. ssh key)
 #    - An .env file exists and is setup
 #    - PM2 is installed and the process is started
-#    with name `elemental4` (pm2 start . --name elemental4)
+#    with name `elem4` and `elem4-anarchy` (pm2 start . --name elemental4)
 #
 #### THE ACTUAL SCRIPT ####
-pm2 stop elemental4
-
 git pull
 
 npm install -D
 
-node build-client.js
 npm run build-server
 
-pm2 start elemental4
+pm2 restart elem4
+pm2 restart elem4-anarchy
 pm2 save

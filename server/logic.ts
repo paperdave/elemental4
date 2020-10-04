@@ -11,10 +11,11 @@ import { getCurrentTime, logCombo, logSuggestion } from './data-logging';
 
 const voteThresholdEq = new Parser().parse(VOTE_THRESHOLD_EQUATION);
 const voteScoringEq = new Parser().parse(VOTE_SCORES_EQUATION);
-const DEFAULT_SCORE = voteThresholdEq.evaluate({
+const DEFAULT_THRESHOLD = voteThresholdEq.evaluate({
   voters: 1,
   hours: 0,
 });
+
 
 export async function logicAddCombo(a: string, b: string, result: string) {
   [a, b] = sortCombo(a, b);
@@ -54,6 +55,33 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
     if(!isUpvote) {
       return { result: 'voted' };
     }
+    if (DEFAULT_THRESHOLD < 1) {
+      let id = storageGetElementNumberFromName(suggest.text);
+      let doCreatorMark = false;
+      if (!id) {
+        doCreatorMark = true;
+        id = await storageAddElement({
+          color: suggest.color,
+          text: suggest.text,
+          createdOn: Date.now(),
+          creator1: userId,
+          creator2: null,
+        });
+      }
+      
+      storageIncElementCount(userId);
+
+      const x = recipe.split('+');
+      await logicAddCombo(x[0], x[1], id);
+
+      await storageSetSuggestion(recipe, { finished: true, result: id });
+
+      return {
+        result: 'element-added',
+        newElement: id,
+        doCreatorMark
+      }
+    }
     // Add a complete new suggestion.
     await storageSetSuggestion(recipe, {
       recipe,
@@ -92,13 +120,14 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
       suggest.color.lightness,
       1,
       1,
-      DEFAULT_SCORE,
+      DEFAULT_THRESHOLD,
       false,
       ''
     )
     return {
       result: 'suggested',
     }
+    
   } else {
     if (res.finished) {
       return {
