@@ -1,6 +1,6 @@
 // Handles serving front end static pages
 // and routing api calls.
-import { HTTP_PORT, HTTPS_KEY, HTTPS_CERT, HTTPS_PORT, ENABLE_HTTP, ENABLE_HTTPS } from "./constants";
+import { HTTP_PORT, HTTPS_KEY, HTTPS_CERT, HTTPS_PORT, ENABLE_HTTP, ENABLE_HTTPS, SERVER_NAME, SERVER_DESCRIPTION, SERVER_ICON } from "./constants";
 import express from 'express';
 import * as log from './logger';
 import { createServer as createHTTPServer } from 'http';
@@ -36,10 +36,10 @@ export function serverCreate() {
     app.get('/elemental.json', (r,res) => {
         res.send({
             type: 'elemental4',
-            name: 'Elemental 4 Main',
-            description: 'The main public server for Elemental 4, generously hosted by Filip Kin.',
+            name: SERVER_NAME,
+            description: SERVER_DESCRIPTION,
             serverVersion: pkg.version,
-            icon: 'https://elemental4.net/icon.png'
+            icon: SERVER_ICON,
         })
     });
     

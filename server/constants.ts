@@ -33,6 +33,10 @@ export const ENABLE_HTTP = env.ENABLE_HTTP === "true";
 export const ENABLE_HTTPS = env.ENABLE_HTTPS === "true";
 export const DEV_VOTE_NO_CHECK = env.DEV_VOTE_NO_CHECK === "true";
 
+export const SERVER_NAME = env.SERVER_NAME;
+export const SERVER_DESCRIPTION = env.SERVER_DESCRIPTION;
+export const SERVER_ICON = env.SERVER_ICON;
+
 export const IP_FORWARDING = env.IP_FORWARDING === "true";
 /** API Key */
 export const IP_DUPLICATION_KEY = env.IP_DUPLICATION_KEY;

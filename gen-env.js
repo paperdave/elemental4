@@ -16,4 +16,8 @@ IP_FORWARDING=false
 DEV_VOTE_NO_CHECK=false
 DATALOG_SHEET_ID=
 
+SERVER_NAME=Elemental 4 Server
+SERVER_DESCRIPTION=An Elemental 4 Server
+SERVER_ICON=https://elemental4.net/icon.png
+
 `);
