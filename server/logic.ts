@@ -245,7 +245,6 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
         }
         let winner: DbSuggestionEntry;
         res.results.filter((x) => {
-          console.log(threshold, 'vs', x.score);
           if (x.score >= threshold && (!winner || (x.score > winner.score))) {
             winner = x;
           }

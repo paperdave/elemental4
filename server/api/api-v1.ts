@@ -87,7 +87,6 @@ export default function() {
             if(tooLong) return
             try {
                 const parse = JSON.parse(data);
-                console.log(parse);
                 if ((parse === null) || (parse === undefined)
                     || ((typeof parse) !== "object")
                     || ((typeof parse.text) !== "string")
@@ -122,7 +121,6 @@ export default function() {
                         userName: userName,
                         isUpvote: parse.vote,
                     });
-                    console.log('result', result);
                     res.send(result);
                 } catch (error) {
                     console.log(error);
@@ -169,7 +167,6 @@ export default function() {
             if(tooLong) return
             try {
                 const parse = JSON.parse(data);
-                console.log(parse);
                 if ((parse === null) || (parse === undefined)
                     || ((typeof parse) !== "object")
                     || ((typeof parse.comment) !== "string")

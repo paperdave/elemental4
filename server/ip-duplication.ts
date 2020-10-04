@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { IP_DUPLICATION_KEY } from './constants';
 
 export async function lookupIpCheck(ip: string) {
-  if (!IP_DUPLICATION_KEY) throw new Error('No key');
+  if (!IP_DUPLICATION_KEY) return true
   if (ip === '127.0.0.1') return true;
   if (ip.startsWith('0.')) return true;
   const url = `https://ipqualityscore.com/api/json/ip/${IP_DUPLICATION_KEY}/${ip}?strictness=0&allow_public_access_points=true&fast=true&lighter_penalties=true&mobile=true`

@@ -15,6 +15,7 @@ export let io: SocketIO.Server;
 export function serverCreate() {
     app = express();
     io = SocketIO();
+    io.origins('*:*');
 
     newEntryEmitter.on((entry) => {
         io.sockets.emit('new-entry', entry)
