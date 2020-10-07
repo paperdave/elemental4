@@ -1,6 +1,6 @@
 {
   "name": "elemental4",
-  "version": "4.0.0-beta3",
+  "version": "4.0.0-beta4",
   "description": "Modern reboot of the old item combination game.",
   "main": "dist_server/server/index.js",
   "private": true,
@@ -23,16 +23,16 @@
     "google-spreadsheet": "^3.0.13",
     "howler": "^2.1.1",
     "jsonpath": "^1.0.2",
+    "jszip": "^3.5.0",
     "localforage": "^1.9.0",
     "moment": "^2.29.0",
+    "monaco-editor": "^0.21.2",
     "node-fetch": "^2.3.0",
     "p5": "^1.1.9",
-    "rethinkdb": "^2.4.2",
     "sha256": "^0.2.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "sqlite3": "^5.0.0",
-    "terser": "^5.3.4"
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "@types/color": "^3.0.1",
@@ -44,28 +44,29 @@
     "@types/jsonpath": "^0.2.0",
     "@types/node": "^14.10.0",
     "@types/node-fetch": "^2.1.4",
-    "@types/rethinkdb": "^2.3.13",
     "@types/sha256": "^0.2.0",
     "@types/socket.io": "^2.1.11",
     "@types/socket.io-client": "^1.4.33",
     "@types/sqlite3": "^3.1.6",
     "file-loader": "^2.0.0",
     "html-minifier": "^3.5.21",
+    "serve": "^11.3.2",
     "ts-loader": "^5.1.1",
     "typescript": "^4.0.2",
     "uglify-es": "^3.3.9",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
-    "worker-loader": "^3.0.2"
+    "worker-loader": "^3.0.2",
+    "terser": "^5.3.4"
   },
   "scripts": {
     "start": "node .",
     "build-server": "tsc -p server",
     "watch-server": "tsc -p server -w",
     "build-game": "node build-client",
-    "watch-game": "webpack -w",
-    "build-all": "npm run build-server && npm run build-game",
+    "watch-game": "node build-client -s && webpack -w",
     "cloc": "cloc game server shared res --fullpath --not-match-d=\"(game\\/out|server\\/out)\"",
-    "upload": "ssh -t elemental4.net \"cd ~/app/elem4 && ./production.sh\""
+    "serve": "serve dist_client -l 8000",
+    "upload": "ssh -t elemental4.net \"cd ~/app/elemental4 && sh production.sh\""
   }
 }

@@ -1,7 +1,10 @@
 {
   "type": "pack",
+  "id": "base",
+  "version": 1,
   "name": "Base Classical Elements",
-  "description": "The four starting points of Air, Earth, Fire, and Water, from which everything else is built upon.",
+  "description": "The four starting points of Air, Earth, Fire, and Water.",
+  "author": "Dave Caruso",
   "format": "lite",
   "files": [
     "./pack.txt"

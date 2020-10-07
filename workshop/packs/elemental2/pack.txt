@@ -1,7 +1,8 @@
 # Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
 #
-# This file serves as the "format guide/example" for elements, as it's not
-# the same as the one in Elemental 2
+# This file also serves as the "format guide/example" for elements, as
+# it's not the same as the one in Elemental 2. This file does not describe
+# the entire format either.
 #
 # Some key things to note:
 #  - You can use multiple spaces to separate things to make it line up.
@@ -10,12 +11,15 @@
 #
 
 # Display Name In-Game
-Id=elemental2
-Title=Elemental 2
-Description=Elemental 2 Raw Data by Cary Huang
+id=elemental2
+version=1
+name=Elemental 2
+description=Cary's Elemental 2, modified to be completable.
+author=Cary Huang
+icon=./icon.png
 
 # The base pack includes the four classical elements.
-Import base
+import base
 
 # Colors
 Space:                     #4C4C4C
@@ -259,66 +263,3 @@ House + People = Civilization (Civilization)
 
 # Extras to make everything create-able
 Mammal + Fire = Human (People)
-
-# Community Provided Element Descriptions
-Air - Contains Oxygen, Carbon Dioxide, some Nitrogen, and More!
-Fire - Invented by cavemen to kill each other with.
-Earth - We live on it, yet we keep trying to kill it.
-Water - Required you drink at least 8 glasses a day.
-Sun - A great big ball of fire floating up above.
-Ocean - What doesn't make you live, makes you salty.
-Vampire - If you use the light theme, this element is dead.
-Dust - Just some ol' dusty dust.
-Crab - IT'S TIME TO RAAAVEEEE!
-Chemical - What type of chemical could this be? No one will ever know for sure...
-Acid - Don't drink it (We are not responsible for any deaths after reading these words)
-Salt - Don't have too much of this, you'll be salty if you do.
-DNA - One of the fundamentals for life.
-Worm - It's slimly and gross but, helps with the earth.
-Lava - Can be very hot like VERY hot.
-Alcohol - MaKe sHoUrE YoU dOn,T dRiNk ThIs.
-Vodka - Why is everything backwords?
-Swamp - You might want to get out of his swamp.
-Death - The End.
-Rainbow - Make sure you find the gold at the end!
-Comet - You might want to move like ALOT.
-Plankton - He will never find the recipe.
-Ice - It's cold and its solid!
-Fish - Flip Flop
-Battery - I GOT THE POWER!!!
-Snail - Wait for it...
-Solar System - Its like 1cm not toooooo big.
-Hourglass - Wait. That's it.
-Knife - stab stab stab
-Library - You can read here!
-Flint - ...and steel
-Supernova - big boom
-Bricks - Make a house now.
-Smog - Smell that fresh air!
-Shell - Sally sells shells by the seashore I think.
-Stars - ...so it's made by 2 suns HMMMMMM.
-Chlorophyll - It's in plants like this leaf you can't see.
-Algae - It's like chlorophyll but more water.
-House - Here's is your taxes!
-Student - F MINUS
-Baby - Don't throw it.
-Sadness - Everyone has it yay?
-Tool - Cool
-Human - Life.
-Dirt - The yummy thing on the floor
-Sand - It's coarse and rough and irritating and it gets everywhere.
-Ice - The other hard water.
-Salt - A known byproduct of playing competitive Smash.
-Knife - Useful for cutting through the hearts of your enemies. And ham.
-Continent - We don't know how to define it, but we know there's 7 continents, or 6, or 5, or 4
-Acid - “Do like you oughta, add acid to water.” -Nethack
-Smoker - smokeng isof teh bad, kiddies
-Rust - Remember kids, don't touch rusty tools or you'll get Tetanus
-Vampire - The second edgiest element.
-Swamp - Like the forest, except this time you drown.
-Death - Life sucks and then you die.
-Hourglass - Redundant, yet oddly symbolic.
-Swamp - The home of Shrek
-Mud - less yummy than dirt but still nic
-Crab - Obama is gone
-Flower - I'm so beautiful, noobs

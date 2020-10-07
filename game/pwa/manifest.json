@@ -4,11 +4,19 @@
   "description": "Modern reboot of the old item combination game.",
   "display": "standalone",
   "scope": "/",
+  "start_url": "/",
   "icons": [
     {
-      "src": "/icon/android-icon-192x192.png",
+      "src": "/icon/normal.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon/maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

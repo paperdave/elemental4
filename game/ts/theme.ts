@@ -5,12 +5,12 @@ import { delay } from "../../shared/shared";
 import { addDLCByUrl } from "./dlc-fetch";
 import { version } from "../../package.json";
 import { getInstalledThemes, installThemes, uninstallThemes } from "./savefile";
+import { SoundId } from "./sound";
+import { addThemeToUI } from "./settings";
+import { THEME_VERSION } from "./theme-version";
+import { asyncConfirm } from "./dialog";
 
 let init = false;
-
-export const THEME_VERSION = 1;
-
-export type SoundId = string;
 
 export interface ThemeColorConfig {
   color: string;
@@ -51,7 +51,8 @@ export interface ThemeFlattenedColors {
 export interface ThemeEntry extends Partial<Theme> {
   type: 'elemental4:theme',
   isBuiltIn: boolean;
-  version: typeof THEME_VERSION,
+  format_version: typeof THEME_VERSION,
+  version: number,
   id: string,
   name: string,
   author: string,
@@ -59,9 +60,9 @@ export interface ThemeEntry extends Partial<Theme> {
   icon: string;
   sketch?: string;
 }
-const builtin_theme_urls: [string, string][] = [
-  ['elem4_default', '/themes/elem4_default'],
-  ['elem4_dark', '/themes/elem4_dark'],
+const builtin_theme_urls: [string, string, number][] = [
+  ['elem4_default', '/themes/elem4_default', 2],
+  ['elem4_dark', '/themes/elem4_dark', 1],
 ];
 
 let themes = [];
@@ -81,6 +82,10 @@ export function getTheme(): ThemeFlattenedColors {
 
 export function getEnabledThemeList(): string[] {
   return themesEnabled;
+}
+
+export function resetBuiltInThemes() {
+  return builtin_theme_urls.map((x) => uninstallTheme(x[0]));
 }
 
 export function calculateTheme() {
@@ -170,11 +175,15 @@ export function increaseThemePriority(id) {
   themesEnabled[index] = old;
 }
 export async function installTheme(theme: ThemeEntry, switchTo: boolean) {
+  console.log('new theme', theme)
   await installThemes(theme);
   themes = await getInstalledThemes();
   if (switchTo && init) {
     enableTheme(theme.id);
     await updateMountedCss();
+  }
+  if (init) {
+    addThemeToUI(theme);
   }
 }
 export function uninstallTheme(id) {
@@ -220,6 +229,19 @@ export async function MountThemeCSS() {
   );
   init = true;
   updateMountedCss();
+
+  window.addEventListener('storage', async(e) => {
+    if(e.key == "workshop_add") {
+      try {
+        const obj = JSON.parse(localStorage.getItem('workshop_add'))
+        if (obj.url && obj.type) {
+          addDLCByUrl(obj.url, obj.type);
+        }
+      } catch (error) {
+
+      }
+    }
+  })
 }
 export async function updateMountedCss() {
   swapOverlay.style.pointerEvents = 'all';

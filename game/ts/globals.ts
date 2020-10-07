@@ -12,6 +12,8 @@ export function exposeGlobals() {
         'iframe': require('./iframe'),
         'stats': require('./statistics'),
         'dialog': require('./dialog'),
+        'sound': require('./sound'),
+        'devTheme': require('./theme-editor'),
         deps: {
             color: require('color'),
             localforage: require('localforage'),

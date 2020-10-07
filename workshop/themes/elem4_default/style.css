@@ -3,7 +3,7 @@
   --background-main: #FFFFFF;
   --background-element-game: #F1F1F1;
   --text-warning: red;
-  --primary: coral;
+  --primary: #F8571C;
   --link-click: red;
 
   --background-hover: rgba(127,127,127,0.15);
@@ -913,14 +913,14 @@ input[type="range"]::-webkit-slider-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%; 
-  background: coral;
+  background: var(--primary);
   cursor: pointer;
 }
 input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: coral;
+  background: var(--primary);
   cursor: pointer;
 }
 #suggest-submit {
@@ -1003,6 +1003,9 @@ input[type="range"]::-moz-range-thumb {
 }
 .theme-header > * {
   margin-left: 6px;
+}
+.theme-header > :last-child {
+  margin-right: 6px;
 }
 .available-themes {
   position: absolute;

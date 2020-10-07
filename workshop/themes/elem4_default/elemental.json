@@ -8,8 +8,22 @@
   "description": "The default look of\nElemental 4.",
   "styles": "./style.css",
   "icon": "./icon.png",
-  "sounds": [],
-  "music": [],
+  "sounds": {
+    "combine": "/sound/combine.mp3",
+    "invalid": "/sound/invalid.mp3",
+    "pickup": "/sound/pickup.mp3",
+    "valid": "/sound/valid.mp3",
+    "drop": "/sound/drop.mp3"
+  },
+  "music": [
+    {
+      "fade": "both",
+      "loop": "full",
+      "url": "/music/music1.mp3",
+      "title": "Elemental 4 Song",
+      "author": "Justin Tan"
+    }
+  ],
   "colors": {
     "white": {
       "color": "#FFFFFF",

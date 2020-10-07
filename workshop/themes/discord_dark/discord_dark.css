@@ -1,10 +1,10 @@
 :root {
   --text-main: #FFFFFF;
-  --background-main: #000000;
-  --background-element-game: #151515;
-  --background-top-bar: #FFF;
-  --text-top-bar: #000000;
-  --background-dialog: #111;
+  --background-main: #333333;
+  --background-element-game: #333333;
+  --background-top-bar: #23272A;
+  --text-top-bar: #FFFFFF;
+  --background-dialog: #333333;
   --background-hover: rgba(127,127,127,0.15);
   --background-active: rgba(127,127,127,0.4);
   --background-selected: rgba(127,127,127,0.3);
@@ -13,24 +13,26 @@
   --text-selected: rgba(127,127,127,0.3);
 }
 
+.settings-category {background-color:#2C2F33;}
+
 .color-btn,
 .suggest-content,
 .dialog-content {
   border-color: white;
 }
 
-button, select, input {
+button {
   border: 1px solid #aaaaaa;
   background: #222222;
   color: white;
 }
-button:not([disabled]):hover, select:not([disabled]):hover {
+button:not([disabled]):hover {
   background: #753506;
 }
-button:not([disabled]):active, select:not([disabled]):active {
+button:not([disabled]):active {
   background: rgb(194, 73, 29);
 }
-button[disabled], select[disabled], input[disabled] {
+button[disabled] {
   border: 1px solid #999;
   background: #555;
   color: #888;

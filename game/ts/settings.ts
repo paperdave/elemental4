@@ -8,6 +8,8 @@ import { getServerList, setActiveServer } from "./server-manager";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
 import { addDLCByUrl } from "./dlc-fetch";
+import e from "express";
+import { openDevThemeEditor } from "./theme-editor";
 
 let themeUpdated = false;
 
@@ -169,14 +171,13 @@ export async function InitSettings() {
       true
     );
 
-    // FIXME WE CANNOT RETURN theme HERE
-    const theme = await addDLCByUrl(text, 'theme') as ThemeEntry;
-    if (theme.type === 'elemental4:theme') {
-      activeColumn.prepend(ThemeDOM(theme));
-    }
+    addDLCByUrl(text, 'theme');
   });
-  // document.querySelector('#theme-browse').addEventListener('click', () => {
-  //   window.open('/workshop');
+  document.querySelector('#theme-browse').addEventListener('click', () => {
+    window.open('/workshop#themes');
+  });
+  // document.querySelector('#theme-devmode').addEventListener('click', () => {
+  //   openDevThemeEditor();
   // });
 
   const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
@@ -196,6 +197,7 @@ export async function InitSettings() {
       ui.status('Connecting to ' + processBaseUrl(server.baseUrl), 0)
       ui.show();
       setActiveServer(server.baseUrl);
+      document.querySelector('.suggest-close').dispatchEvent(new MouseEvent('click'));
       try {
         await connectApi(server.baseUrl, null, ui);
       } catch (error) {
@@ -254,6 +256,7 @@ export async function InitSettings() {
 
 function ThemeDOM(theme: ThemeEntry) {
   const dom = document.createElement('div');
+  dom.setAttribute('data-theme-item', theme.id)
   dom.classList.add('theme-item');
   const moveButtons = document.createElement('div');
   moveButtons.classList.add('theme-move-buttons');
@@ -325,4 +328,18 @@ function ThemeDOM(theme: ThemeEntry) {
   dom.appendChild(info);
 
   return dom
+}
+
+export function addThemeToUI(theme: any) {
+  if (theme && theme.type === 'elemental4:theme') {
+    const find = document.querySelector('[data-theme-item="' + theme.id + '"]');
+    if(find) {
+      const dom = ThemeDOM(theme);
+      find.parentElement.insertBefore(dom, find);
+      find.remove();
+    } else {
+      const activeColumn = document.querySelector('.active-themes .theme-list')
+      activeColumn.prepend(ThemeDOM(theme));
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { MountThemeCSS } from './theme';
+import { MountThemeCSS, resetBuiltInThemes } from './theme';
 import { InitSettings } from './settings';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
@@ -7,8 +7,9 @@ import { connectApi } from './api';
 import { ElementalLoadingUi } from '../../shared/elem';
 import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
-import { getActiveServer, getServerList, installDefaultServers, setActiveServer } from './server-manager';
+import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { asyncAlert, asyncPrompt } from './dialog';
+import { loadSounds } from './sound';
 
 declare const $production: string;
 declare const $build_date: string;
@@ -35,6 +36,7 @@ async function boot(MenuAPI: MenuAPI) {
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== pkg.version) {
+      await resetBuiltInThemes();
       const cache = latestVersion + '-' + Math.random().toFixed(6).substr(2);
       const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cache));
       progress.on('progress', ({ percent, current, total }) => {
@@ -72,6 +74,7 @@ async function boot(MenuAPI: MenuAPI) {
   const initialServer = await getActiveServer();
   await MountThemeCSS();
   await InitSettings();
+  await loadSounds();
   await InitElementGameUi();
 
   // i dont want people just getting in super ez, so this should do the trick.

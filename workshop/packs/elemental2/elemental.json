@@ -1,8 +1,10 @@
 {
   "type": "pack",
   "id": "elemental2",
+  "version": 1,
   "name": "Elemental 2",
-  "description": "The four starting points of Air, Earth, Fire, and Water, from which everything else is built upon.",
+  "description": "Cary's Elemental 2, modified to be completable.",
+  "author": "Cary Huang",
   "format": "lite",
   "files": [
     "./pack.txt"

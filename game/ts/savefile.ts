@@ -1,6 +1,7 @@
 import { ElementalBaseAPI, SaveFileAPI, getSubAPI, ServerSavefileEntry } from '../../shared/elem';
 import { debounce } from '@reverse/debounce';
 import { Store } from '../../shared/store';
+import { escapeHTML } from '../../shared/shared';
 
 const data = new Store('data');
 const themes = new Store('theme_data');
@@ -41,6 +42,18 @@ export async function installServer(baseUrl: string, config: any) {
     servers.push({ baseUrl, name, config });
   }
   await data.set('servers', servers);
+
+  const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
+  serverSelect.querySelectorAll('*:not(:first-child)').forEach((x) => {
+    x.remove();
+  })
+  servers.forEach((server) => {
+    const option = document.createElement('option');
+    option.value = server.baseUrl;
+    option.innerHTML = escapeHTML(`${server.name} - ${processBaseUrl(server.baseUrl)}`);
+    serverSelect.appendChild(option);
+  });
+  serverSelect.value = 'internal:change-btn';
 }
 export async function getServer(baseUrl: string) {
   baseUrl = removeUrlSuffix(baseUrl);

@@ -43,11 +43,14 @@ export class Elemental4API
   private socket: SocketIOClient.Socket;
 
   private processEntry = createQueueExec(async(entry: Entry) => {
+    if (entry.entry <= this.dbMeta.lastEntry) {
+      return;
+    }
     if (entry.entry !== this.dbMeta.lastEntry + 1) {
+      console.log('entry out of order. expected #' + (this.dbMeta.lastEntry + 1) + ' but got #' + entry.entry + '. calling later');
       this.processEntry.callLater(entry);
       return;
     }
-    this.dbMeta.lastEntry = entry.entry;
     if(entry.type === 'element') {
       await this.elementStore.set(entry.id, {
         id: entry.id,
@@ -112,6 +115,7 @@ export class Elemental4API
       x.stats.comments.push(entry.comment);
       await this.elementStore.set(entry.id, x);
     }
+    this.dbMeta.lastEntry = entry.entry;
     this.waitNewEntryEmitter.emit(entry)
   });
   private async notifyUsername() {

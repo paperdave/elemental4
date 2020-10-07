@@ -12,36 +12,71 @@ process.chdir(__dirname);
 (async() => {
     fs.pathExistsSync('./dist_client') && fs.removeSync("./dist_client");
 
-    // Webpack build
-    await new Promise((next) => {
-        webpack(config, (err, stats) => {
-            // errors
-            if (err) {
-                console.error(err.stack || err);
-                if (err.details) {
-                    console.error(err.details);
+    if(!process.argv.includes('-s')) {
+        // Webpack build
+        await new Promise((next) => {
+            webpack(config, (err, stats) => {
+                // errors
+                if (err) {
+                    console.error(err.stack || err);
+                    if (err.details) {
+                        console.error(err.details);
+                    }
+                    process.exit(1);
                 }
-                process.exit(1);
-            }
+    
+                const info = stats.toJson();
+    
+                // errors
+                if (stats.hasErrors()) {
+                    console.error(info.errors.join("\n\n"));
+                }
+    
+                // warnings
+                if (stats.hasWarnings()) {
+                    console.warn(info.warnings.join("\n"));
+                }
+    
+                next();
+            });
+        });
+    }
 
-            const info = stats.toJson();
+    const workshopManifest = {
+        themes: [],
+        packs: [],
+    };
 
-            // errors
-            if (stats.hasErrors()) {
-                console.error(info.errors.join("\n\n"));
-            }
+    fs.readdirSync('workshop/themes').forEach((id) => {
+        const json = (fs.readJSONSync('workshop/themes/' + id + '/elemental.json'));
 
-            // warnings
-            if (stats.hasWarnings()) {
-                console.warn(info.warnings.join("\n"));
-            }
-
-            next();
+        workshopManifest.themes.push({
+            url: 'https://elemental4.net/themes/' + id,
+            id: json.id,
+            name: json.name,
+            author: json.author,
+            description: json.description,
+            icon: json.icon ? 'https://elemental4.net/themes/' + id + '/' + json.icon : undefined,
+            contains: ['styles', 'colors', 'sounds', 'music', 'sketch'].filter(y => y in json),
         });
     });
+    fs.readdirSync('workshop/packs').forEach((id) => {
+        const json = (fs.readJSONSync('workshop/packs/' + id + '/elemental.json'));
+
+        workshopManifest.packs.push({
+            url: 'https://elemental4.net/packs/' + id,
+            id: json.id,
+            name: json.name,
+            author: json.author,
+            description: json.description,
+            icon: json.icon ? 'https://elemental4.net/packs/' + id + '/' + json.icon : undefined
+        });
+    });
+    fs.ensureDirSync("./dist_client");
+
+    fs.writeJSONSync('dist_client/workshop.json', workshopManifest)
 
     // Minify HTML Files
-    fs.ensureDirSync("./dist_client");
     fs.readdirSync("./game/views").forEach(file => {
         let input_html = fs.readFileSync(path.join(__dirname, "game/views/", file)).toString();
         input_html = input_html.replace(/\<script\>((.|\n|\r)*?)\<\/script\>/g, (src) => {
@@ -89,5 +124,6 @@ process.chdir(__dirname);
     fs.copySync('res', 'dist_client/');
     fs.copySync('game/pwa', 'dist_client/');
     fs.copySync('node_modules/p5/lib/p5.min.js', 'dist_client/p5.min.js');
+    fs.copySync('node_modules/monaco-editor', 'dist_client/monaco-editor');
     fs.writeFileSync('dist_client/version', require('./package.json').version);
 })();

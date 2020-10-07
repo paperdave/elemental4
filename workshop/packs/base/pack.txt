@@ -1,7 +1,8 @@
-Id=base
-Title=Base Classical Elements
-Description=The four starting points of Air, Earth, Fire, and Water, from which everything else is built upon.
-Version=1
+id=base
+version=1
+name=Base Classical Elements
+description=The four starting points of Air, Earth, Fire, and Water, from which everything else is built upon.
+author=Dave Caruso
 
 Air:                       #B4D8FC
 Earth:                     #B79370

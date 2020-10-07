@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/themes/elem4_default/style.css">
+  <title>Elemental 4 Theme Editor</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: sans-serif; user-select: none; }
+    a {
+      color: rgb(192, 63, 16);
+      text-decoration: none;
+    }
+    a:hover {
+      color: #F8571C;
+      text-decoration: underline;
+    }
+    a:active {
+      color: red;
+      text-decoration: underline;
+    }
+    button, select, input:not([type=range]) {
+      margin: auto;
+      border: 1px solid #888;
+      background: #DEDEDE;
+      border-radius: 4px;
+      padding: 8px;
+      position: relative;
+      overflow: hidden;
+      color: black;
+    }
+    button.huge, select.huge {
+      font-size: 18px;
+      padding: 10px;
+    }
+    button:not([disabled]):hover, select:not([disabled]):hover {
+      outline: none;
+      background: #e0bcad;
+      border: 1px solid #b96643;
+    }
+    button:not([disabled]):active, select:not([disabled]):active {
+      outline: none;
+      background: #ff9d7a;
+    }
+    button:not([disabled]):focus, select:not([disabled]):focus {
+      outline: none;
+      border: 1px solid #F8571C;
+    }
+    button[disabled], select[disabled] {
+      border: 1px solid #AAA;
+      background: #FAFAFA;
+      color: #555;
+    }
+    input[type='text'], input[type='password'], input[type='email'] {
+      background-color: white;
+      padding-left: 0;
+      text-indent: 10px;
+    }
+    #container {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+    }
+    #editor {
+      overflow: hidden;
+      flex: 1;
+    }
+    .tab {
+      height: 48px;
+      padding: 10px;
+      line-height: 28px;
+    }
+    .tab:hover {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+    .tab:active {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+    .tab.select {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body style='display: none;'>
+  <div class="theme-header">
+    <div id='json' class="tab select">Metadata</div>
+    <div id='css' class="tab">CSS</div>
+    <div id='sketch' class="tab">Sketch</div>
+    <div style='flex: 1'></div>
+  </div>
+  <div id="container">
+    <div id="editor"></div>
+  </div>
+  <script src="/monaco-editor/min/vs/loader.js"></script>
+  <script>
+    require.config({ paths: { vs: '/monaco-editor/min/vs' } });
+
+    require(['vs/editor/editor.main'], function () {
+      const jsonModel = monaco.editor.createModel(
+        '',
+        'json',
+        monaco.Uri.parse(`file:///pack/elemental.json`)
+      );
+      const cssModel = monaco.editor.createModel(
+        '',
+        'css',
+        monaco.Uri.parse(`file:///pack/styles.css`)
+      );
+      const sketchModel = monaco.editor.createModel(
+        '',
+        'javascript',
+        monaco.Uri.parse(`file:///pack/sketch.js`)
+      );
+      var editor = monaco.editor.create(document.getElementById('editor'), {
+        model: jsonModel
+      });
+      editor.layout({width:innerWidth, height:innerHeight - 48});
+      document.addEventListener('resize', () => {
+        editor.layout({width:innerWidth, height:innerHeight - 48});
+      });
+      document.querySelector("#json").addEventListener('click', (x) => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('select'))
+        x.currentTarget.classList.add('select');
+        editor.setModel(jsonModel);
+      })
+      document.querySelector("#css").addEventListener('click', (x) => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('select'))
+        x.currentTarget.classList.add('select');
+        editor.setModel(cssModel);
+      })
+      document.querySelector("#sketch").addEventListener('click', (x) => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('select'))
+        x.currentTarget.classList.add('select');
+        editor.setModel(sketchModel);
+      });
+
+      [
+        jsonModel,
+        sketchModel,
+        cssModel
+      ].forEach(model => {
+        model.onDidChangeContent((event) => {
+          parent.postMessage({
+            type: 'update_editor',
+            theme: {
+              json: JSON.parse(jsonModel.getValue().toString()),
+              style: cssModel.getValue().toString(),
+              sketch: sketchModel.getValue().toString()
+            }
+          }, '*')
+        });
+      });
+
+      let hasInit = false;
+      let parent
+      window.addEventListener('message', (obj) => {
+        const data = obj.data;
+        console.log(data);
+        if(data.type === 'ping' && !hasInit) {
+          parent = obj.currentTarget;
+          parent.postMessage({ type: 'ready' }, '*')
+          hasInit = true;
+        } else if(data.type === 'set-theme') {
+          jsonModel.setValue(JSON.stringify(data.theme.json, null, 2))
+          cssModel.setValue(data.theme.style)
+          sketchModel.setValue(data.theme.sketch)
+          document.body.removeAttribute('style')
+        }
+      })
+    });
+  </script>
+</body>
+</html>

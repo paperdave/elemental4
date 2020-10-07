@@ -1,10 +1,11 @@
 import { asyncAlert, asyncConfirm } from "./dialog";
-import { installTheme, ThemeEntry, THEME_VERSION } from "./theme";
+import { installTheme, ThemeEntry } from "./theme";
 import { getSupportedServerTypes } from './api';
 import { resolve } from 'url';
 import { version } from "../../package.json";
 import { installServer } from "./savefile";
 import { capitalize } from "@reverse/string";
+import { THEME_VERSION } from "./theme-version";
 
 export type DLCType = 'theme' | 'pack' | 'server';
 
@@ -59,7 +60,7 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
       return null;
     }
 
-    if (isBuiltIn && intendedType !== 'server' && !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Server, would you still like to add it?', 'Continue')) {
+    if (isBuiltIn || intendedType !== 'server' && !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Server, would you still like to add it?', 'Continue')) {
       return null;
     }
     

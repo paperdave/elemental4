@@ -10,6 +10,7 @@ import { randomOf } from "@reverse/random";
 import DomToImage from 'dom-to-image';
 import { incrementStatistic } from "./statistics";
 import { OFFLINE } from ".";
+import { playSound } from "./sound";
 
 function formatCategory(x: string) {
   return x.split('-').map(capitalize).join(' ')
@@ -66,10 +67,12 @@ async function dropHoldingElement(combineWith?: HTMLElement) {
 
     if(getConfigBoolean('animations', true)) {
       if(!combineWith) {
+        playSound('drop');
         x.classList.add('drop');
         await delay(500);
         x.remove();
       } else {
+        playSound('combine');
         x.setAttribute(
           'style',
           '--offset-x:' + ((combineWith.offsetLeft - getElementMargin()) - parseFloat(x.style.left) + 'px;')
@@ -99,6 +102,8 @@ async function elementPopAnimation(element: Elem, source: HTMLElement, dest: HTM
   if (source === suggestResultElem) {
     wrapper.classList.add('is-that-hardcoded-shit');
   }
+
+  playSound('valid');
 
   wrapper.classList.add('elem-found-wrapper');
   const offsetX = ((sourceLeft - getElementMargin()) - (dest.offsetLeft - getElementMargin()));
@@ -138,6 +143,8 @@ async function elementErrorAnimation(source: HTMLElement) {
   wrapper.appendChild(dom);
   elementContainer.appendChild(wrapper);
 
+  playSound('invalid');
+
   await delay(850);
   wrapper.remove();
 }
@@ -160,7 +167,8 @@ function updateSuggestion() {
 }
 
 // Makes the HTML for an element
-export function ElementDom({ display }: Elem) {
+export function ElementDom(elem2: Elem) {
+  const display = elem2.display;
   const elem = document.createElement('div');
   elem.appendChild(document.createTextNode(display.text));
   elem.className = `elem ${getClassFromDisplay(display)}`;
@@ -285,6 +293,7 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
         }
       }
     } else {
+      playSound('pickup');
       incrementStatistic('elementsPickedUp');
       holdingRect = dom.getBoundingClientRect();
 
@@ -702,9 +711,12 @@ export async function InitElementNews() {
   }
 }
 export function ClearElementGameUi() {
-  document.querySelectorAll('[data-element').forEach((x) => {
+  elementContainer.querySelectorAll('[data-category],h3').forEach((x) => {
     x.remove();
   });
+  const categoryDiv = document.createElement('div');
+  categoryDiv.setAttribute('data-category', 'none');
+  elementContainer.appendChild(categoryDiv);
   document.querySelector('#tutorial1').classList.remove('tutorial-visible');
   document.querySelector('#tutorial2').classList.remove('tutorial-visible');
   tutorial1visible = false;

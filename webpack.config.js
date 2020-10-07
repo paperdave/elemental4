@@ -20,8 +20,7 @@ module.exports = (prod = false) => ({
         new webpack.DefinePlugin({
             $production: JSON.stringify(prod),
             $build_date: JSON.stringify(execSync('date +"%F %H:%M:%S"').toString()),
-            // $password: JSON.stringify(false)
-            $password: JSON.stringify('username')
+            $password: JSON.stringify(prod ? 'username' : false)
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],

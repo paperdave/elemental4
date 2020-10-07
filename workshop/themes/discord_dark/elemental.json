@@ -2,12 +2,12 @@
   "type": "elemental4:theme",
   "format_version": 1,
   "version": 2,
-  "id": "elem4_dark",
-  "name": "Default Dark",
-  "author": "Dave Caruso",
-  "description": "The built in dark mode for Elemental 4.",
-  "styles": "./dark.css",
-  "icon": "./icon.png",
+  "id": "discord_dark",
+  "name": "Discord Dark Mode",
+  "author": "ryan#4755",
+  "description": "Dark mode using Discord's color scheme, by ryan#4755.",
+  "styles": "./discord_dark.css",
+  "icon": "./icon.jpg",
   "colors": {
     "white": {
       "color": "#FFFFFF",
@@ -50,7 +50,7 @@
       "lightnessMultiplier": 0.8
     },
     "green": {
-      "color": "#54E360",
+      "color": "#7BFAFF",
       "saturationMultiplier": 1,
       "lightnessMultiplier": 0.8
     },
@@ -60,12 +60,12 @@
       "lightnessMultiplier": 0.8
     },
     "blue": {
-      "color": "#54b3e3",
+      "color": "#72AEDA",
       "saturationMultiplier": 1,
       "lightnessMultiplier": 0.8
     },
     "dark-blue": {
-      "color": "#5475e3",
+      "color": "#7289DA",
       "saturationMultiplier": 1,
       "lightnessMultiplier": 0.8
     },
