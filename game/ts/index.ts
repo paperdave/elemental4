@@ -44,6 +44,7 @@ async function boot(MenuAPI: MenuAPI) {
       });
       progress.on('done', (text) => {
         localStorage.cache = cache;
+        await caches.delete('ELEMENTAL')
         eval(text);
         // pass the current menu api / ui.
         window['$elemental4']({

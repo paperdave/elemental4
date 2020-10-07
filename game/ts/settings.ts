@@ -8,8 +8,6 @@ import { getServerList, setActiveServer } from "./server-manager";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
 import { addDLCByUrl } from "./dlc-fetch";
-import e from "express";
-import { openDevThemeEditor } from "./theme-editor";
 
 let themeUpdated = false;
 
