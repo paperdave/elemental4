@@ -21,6 +21,7 @@ type MenuAPI = {
   cache: string;
   status?: (text: string, progress?: number) => void;
   showGame?: () => void;
+  upgraded?: string
 }
 
 async function boot(MenuAPI: MenuAPI) {
@@ -42,14 +43,17 @@ async function boot(MenuAPI: MenuAPI) {
       progress.on('progress', ({ percent, current, total }) => {
         ui.status(`Updating Client`, percent);
       });
-      progress.on('done', (text) => {
+      progress.on('done', async(text) => {
         localStorage.cache = cache;
         await caches.delete('ELEMENTAL')
+
         eval(text);
+
         // pass the current menu api / ui.
         window['$elemental4']({
           ...MenuAPI,
           ...ui,
+          upgraded: pkg.version
         });
       })
       return;
