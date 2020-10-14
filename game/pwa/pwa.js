@@ -1,4 +1,4 @@
-self.postMessage({ worker_version: 2 }, '*');
+const meta = { worker_version: 2 };
 
 var cacheName = 'ELEMENTAL';
 var contentToCache = [
