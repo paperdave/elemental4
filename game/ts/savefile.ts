@@ -32,6 +32,7 @@ export async function getInstalledServers() {
   return (await data.get('servers'))|| [];
 }
 export async function installServer(baseUrl: string, config: any) {
+  console.log('Install Server', baseUrl)
   baseUrl = removeUrlSuffix(baseUrl);
   const servers = (await data.get('servers') || []) as any;
   const f = servers.find(x => x.baseUrl === baseUrl)

@@ -12,7 +12,7 @@ export function exposeGlobals() {
         'iframe': require('./iframe'),
         'stats': require('./statistics'),
         'dialog': require('./dialog'),
-        'sound': require('./sound'),
+        'audio': require('./audio'),
         'devTheme': require('./theme-editor'),
         deps: {
             color: require('color'),

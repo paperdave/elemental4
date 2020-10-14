@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {
+    "color": {
+      "type": "object",
+      "title": "A Color Definition",
+      "description": "Describes a Dynamic Color, which APIs can tweak to get an accurately themed color.",
+      "required": ["color","lightnessMultiplier","saturationMultiplier"],
+      "properties": {
+        "color": {
+          "type": "string",
+          "title": "Base Color",
+          "description": "HEX or CSS color for this color entry."
+        },
+        "saturationMultiplier": {
+          "type": "number",
+          "minimum": 0,
+          "title": "Saturation Multiplier",
+          "description": "Limit how much the saturation slider can affect the color. 1=Full, 0=Static Color. White, Black, and Grey are forced at 0 saturation."
+        },
+        "lightnessMultiplier": {
+          "type": "number",
+          "minimum": 0,
+          "title": "Lightness Multiplier",
+          "description": "Limit how much the lightness slider can affect the color. 1=Full, 0=Static Color. White and Black are forced at 0 lightness, since they represent ends of the grey spectrum."
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": [
+    "type",
+    "format_version",
+    "version",
+    "id",
+    "name"
+  ],
+  "properties": {
+    "type": {
+      "description": "Type of Elemental Data. For Elemental 4 themes it must be 'elemental4:theme'",
+      "const": "elemental4:theme"
+    },
+    "format_version": {
+      "description": "Theme format version. Must be 1",
+      "const": 1
+    },
+    "version": {
+      "title": "Theme Version",
+      "description": "User set value. Used for updating.",
+      "type": "number"
+    },
+    "id": {
+      "title": "Theme Identifier",
+      "description": "Unique identifier for your theme.",
+      "type": "string"
+    },
+    "name": {
+      "title": "Theme Display Name",
+      "description": "Displayed in the theme menu, in bold.",
+      "type": "string"
+    },
+    "description": {
+      "title": "Theme Description",
+      "description": "Displayed in the theme menu, under the theme name in smaller font.",
+      "type": "string"
+    },
+    "author": {
+      "title": "Theme Author",
+      "description": "Displayed on the Workshop.",
+      "type": "string"
+    },
+    "icon": {
+      "title": "Theme Icon Path",
+      "description": "Icon to be displayed next to the theme, should be 128x128. URL is resolved from this file, so it can be relative.",
+      "type": "string"
+    },
+    "styles": {
+      "title": "Theme CSS Styles",
+      "description": "Theme CSS Files. URL is resolved from this file, so it can be relative.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "number" }}
+      ]
+    },
+    "sound_merge_mode": {
+      "title": "Sound Merge Mode",
+      "description": "Decides how sound entries from other themes should mix with this one. Combine means it will combine themes with sounds before it, Override means it will override packs before it.",
+      "enum": [
+        "combine",
+        "override"
+      ]
+    },
+    "music_merge_mode": {
+      "title": "Music Merge Mode",
+      "description": "Decides how music entries from other themes should mix with this one. Combine means it will combine themes with music before it, Override means it will override themes before it.",
+      "enum": [
+        "combine",
+        "override"
+      ]
+    },
+    "colors": {
+      "title": "Color Definitions",
+      "description": "Decides how music entries from other themes should mix with this one. Combine means it will combine themes with music before it, Override means it will override themes before it.",
+      "type": "object",
+      "properties": {
+        "white": { "$ref": "#/definitions/color" },
+        "black": { "$ref": "#/definitions/color" },
+        "grey": { "$ref": "#/definitions/color" },
+        "brown": { "$ref": "#/definitions/color" },
+        "red": { "$ref": "#/definitions/color" },
+        "orange": { "$ref": "#/definitions/color" },
+        "yellow": { "$ref": "#/definitions/color" },
+        "yellow-green": { "$ref": "#/definitions/color" },
+        "green": { "$ref": "#/definitions/color" },
+        "aqua": { "$ref": "#/definitions/color" },
+        "blue": { "$ref": "#/definitions/color" },
+        "dark-blue": { "$ref": "#/definitions/color" },
+        "purple": { "$ref": "#/definitions/color" },
+        "magenta": { "$ref": "#/definitions/color" },
+        "hot-pink": { "$ref": "#/definitions/color" }
+      }
+    }
+  }
+}

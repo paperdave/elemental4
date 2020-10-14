@@ -9,7 +9,7 @@ import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { asyncAlert, asyncPrompt } from './dialog';
-import { loadSounds } from './sound';
+import { loadSounds, playSound } from './audio';
 
 declare const $production: string;
 declare const $build_date: string;
@@ -31,6 +31,14 @@ async function boot(MenuAPI: MenuAPI) {
 
   const ui = MenuAPI.status ? MenuAPI : createLoadingUi();
 
+  if(MenuAPI.upgraded) {
+    ui.status('Finalizing Updates', 0);
+    if (window.navigator && navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => Promise.all(registrations.map(x => x.unregister())));
+    }
+    await caches.delete('ELEMENTAL')
+  }
+
   ui.status('Checking Updates', 0);
 
   // check for updates
@@ -45,8 +53,7 @@ async function boot(MenuAPI: MenuAPI) {
       });
       progress.on('done', async(text) => {
         localStorage.cache = cache;
-        await caches.delete('ELEMENTAL')
-
+        
         eval(text);
 
         // pass the current menu api / ui.
@@ -81,7 +88,7 @@ async function boot(MenuAPI: MenuAPI) {
   await InitSettings();
   await loadSounds();
   await InitElementGameUi();
-
+  
   // i dont want people just getting in super ez, so this should do the trick.
   if ($password) {
     const entry = await asyncPrompt('Password Required for Beta', 'To enter in the beta, you need to know the Password.', '');
@@ -117,6 +124,7 @@ async function boot(MenuAPI: MenuAPI) {
   await delay(10);
 
   document.getElementById('GAME').classList.add('animate-in');
+  playSound('startup');
 }
 
 window['$elemental4'] = boot;

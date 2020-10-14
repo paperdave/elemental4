@@ -1,20 +1,31 @@
 {
+  "$schema": "../../../res/theme.schema.json",
   "type": "elemental4:theme",
   "format_version": 1,
   "version": 1,
   "id": "elem4_default",
   "name": "Elemental 4",
   "author": "Dave Caruso",
-  "description": "The default look of\nElemental 4.",
+  "description": "The default look of Elemental 4.",
   "styles": "./style.css",
   "icon": "./icon.png",
+  "sound_merge_mode": "override",
   "sounds": {
-    "combine": "/sound/combine.mp3",
-    "invalid": "/sound/invalid.mp3",
-    "pickup": "/sound/pickup.mp3",
-    "valid": "/sound/valid.mp3",
-    "drop": "/sound/drop.mp3"
+    "element.combine": [{ "url": "/sound/element-combine.mp3" }],
+    "element.invalid": [{ "url": "/sound/element-invalid.mp3" }],
+    "element.pickup": [{ "url": "/sound/element-pickup.mp3" }],
+    "element.valid": [{ "url": "/sound/element-valid.mp3" }],
+    "element.valid.rediscover": [{ "url": "/sound/element-valid.mp3" }],
+    "element.drop": [{ "url": "/sound/element-drop.mp3" }],
+    "news.new-element": [],
+    "dialog.open": [],
+    "dialog.close": [],
+    "dialog.attention": [],
+    "suggest.created": [],
+    "suggest.voted": [],
+    "startup": []
   },
+  "music_merge_mode": "combine",
   "music": [
     {
       "fade": "both",

@@ -57,7 +57,7 @@ export interface E4Suggestion {
 }
 
 export interface E4SuggestionResponse {
-  result: 'voted' | 'suggested' | 'already-added' | 'vote-fraud-detect-down' | 'vote-fraud-detected' | 'element-added';
+  result: 'voted' | 'suggested' | 'already-added' | 'vote-fraud-detect-down' | 'vote-fraud-detected' | 'element-added' | 'internal-error';
   /** If set then it the new element got added successfully to the server. */
   newElement?: string;
   doCreatorMark?: boolean;

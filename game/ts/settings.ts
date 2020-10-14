@@ -8,6 +8,8 @@ import { getServerList, setActiveServer } from "./server-manager";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
 import { addDLCByUrl } from "./dlc-fetch";
+import fileSize from "filesize";
+import { openDevThemeEditor } from "./theme-editor";
 
 let themeUpdated = false;
 
@@ -16,11 +18,6 @@ export async function InitSettings() {
 
   const elemSettingsDialog = document.querySelector('#dialog-settings') as HTMLElement;
 
-  // const animations = getConfigBoolean('animations', true);
-  // if (animations) {
-  document.body.classList.add('config-animations');
-  //   (document.querySelector('#animations') as HTMLInputElement).checked = true;
-  // }
   const alwaysSuggest = getConfigBoolean('always-suggest', false);
   if (alwaysSuggest) {
     (document.querySelector('#always-suggest') as HTMLInputElement).checked = true;
@@ -33,6 +30,22 @@ export async function InitSettings() {
   const elementScale = getConfigString('element-scale', 'normal');
   document.body.setAttribute('data-element-scale', elementScale);
   (document.querySelector('#element-scale') as HTMLInputElement).value = elementScale;
+
+  const playStartupSound = getConfigBoolean('config-play-startup-sound', true);
+  if (playStartupSound) {
+    (document.querySelector('#play-startup-sound') as HTMLInputElement).checked = true;
+    document.body.classList.add('config-play-startup-sound');
+  }
+  const playNotificationSound = getConfigBoolean('config-play-notification-sound', true);
+  if (playNotificationSound) {
+    (document.querySelector('#play-notification-sound') as HTMLInputElement).checked = true;
+    document.body.classList.add('config-play-notification-sound');
+  }
+  const playNewsSound = getConfigBoolean('config-play-news-sound', true);
+  if (playNewsSound) {
+    (document.querySelector('#play-news-sound') as HTMLInputElement).checked = true;
+    document.body.classList.add('config-play-news-sound');
+  }
 
   let lastTab = '';
   async function focus(tab: string) {
@@ -55,6 +68,9 @@ export async function InitSettings() {
       getDisplayStatistics().then((stats) => {
         content.innerHTML = `<h2>Statistics for Current Save File</h2><table><tbody>${stats.map(x => `<tr><td><strong>${x[0]}</strong></td><td>${x[1]}</td></tr>`).join('')}</tbody></table>`;
       });
+    }
+    if (tab === 'general') {
+      updateStorageEstimation();
     }
   }
 
@@ -122,15 +138,23 @@ export async function InitSettings() {
     setConfigBoolean('show-category-names', v);
     document.body.classList[v ? 'add' : 'remove']('config-show-category-names');
   });
-  // document.querySelector("#animations").addEventListener('click', (ev) => {
-  //   const v = (ev.currentTarget as HTMLInputElement).checked;
-  //   setConfigBoolean('animations', v);
-  //   document.body.classList[v ? 'add' : 'remove']('config-animations');
-  // });
   document.querySelector("#always-suggest").addEventListener('click', (ev) => {
     const v = (ev.currentTarget as HTMLInputElement).checked;
     setConfigBoolean('always-suggest', v);
   });
+  document.querySelector('#play-startup-sound').addEventListener('click', (ev) => {
+    const v = (ev.currentTarget as HTMLInputElement).checked;
+    setConfigBoolean('config-play-startup-sound', v);
+  })
+  document.querySelector('#play-notification-sound').addEventListener('click', (ev) => {
+    const v = (ev.currentTarget as HTMLInputElement).checked;
+    setConfigBoolean('config-play-notification-sound', v);
+  })
+  document.querySelector('#play-news-sound').addEventListener('click', (ev) => {
+    const v = (ev.currentTarget as HTMLInputElement).checked;
+    setConfigBoolean('config-play-news-sound', v);
+  })
+
   document.querySelector("#element-scale").addEventListener('click', (ev) => {
     const v = (ev.currentTarget as HTMLInputElement).value;
     setConfigString('element-scale', v);
@@ -174,9 +198,9 @@ export async function InitSettings() {
   document.querySelector('#theme-browse').addEventListener('click', () => {
     window.open('/workshop#themes');
   });
-  // document.querySelector('#theme-devmode').addEventListener('click', () => {
-  //   openDevThemeEditor();
-  // });
+  document.querySelector('#theme-devmode').addEventListener('click', () => {
+    openDevThemeEditor();
+  });
 
   const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
   const servers = await getServerList();
@@ -250,6 +274,27 @@ export async function InitSettings() {
     }
     saveModifySelect.value = 'title'
   });
+}
+
+interface StorageEstimate {
+  quota: number;
+  usage: number;
+  usageDetails?: {
+    indexedDB: number;
+    caches: number;
+    serviceWorkerRegistrations: number;
+  }
+}
+
+async function updateStorageEstimation() {
+  const { quota, usage, usageDetails } = await navigator.storage.estimate() as StorageEstimate
+  document.querySelector('#storage-quota-used').innerHTML = escapeHTML(fileSize(usage));
+  document.querySelector('#storage-quota-total').innerHTML = escapeHTML(fileSize(quota));
+  if(usageDetails) {
+    const caches = usageDetails.caches || 0;
+    const indexedDB = usageDetails.indexedDB || 0;
+    const workers = usageDetails.serviceWorkerRegistrations || 0;
+  }
 }
 
 function ThemeDOM(theme: ThemeEntry) {

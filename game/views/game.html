@@ -108,26 +108,33 @@
       <h2>Display</h2>
       <div>
         <label for="element-scale">Element Size: </label>
-        <select id="element-scale">
+        <select id="element-scale" style="height:22px;padding:0;">
           <option value="tiny">Tiny</option>
           <option value="small">Small</option>
           <option value="normal">Normal</option>
           <option value="large">Large</option>
         </select>
       </div>
-      <!-- <div>
-        <input type="checkbox" id='animations'> <label for="animations">Enable extra animations.</label>
-      </div> -->
       <div>
         <input type="checkbox" id='show-category-names'> <label for="show-category-names">Show category names (Color Names)</label>
       </div>
       <div>
-        <input type="checkbox" id='always-suggest'> <label for="always-suggest">Always open suggestion screen.</label>
+        <input type="checkbox" id='always-suggest'> <label for="always-suggest">Always open suggestion screen</label>
       </div>
       <p>
         To change your theme, view the <a href="#" data-action='theme'>Themes</a> section.
       </p>
-      <!-- <h2>Sound</h2>
+      <h2>Sound</h2>
+      <div>
+        <input type="checkbox" id='play-startup-sound'> <label for="play-startup-sound">Play Startup Sound</label>
+      </div>
+      <div>
+        <input type="checkbox" id='play-notification-sound'> <label for="play-startup-sound">Play Notification Sounds</label>
+      </div>
+      <div>
+        <input type="checkbox" id='play-news-sound'> <label for="play-startup-sound">Play New Element Sound</label>
+      </div>
+      <br>
       <table>
         <tr>
           <td><label for="volume-sound-slider">SFX</label></td>
@@ -137,15 +144,30 @@
           <td><label for="volume-music-slider">Music</label></td>
           <td><input class='volume-slider' min='0' max='100' value='100' id='volume-music-slider' type="range" data-volume-slider='music'> <span data-volume-display='music'>100%</span></td>
         </tr>
-      </table> -->
+      </table>
+      <h2>Storage</h2>
+      <p>
+        Using <strong id='storage-quota-used'></strong> (browser will allow <strong id='storage-quota-total'></strong>) device storage for Elemental 4.
+      </p>
+      <div id='storage-no-breakdown'>
+        <p>
+          This browser does not support showing storage usage breakdown.
+        </p>
+      </div>
+      <div id='storage-yes-breakdown'>
+        <div id='storage-bar'>
+          
+        </div>
+      </div>
     </div>
     <div class="settings-content settings-theme" data-settings='theme'>
       <div class="theme-header">
-        <button class="btn" id='theme-apply'>Apply</button>
+        <button class="btn" id='theme-apply'>Apply Changes</button>
+        <div style="flex:0 0 20px"></div>
         <button class="btn" id='theme-add'>Add Theme</button>
-        <button class="btn" id='theme-browse'>View Workshop</button>
+        <button class="btn" id='theme-browse'>Open Workshop</button>
         <div style="flex:1"></div>
-        <!-- <button class="btn" id='theme-devmode'>Developer Mode</button> -->
+        <button class="btn" id='theme-devmode'>Developer Mode</button>
       </div>
       <div class="available-themes">
         <div class="theme-section-header">
@@ -179,17 +201,27 @@
         </div>
       </div>
       <div id='server-settings'>
-        <select value="internal:change-btn" id='change-server'>
-          <option disabled value="internal:change-btn">[Change Server]</option>
-        </select>
-        <select id='change-savefile'>
-        </select>
-        <select id='modify-savefile' value="title">
-          <option disabled selected='create' value="title">[Save File Actions]</option>
-          <option id='modify-savefile-create' value="create">New File</option>
-          <option id='modify-savefile-rename' value="rename">Rename Current File</option>
-          <option id='modify-savefile-delete' value="delete">Delete Current File</option>
-        </select>
+        <div style="margin-bottom:4px;">
+          <select value="internal:change-btn" id='change-server'>
+            <option disabled value="internal:change-btn">[Change Server]</option>
+          </select>
+          <button id='server-add'>
+            Add
+          </button>
+          <button id='server-remove'>
+            Edit
+          </button>
+        </div>
+        <div>
+          <select id='change-savefile'>
+          </select>
+          <select id='modify-savefile' value="title">
+            <option disabled selected='create' value="title">[Save File Actions]</option>
+            <option id='modify-savefile-create' value="create">New File</option>
+            <option id='modify-savefile-rename' value="rename">Rename Current File</option>
+            <option id='modify-savefile-delete' value="delete">Delete Current File</option>
+          </select>
+        </div>
       </div>
       <hr>
     </div>

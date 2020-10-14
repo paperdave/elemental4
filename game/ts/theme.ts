@@ -5,10 +5,11 @@ import { delay } from "../../shared/shared";
 import { addDLCByUrl } from "./dlc-fetch";
 import { version } from "../../package.json";
 import { getInstalledThemes, installThemes, uninstallThemes } from "./savefile";
-import { SoundId } from "./sound";
+import { SoundId } from "./audio";
 import { addThemeToUI } from "./settings";
 import { THEME_VERSION } from "./theme-version";
 import { asyncConfirm } from "./dialog";
+import { capitalize } from "@reverse/string";
 
 let init = false;
 
@@ -23,18 +24,14 @@ export interface ThemeColorConfigWithColor {
   lightnessMultiplier: number;
 }
 
-export type ThemeSound = ThemeSoundSingle | ThemeSoundSprite;
-export interface ThemeSoundSingle {
-  src: string | string[];
-  id: string;
-}
-export interface ThemeSoundSprite {
-  src: string | string[];
-  sprites: Partial<Record<SoundId, [number, number]>>;
+interface SoundEntry {
+  url: string;
+  pitch: number;
+  pitchVariance: number;
 }
 
 export interface Theme {
-  sounds: ThemeSound[];
+  sounds: Record<SoundId, SoundEntry[]>;
   music: string[];
   colors: Partial<Record<E4ColorPalette, ThemeColorConfig>>;
   styles: string | string[];
@@ -59,6 +56,8 @@ export interface ThemeEntry extends Partial<Theme> {
   description: string,
   icon: string;
   sketch?: string;
+  sound_merge_mode: 'merge' | 'override';
+  music_merge_mode: 'merge' | 'override';
 }
 const builtin_theme_urls: [string, string, number][] = [
   ['elem4_default', '/themes/elem4_default', 2],
@@ -230,12 +229,27 @@ export async function MountThemeCSS() {
   init = true;
   updateMountedCss();
 
+  try {
+    const obj = JSON.parse(localStorage.getItem('workshop_add'))
+    localStorage.removeItem('workshop_add');
+    if (obj && obj.url && obj.type) {
+      if(await asyncConfirm('Add ' + capitalize(obj.type) + '?', `You are about to install DLC from ${obj.url}, make sure you trust the content you are installing.`, 'Add DLC')) {
+        addDLCByUrl(obj.url, obj.type);
+      }
+    }
+  } catch (error) {
+    
+  }
+
   window.addEventListener('storage', async(e) => {
     if(e.key == "workshop_add") {
       try {
-        const obj = JSON.parse(localStorage.getItem('workshop_add'))
+        const obj = JSON.parse(localStorage.getItem('workshop_add') || 'x')
+        localStorage.removeItem('workshop_add');
         if (obj.url && obj.type) {
-          addDLCByUrl(obj.url, obj.type);
+          if(await asyncConfirm('Add ' + capitalize(obj.type) + '?', `You are about to install DLC from ${obj.url}, make sure you trust the content you are installing.`, 'Add DLC')) {
+            addDLCByUrl(obj.url, obj.type);
+          }
         }
       } catch (error) {
 
@@ -243,7 +257,7 @@ export async function MountThemeCSS() {
     }
   })
 }
-export async function updateMountedCss() {
+export async function updateMountedCss(animate = true) {
   swapOverlay.style.pointerEvents = 'all';
   const string = JSON.stringify(themesEnabled);
   if(string === '[]') {
@@ -255,17 +269,19 @@ export async function updateMountedCss() {
   style = document.createElement("style");
   calculateTheme();
   style.innerHTML = getCSS();
-  if(oldStyle) {
+  if (oldStyle && animate) {
     swapOverlay.style.opacity = '1';
     swapOverlay.style.transitionDuration = '150ms';
     await delay(150);
   }
   document.head.appendChild(style);
-  if(oldStyle) {
+  if (oldStyle) {
     oldStyle.remove();
-    await delay(20);
-    swapOverlay.style.transitionDuration = '300ms';
-    swapOverlay.style.opacity = '0';
+    if (animate) {
+      await delay(20);
+      swapOverlay.style.transitionDuration = '300ms';
+      swapOverlay.style.opacity = '0';
+    }
   }
   swapOverlay.style.pointerEvents = 'none';
 }

@@ -19,5 +19,6 @@
         "downlevelIteration": true,
         "moduleResolution": "node",
         "resolveJsonModule": true
-    }
+    },
+    "exclude": ["node_modules","dist_client","dist_server"]
 }

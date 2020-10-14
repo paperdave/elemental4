@@ -10,7 +10,7 @@ import { randomOf } from "@reverse/random";
 import DomToImage from 'dom-to-image';
 import { incrementStatistic } from "./statistics";
 import { OFFLINE } from ".";
-import { playSound } from "./sound";
+import { playSound } from "./audio";
 
 function formatCategory(x: string) {
   return x.split('-').map(capitalize).join(' ')
@@ -67,12 +67,12 @@ async function dropHoldingElement(combineWith?: HTMLElement) {
 
     if(getConfigBoolean('animations', true)) {
       if(!combineWith) {
-        playSound('drop');
+        playSound('element.drop');
         x.classList.add('drop');
         await delay(500);
         x.remove();
       } else {
-        playSound('combine');
+        playSound('element.combine');
         x.setAttribute(
           'style',
           '--offset-x:' + ((combineWith.offsetLeft - getElementMargin()) - parseFloat(x.style.left) + 'px;')
@@ -81,7 +81,7 @@ async function dropHoldingElement(combineWith?: HTMLElement) {
           + 'top:' + x.style.top
         );
         x.classList.add('combine');
-        await delay(300);
+        await delay(350);
         x.remove();
       }
     } else {
@@ -103,7 +103,11 @@ async function elementPopAnimation(element: Elem, source: HTMLElement, dest: HTM
     wrapper.classList.add('is-that-hardcoded-shit');
   }
 
-  playSound('valid');
+  if (isNew) {
+    playSound('element.valid');
+  } else {
+    playSound('element.valid.rediscover');
+  }
 
   wrapper.classList.add('elem-found-wrapper');
   const offsetX = ((sourceLeft - getElementMargin()) - (dest.offsetLeft - getElementMargin()));
@@ -143,7 +147,7 @@ async function elementErrorAnimation(source: HTMLElement) {
   wrapper.appendChild(dom);
   elementContainer.appendChild(wrapper);
 
-  playSound('invalid');
+  playSound('element.invalid');
 
   await delay(850);
   wrapper.remove();
@@ -293,7 +297,7 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
         }
       }
     } else {
-      playSound('pickup');
+      playSound('element.pickup');
       incrementStatistic('elementsPickedUp');
       holdingRect = dom.getBoundingClientRect();
 

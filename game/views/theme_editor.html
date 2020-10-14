@@ -91,6 +91,8 @@
     <div id='css' class="tab">CSS</div>
     <div id='sketch' class="tab">Sketch</div>
     <div style='flex: 1'></div>
+    <div id='x_reset' class="tab">Reset Theme</div>
+    <div id='x_downloadZip' class="tab">Download ZIP</div>
   </div>
   <div id="container">
     <div id="editor"></div>
@@ -136,6 +138,12 @@
         document.querySelectorAll('.tab').forEach(x => x.classList.remove('select'))
         x.currentTarget.classList.add('select');
         editor.setModel(sketchModel);
+      });
+      document.querySelector('#x_reset').addEventListener('click', () => {
+        parent.postMessage({ type: 'action.reset'})
+      });
+      document.querySelector('#x_downloadZip').addEventListener('click', () => {
+        parent.postMessage({ type: 'action.downloadZip'})
       });
 
       [

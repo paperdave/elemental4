@@ -157,8 +157,27 @@
     </h2>
     <div id="packs"></div>
   </section>
+  <div class="dialog">
+    <div class="dialog-content">
+      test
+    </div>
+  </div>
 
   <script>
+    let gameRunning;
+
+    let timer;
+    localStorage.singleton_time = Date.now();
+    const handler = (e) => {
+      if(e.key == "singleton_available"){
+        clearInterval(timer);
+        gameRunning = true;
+      }
+    };
+    timer = setTimeout(() => {
+      gameRunning = false;
+    }, 200);
+
     function escapeHTML(html) {
       return html.replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -167,7 +186,13 @@
         .replace(/'/g, '&#x27;');
     }
     function add(type, url) {
-      localStorage.setItem('workshop_add', JSON.stringify({ type, url }));
+      if (gameRunning) {
+        localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: Date.now() }));
+
+      } else {
+        localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: Date.now() }));
+        window.open('/')
+      }
     }
 
     const themes = document.querySelector('#themes');
@@ -197,7 +222,7 @@
         installBtn.innerHTML = 'Install';
         installBtn.classList.add('huge');
         installBtn.addEventListener('click', () => {
-          add('pack', theme.url)
+          add('theme', theme.url)
         })
 
         dom.appendChild(info);

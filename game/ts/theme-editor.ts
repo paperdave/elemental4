@@ -1,7 +1,8 @@
-import { debounce } from "@reverse/debounce";
+import { debounce, throttle } from "@reverse/debounce";
 import JSZip from "jszip";
 import { THEME_VERSION } from "./theme-version";
 import { enableTheme, installTheme, ThemeEntry, updateMountedCss } from "./theme";
+import { saveAs } from "file-saver";
 
 const initialDevTheme: Omit<ThemeEntry, "isBuiltIn"> = {
   type: 'elemental4:theme',
@@ -87,7 +88,7 @@ export async function enableDeveloperTheme() {
     sketch: devTheme.sketch,
   }, false);
   await enableTheme('internal:developer_mode')
-  await updateMountedCss();
+  await updateMountedCss(false);
 }
 
 export async function downloadDeveloperTheme() {
@@ -99,11 +100,11 @@ export async function downloadDeveloperTheme() {
 
   zip.generateAsync({ type: "blob" })
     .then(function(blob) {
-      
+      saveAs(blob, 'theme.zip');
     });
 }
 
-export async function resetDeveloperTheme() {
+export function resetDeveloperTheme() {
   devTheme = {
     json: initialDevTheme,
     style: initialDevCSS,
@@ -115,8 +116,7 @@ export async function resetDeveloperTheme() {
 const updateDevTheme = debounce((x) => {
   devTheme = x;
   enableDeveloperTheme();
-  console.log(devTheme)
-}, 1000);
+}, 100);
 
 let themeWindow: Window;
 let interval;
@@ -138,6 +138,16 @@ export async function openDevThemeEditor() {
       }
       if (data.type === 'edit') {
         updateDevTheme(data.theme);
+      }
+      if (data.type === 'action.reset') {
+        resetDeveloperTheme();
+        themeWindow.postMessage({
+          type: 'set-theme',
+          theme: devTheme
+        }, '*');
+      }
+      if (data.type === 'action.downloadZip') {
+        downloadDeveloperTheme();
       }
     })
     if(!interval) {

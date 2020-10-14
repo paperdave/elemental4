@@ -132,6 +132,10 @@ export async function storageLoad() {
   }
 }
 
+setInterval(() => {
+  processDayPassing();
+}, 12 * 60 * 60 * 1000);
+
 export async function storageSave() {
   await fs.writeJSON('data/meta.json', {
     elementCount,

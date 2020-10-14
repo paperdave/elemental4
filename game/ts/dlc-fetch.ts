@@ -60,7 +60,7 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
       return null;
     }
 
-    if (isBuiltIn || intendedType !== 'server' && !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Server, would you still like to add it?', 'Continue')) {
+    if (intendedType !== 'server' && (isBuiltIn || !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Server, would you still like to add it?', 'Continue'))) {
       return null;
     }
     
@@ -69,9 +69,6 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
     }
 
     await installServer(url, json);
-
-    // FIXME WE CANNOT RETURN json HERE
-    return intendedType === 'server' && json;
   } else if (json.type === 'elemental4:theme') {
     if(!(
       'format_version' in json &&
@@ -108,9 +105,18 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
       json.version = version;
     }
 
-    await installTheme(json, isBuiltIn);
-
-    // FIXME WE CANNOT RETURN json HERE
-    return intendedType === 'theme' && json;
+    await installTheme(json, true);
+  } else if (json.type === 'pack') {
+    if (isBuiltIn) {
+      return null;
+    }
+    await asyncAlert('Error Adding DLC', 'Singleplayer mode has not been added yet.');
+    return null;
+  } else {
+    if (isBuiltIn) {
+      return null;
+    }
+    await asyncAlert('Error Adding DLC', 'Don\'t know how to add server type "' + json.type + '"');
+    return null;
   }
 }

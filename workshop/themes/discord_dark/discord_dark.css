@@ -14,6 +14,7 @@
 }
 
 .settings-category {background-color:#2C2F33;}
+.element-sidebar {background-color:#2C2F33;}
 
 .color-btn,
 .suggest-content,
@@ -22,37 +23,37 @@
 }
 
 button {
-  border: 1px solid #aaaaaa;
-  background: #222222;
+  border: 1px solid #23272A;
+  background-color: #222222;
   color: white;
 }
 button:not([disabled]):hover {
-  background: #753506;
+  background-color: #753506;
 }
 button:not([disabled]):active {
-  background: rgb(194, 73, 29);
+  background-color: rgb(194, 73, 29);
 }
 button[disabled] {
-  border: 1px solid #999;
-  background: #555;
+  border: 1px solid #23272A;
+  background-color: #555;
   color: #888;
 }
 input[type="range"] {
-  background: #888;
+  background-color: #888;
 }
 
 ::-webkit-scrollbar {
-  background: var(--background-element-game);
+  background-color: var(--background-element-game);
 }
 ::-webkit-scrollbar-thumb {
-  background: #999999;
+  background-color: #1c2022;
   border: 2px solid var(--background-element-game);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A8A8A8;
+  background-color: #1c2022;
 }
 ::-webkit-scrollbar-thumb:active {
-  background: #CCCCCC;
+  background-color: #1c2022;
 }
 
 ::-webkit-scrollbar-button:vertical:decrement {
@@ -73,10 +74,10 @@ input[type="range"] {
   height: 15px;
 }
 ::-webkit-scrollbar-button:hover {
-  background-color: #666666;
+  background-color: #1c2022;
 }
 ::-webkit-scrollbar-button:active {
-  background-color: #CCCCCC;
+  background-color: #1c2022;
 }
 ::-webkit-scrollbar-corner {
   background-color: var(--background-element-game);

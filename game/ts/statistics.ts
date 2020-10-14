@@ -16,10 +16,10 @@ interface ClientStats {        // check = tracking setup in the game
   combinationsFailure: number; // √
   infoOpened: number;          // √
   hintsUsed: number;           //
-  suggestionsSent: number;     //
-  suggestionsVoted: number;    //
-  suggestionsDownvoted: number;//
-  suggestionsCreated: number;  //
+  suggestionsSent: number;     // √
+  suggestionsVoted: number;    // √
+  suggestionsDownvoted: number;// √
+  suggestionsCreated: number;  // √
 }
 type ClientStatName = keyof ClientStats
 

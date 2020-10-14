@@ -1,7 +1,14 @@
 import { delay, escapeHTML } from "../../shared/shared";
 import { Emitter } from '@reverse/emitter';
+import { playSound } from "./audio";
 
 export async function animateDialogOpen(root: HTMLElement) {
+  if (document.hasFocus()) {
+    playSound('dialog.open');
+  } else {
+    window.focus()
+    playSound('dialog.attention');
+  }
   root.classList.add('dialog-open');
   root.classList.add('dialog-opening');
   (root.firstElementChild as HTMLElement)?.focus()
@@ -10,6 +17,7 @@ export async function animateDialogOpen(root: HTMLElement) {
 }
 
 export async function animateDialogClose(root: HTMLElement) {
+  playSound('dialog.open');
   root.classList.add('dialog-closing');
   await delay(200);
   root.classList.remove('dialog-closing');

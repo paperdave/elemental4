@@ -415,7 +415,7 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
   background-image: url(/no-element.svg);
   background-size: cover;
 }
-.config-animations .elem.restock {
+.elem.restock {
   animation: element-restock 0.65s cubic-bezier(.29,.25,.09,1) 0.25s both;
 }
 .elem.ghost { opacity: 0.5; }
@@ -445,13 +445,13 @@ textarea.elem {
   resize: none;
   outline: none!important;
 }
-.config-animations .drop .elem.held {
+.drop .elem.held {
   animation: element-drop 0.6s cubic-bezier(.2,.01,1,.44) both, fade-out linear 0.5s both;
 }
-.config-animations .elem.held {
+.elem.held {
   animation: element-grab-x 0.2s cubic-bezier(.13,.03,.22,1) both;
 }
-.config-animations .combine .elem {
+.combine .elem {
   animation: element-combine-x 0.28s cubic-bezier(.5,.5,.5,1) both;
 }
 .elem-held-wrapper, .elem-found-wrapper, .elem-error-wrapper {
@@ -461,31 +461,31 @@ textarea.elem {
   pointer-events: none;
   z-index: 99900;
 }
-.config-animations .elem-error-wrapper {
+.elem-error-wrapper {
   animation: error-wrapper 0.85s both;
 }
-.config-animations .elem-error-wrapper .elem {
+.elem-error-wrapper .elem {
   animation: error-shake 0.6s both;
 }
-.config-animations .elem-held-wrapper {
+.elem-held-wrapper {
   animation: element-grab-y 0.28s both;
 }
-.config-animations .elem-found-wrapper {
+.elem-found-wrapper {
   animation: element-found-move-y var(--calculated-animation-time) 0.25s both;
 }
-.config-animations .elem-found-wrapper .elem {
+.elem-found-wrapper .elem {
   animation: element-found-reveal 0.25s cubic-bezier(.45,1.07,1,.86), element-found-move-x var(--calculated-animation-time) 0.25s, element-found-shadow 1.5s both ease;
 }
-.config-animations .elem-found-wrapper.is-that-hardcoded-shit {
+.elem-found-wrapper.is-that-hardcoded-shit {
   animation: element-found-move-y-hardcoded var(--calculated-animation-time) 0.25s both;
 }
-.config-animations .elem-found-wrapper.is-that-hardcoded-shit .elem {
+.elem-found-wrapper.is-that-hardcoded-shit .elem {
   animation: element-found-reveal-hardcoded 0.25s cubic-bezier(.45,1.07,1,.86), element-found-move-x-hardcoded var(--calculated-animation-time) 0.25s, element-found-shadow 1.5s both ease;
 }
-.config-animations .elem-held-wrapper.combine {
+.elem-held-wrapper.combine {
   animation: element-combine-y 0.28s both;
 }
-.config-animations .elem.held::after { /* the hover color */
+.elem.held::after { /* the hover color */
   animation: element-grab-hover 0.1s linear both;
 }
 .dialog {
@@ -504,16 +504,16 @@ textarea.elem {
 .dialog-open {
   display: flex;
 }
-.config-animations .dialog-opening {
+.dialog-opening {
   animation: dialog-wrapper-open 0.15s linear both;
 }
-.config-animations .dialog-opening .dialog-content {
+.dialog-opening .dialog-content {
   animation: dialog-open 0.1s both ease-out, fade-in 0.1s linear both;
 }
-.config-animations .dialog-closing {
+.dialog-closing {
   animation: dialog-wrapper-open 0.15s linear both reverse;
 }
-.config-animations .dialog-closing .dialog-content {
+.dialog-closing .dialog-content {
   animation: dialog-open 0.1s both ease-out reverse, fade-in 0.1s linear both reverse;
 }
 .dialog-content {
@@ -627,10 +627,10 @@ textarea.elem {
   height: 400px;
   display: flex;
 }
-.config-animations .info.animate-in .info-container-wrapper {
+.info.animate-in .info-container-wrapper {
   animation: info-animate 0.35s cubic-bezier(.65,0,0,1);
 }
-.config-animations .info.animate-in .info-bg {
+.info.animate-in .info-bg {
   animation: info-bg-container 0.35s cubic-bezier(.65,0,0,1);
 }
 .info-content {

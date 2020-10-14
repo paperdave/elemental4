@@ -1,0 +1,36 @@
+<title>Elemental 4 DLC Installer</title>
+<body style="font-family:sans-serif;padding:80px">
+<noscript>JavaScript Required</noscript></body>
+<script>
+  document.body.innerHTML = '<h1>Loading...</h1><p>Please wait.</p>';
+  let timer;
+  localStorage.singleton_time = Date.now();
+  const handler = (e) => {
+    if(e.key == "singleton_available"){
+      clearInterval(timer);
+      add(true)
+    }
+  };
+  window.addEventListener('storage', handler);
+  timer = setTimeout(() => {
+    add(false)
+  }, 500);
+  function add(running) {
+    window.addEventListener('storage', handler);
+    const params = new URLSearchParams(window.location.search)
+    const type = params.get('type');
+    const url = params.get('url');
+    if(!type || !url) {
+      document.body.innerHTML = '<h1>Incorrect usage.</h1> You must specify the url as <p><code>'+location.origin+'/install?type=[type]&url=[url]</code></p>';
+      return
+    }
+    if (running) {
+      localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: Date.now() }));
+      document.body.innerHTML = '<h1>Success</h1><p>The install request was sent to the running Elemental 4 instance.<br>You can now close this tab.</p>';
+    } else {
+      document.body.innerHTML = '<h1>Success</h1><p>Opening Elemental 4 to process the request.<br>Please wait</p>';
+      localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: Date.now() }));
+      location.href = '/'
+    }
+  }
+</script>

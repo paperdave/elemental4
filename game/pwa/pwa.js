@@ -1,3 +1,5 @@
+window.postMessage({ worker_version: 2 }, '*');
+
 var cacheName = 'ELEMENTAL';
 var contentToCache = [
   '/',
@@ -12,6 +14,7 @@ var contentToCache = [
 ];
 
 self.addEventListener('install', (e) => {
+  e.
   e.waitUntil(
     caches.open(cacheName).then((cache) => {
       const v = new URL(location).searchParams.get('v');

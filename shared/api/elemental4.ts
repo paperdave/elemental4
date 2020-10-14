@@ -351,6 +351,13 @@ export class Elemental4API
       }
 
       return { suggestType: 'vote', newElements: r.newElement ? [r.newElement] : null };
+    } else if (r.result === 'internal-error') {
+      await this.ui.alert({
+        title: 'Server Error',
+        text: 'An error occured during loading',
+      });
+
+      return { suggestType: 'failed'  };
     }
   }
 
