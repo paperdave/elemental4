@@ -1,4 +1,4 @@
-window.postMessage({ worker_version: 2 }, '*');
+self.postMessage({ worker_version: 2 }, '*');
 
 var cacheName = 'ELEMENTAL';
 var contentToCache = [
