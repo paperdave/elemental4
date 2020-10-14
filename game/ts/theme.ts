@@ -56,8 +56,8 @@ export interface ThemeEntry extends Partial<Theme> {
   description: string,
   icon: string;
   sketch?: string;
-  sound_merge_mode: 'merge' | 'override';
-  music_merge_mode: 'merge' | 'override';
+  sound_merge_mode?: 'merge' | 'override';
+  music_merge_mode?: 'merge' | 'override';
 }
 const builtin_theme_urls: [string, string, number][] = [
   ['elem4_default', '/themes/elem4_default', 2],

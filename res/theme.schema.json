@@ -120,5 +120,10 @@
         "hot-pink": { "$ref": "#/definitions/color" }
       }
     }
+  },
+  "sketch": {
+    "title": "P5.js Sketch",
+    "description": "Theme Sketch. Rendered with p5.js on the element game background. URL is resolved from this file, so it can be relative.",
+    "type": "string"
   }
 }

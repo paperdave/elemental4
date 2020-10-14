@@ -101,7 +101,7 @@
   <script>
     require.config({ paths: { vs: '/monaco-editor/min/vs' } });
 
-    require(['vs/editor/editor.main'], function () {
+    require(['vs/editor/editor.main'], async function () {
       const jsonModel = monaco.editor.createModel(
         '',
         'json',
@@ -117,6 +117,14 @@
         'javascript',
         monaco.Uri.parse(`file:///pack/sketch.js`)
       );
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+          validate: true,
+          schemas: [{
+              uri: "https://elemental4.net/theme.schema.json", // id of the first schema
+              fileMatch: [monaco.Uri.parse("file:///pack/elemental.json").toString()], // associate with our model
+              schema: await fetch('/theme.schema.json').then(x => x.json())
+          }]
+      });
       var editor = monaco.editor.create(document.getElementById('editor'), {
         model: jsonModel
       });
