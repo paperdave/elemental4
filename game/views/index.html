@@ -139,6 +139,7 @@
       border: 1px solid #F8571C;
       border-radius: 4px;
       overflow: hidden;
+      z-index: 9999999;
     }
     #suggest{
       transform: translateY(100%);
@@ -158,7 +159,7 @@
   </style>
 </head>
 <body>
-  <script>window.localStorage&&localStorage.cache&&document.body.classList.add('launching')</script>
+  <script>window.localStorage&&(localStorage.auto_start)&&document.body.classList.add('launching')</script>
   <section id='CONTENT'>
     <h1>
       <svg width="450" viewBox="0 0 320 66" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Elemental 4">
@@ -204,8 +205,7 @@
     supported&&(() => {
       let launch = document.querySelector("#launch"); 
       let head = document.querySelector('head');
-      let gameHTML;
-      let autoStart = !!localStorage.cache;
+      let autoStart = !!(localStorage.auto_start);
       let cache = localStorage.cache || 'resolve';
 
       function link(uri) {
@@ -224,7 +224,7 @@
           Promise.all([
             new Promise(async function(d, e){
               if(cache === 'resolve') {
-                cache = (await fetch('/version').then(x => x.text())) + '-' + Math.random().toFixed(6).substr(2);
+                localStorage.cache = cache = (await fetch('/version').then(x => x.text())) + '-' + Math.random().toFixed(6).substr(2);
               }
               // fetch the elemental resources
               var script = document.createElement('script');
@@ -234,14 +234,8 @@
               head.appendChild(script);
             }),
             link("/font.css"),
-            fetch("/game.html").then((x) => {
-              if(x.status !== 200) throw 'game.html not found!';
-              else return x.text()
-            }).then((text) => {
-              gameHTML = text;
-            }),
             new Promise((done) => {
-              if(localStorage.getItem('clear_idb')) {
+              if(localStorage.getItem('clear_idb') || parseInt(localStorage.getItem('singleton_time')) < 1602808366796) {
                 const req = indexedDB.deleteDatabase('ELEMENTAL');
                 req.onsuccess = done;
                 req.onerror = done;
@@ -304,8 +298,8 @@
         // wait for stuff to load
         function start() {
           launch.innerHTML = "Play Game";
-          var GAME = document.getElementById('GAME');
-          GAME.innerHTML = gameHTML;
+
+          localStorage.setItem('auto_start', 'true');
 
           $elemental4(autoStart ? { cache } : {
             cache,

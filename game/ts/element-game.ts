@@ -325,7 +325,6 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
   });
 
   dom.addEventListener('contextmenu', (ev) => {
-    return
     incrementStatistic('infoOpened');
     
     infoContainer.classList.remove('animate-in');

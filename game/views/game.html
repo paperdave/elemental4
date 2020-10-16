@@ -46,7 +46,7 @@
   <div class="info-bg"></div>
   <div class="info-container-wrapper">
     <div class="info-container">
-      <div class="elem" data-element-info="$.display"></div>
+      <div class="elem" data-element-info="$.display.text"></div>
       <div class="info-content">
         <h3>Element #<span data-element-info='$.id'></span></h3>
         <p>
@@ -75,23 +75,23 @@
       <div class="settings-category selected" data-action='general'>
         General
       </div>
-      <div class="settings-category" data-action='input'>
+      <!-- <div class="settings-category" data-action='input'>
         Keyboard
-      </div>
+      </div> -->
       <div class="settings-category" data-action='theme'>
         Themes
       </div>
       <div class="settings-category" data-action='server'>
         Server
       </div>
-      <div class="settings-category" data-action='singleplayer'>
+      <!-- <div class="settings-category" data-action='singleplayer'>
         Singleplayer Packs
-      </div>
+      </div> -->
       <div class="settings-category" data-action='stats'>
         Statistics
       </div>
       <div class="settings-category" data-action='save'>
-        Reset Data
+        Storage
       </div>
       <div class="settings-category" data-action='about'>
         About
@@ -129,10 +129,10 @@
         <input type="checkbox" id='play-startup-sound'> <label for="play-startup-sound">Play Startup Sound</label>
       </div>
       <div>
-        <input type="checkbox" id='play-notification-sound'> <label for="play-startup-sound">Play Notification Sounds</label>
+        <input type="checkbox" id='play-notification-sound'> <label for="play-notification-sound">Play Notification Sounds</label>
       </div>
       <div>
-        <input type="checkbox" id='play-news-sound'> <label for="play-startup-sound">Play New Element Sound</label>
+        <input type="checkbox" id='play-news-sound'> <label for="play-news-sound">Play New Element Sound</label>
       </div>
       <br>
       <table>
@@ -145,20 +145,6 @@
           <td><input class='volume-slider' min='0' max='100' value='100' id='volume-music-slider' type="range" data-volume-slider='music'> <span data-volume-display='music'>100%</span></td>
         </tr>
       </table>
-      <h2>Storage</h2>
-      <p>
-        Using <strong id='storage-quota-used'></strong> (browser will allow <strong id='storage-quota-total'></strong>) device storage for Elemental 4.
-      </p>
-      <div id='storage-no-breakdown'>
-        <p>
-          This browser does not support showing storage usage breakdown.
-        </p>
-      </div>
-      <div id='storage-yes-breakdown'>
-        <div id='storage-bar'>
-          
-        </div>
-      </div>
     </div>
     <div class="settings-content settings-theme" data-settings='theme'>
       <div class="theme-header">
@@ -209,7 +195,7 @@
             Add
           </button>
           <button id='server-remove'>
-            Edit
+            Remove Current
           </button>
         </div>
         <div>
@@ -226,6 +212,24 @@
       <hr>
     </div>
     <div class="settings-content settings-save" data-settings='save'>
+      <h2>Storage</h2>
+      <p>
+        Using <strong id='storage-quota-used'></strong> (browser will allow <strong id='storage-quota-total'></strong>) device storage for Elemental 4.
+      </p>
+      <div id='storage-no-breakdown'>
+        <p>
+          This browser does not support showing storage usage breakdown.
+        </p>
+      </div>
+      <div id='storage-yes-breakdown'>
+        <table id='storage-breakdown'>
+          
+        </table>
+        <div id='storage-bar'>
+          
+        </div>
+      </div>
+      <h2>Reset</h2>
       <p class="warning-text">
         <strong>WARNING</strong>: These options all delete parts of saved data on this device, so be careful. They all have confirmation popups, so you don't have to be <em>that</em> scared.
       </p>
@@ -234,9 +238,6 @@
       </div>
       <div class="button-container">
         <button data-reset-button='themes'>Clear Saved Themes</button>
-      </div>
-      <div class="button-container">
-        <button data-reset-button='elements'>Clear Element Progress</button>
       </div>
       <div class="button-container">
         <button data-reset-button='all'>Clear <strong>All Local Device Data</strong></button>

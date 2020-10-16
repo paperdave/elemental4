@@ -60,7 +60,7 @@ export function escapeHTML(html: string): string {
         .replace(/'/g, '&#x27;');
 }
 export function sortCombo(...x: string[]) {
-    return x.sort();
+    return x.map((y) => parseInt(y) || y).sort().map(x => x.toString());
 }
 export function randomString(length: number, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
     var result = '';

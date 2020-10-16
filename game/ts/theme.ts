@@ -174,7 +174,6 @@ export function increaseThemePriority(id) {
   themesEnabled[index] = old;
 }
 export async function installTheme(theme: ThemeEntry, switchTo: boolean) {
-  console.log('new theme', theme)
   await installThemes(theme);
   themes = await getInstalledThemes();
   if (switchTo && init) {
@@ -226,6 +225,7 @@ export async function MountThemeCSS() {
       return addDLCByUrl(x[1], 'theme', true);
     })
   );
+  await delay(100)
   init = true;
   updateMountedCss();
 
@@ -234,7 +234,7 @@ export async function MountThemeCSS() {
     localStorage.removeItem('workshop_add');
     if (obj && obj.url && obj.type) {
       if(await asyncConfirm('Add ' + capitalize(obj.type) + '?', `You are about to install DLC from ${obj.url}, make sure you trust the content you are installing.`, 'Add DLC')) {
-        addDLCByUrl(obj.url, obj.type);
+        await addDLCByUrl(obj.url, obj.type);
       }
     }
   } catch (error) {

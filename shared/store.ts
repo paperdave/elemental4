@@ -3,10 +3,22 @@
 
 import { createInstance } from "localforage";
 
-export class Store {
+
+export abstract class IStore {
+  abstract get(key: string): Promise<any>;
+  abstract set(key: string, item: any);
+  abstract del(key: string);
+  abstract keys();
+  abstract length();
+  abstract clear();
+  abstract bulkTransfer(x: () => Promise<void>);
+}
+
+export class Store extends IStore {
   private localForage: LocalForage;
 
   constructor(storeName: string) {
+    super();
     this.localForage = createInstance({
       name: 'ELEMENTAL',
       storeName: storeName,
@@ -30,5 +42,8 @@ export class Store {
   }
   clear() {
     return this.localForage.clear();
+  }
+  bulkTransfer(x: () => Promise<void>) {
+    return x();
   }
 }

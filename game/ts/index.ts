@@ -15,6 +15,8 @@ declare const $production: string;
 declare const $build_date: string;
 declare const $password: string;
 
+const cacheName = 'ELEMENTAL';
+
 export let OFFLINE = false;
 
 type MenuAPI = {
@@ -38,7 +40,7 @@ async function boot(MenuAPI: MenuAPI) {
     }
     await caches.delete('ELEMENTAL')
   }
-
+  
   ui.status('Checking Updates', 0);
 
   // check for updates
@@ -46,20 +48,25 @@ async function boot(MenuAPI: MenuAPI) {
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== pkg.version) {
       await resetBuiltInThemes();
-      const cache = latestVersion + '-' + Math.random().toFixed(6).substr(2);
-      const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cache));
+      const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
+      const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
       progress.on('progress', ({ percent, current, total }) => {
         ui.status(`Updating Client`, percent);
       });
       progress.on('done', async(text) => {
-        localStorage.cache = cache;
+        localStorage.cache = cacheKey;
         
+        if (await caches.has(cacheName)) {
+          caches.delete(cacheName);
+        }
+
         eval(text);
 
         // pass the current menu api / ui.
         window['$elemental4']({
           ...MenuAPI,
           ...ui,
+          cache: cacheKey,
           upgraded: pkg.version
         });
       })
@@ -70,7 +77,39 @@ async function boot(MenuAPI: MenuAPI) {
     console.log("Could not check version, offline mode enabled");
   }
 
+  if('serviceWorker' in navigator) {
+    ui.status('Registering Service', 0);
+    const registration = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+
+    ui.status('Caching Game Files', 0);
+
+    const cache = await caches.open(cacheName)
+    await cache.addAll([
+      '/',
+      '/logo.svg',
+      '/air.svg',
+      '/earth.svg',
+      '/fire.svg',
+      '/water.svg',
+      '/logo-workshop.svg',
+      '/no-element.svg',
+      '/game',
+      '/font.css',
+      '/icon/maskable.png',
+      '/icon/normal.png',
+      '/theme.schema.json',
+      '/p5_background',
+      '/theme_editor',
+      '/p5.min.js',
+      '/manifest.json',
+      '/elemental.js?v=' + MenuAPI.cache
+    ]);
+  } 
+
   ui.status('Loading Game', 0);
+
+  const gameRoot = document.getElementById('GAME');
+  gameRoot.innerHTML = await fetch('/game').then((x) => x.text());
 
   if (!$production) {
     require("./globals").exposeGlobals();
@@ -88,8 +127,8 @@ async function boot(MenuAPI: MenuAPI) {
   await InitSettings();
   await loadSounds();
   await InitElementGameUi();
-  
-  // i dont want people just getting in super ez, so this should do the trick.
+
+  // i don't want people just getting in super ez, so this should do the trick.
   if ($password) {
     const entry = await asyncPrompt('Password Required for Beta', 'To enter in the beta, you need to know the Password.', '');
 
@@ -98,12 +137,6 @@ async function boot(MenuAPI: MenuAPI) {
       return
     }
   }
-
-  if('serviceWorker' in navigator && $production) {
-    ui.status('Registering Service', 0);
-
-    await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
-  } 
 
   ui.status(OFFLINE ? 'Loading Game' : 'Connecting to Game', 0);
 

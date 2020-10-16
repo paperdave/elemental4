@@ -1,5 +1,7 @@
 import Color from "color";
 import { DynamicColor } from "./elemental4-types";
+import { IStore, Store } from "./store";
+import { ChunkedStore } from "./store-chunk";
 
 export type ElementalColorPalette
   = 'white'
@@ -82,7 +84,7 @@ export interface Elem {
     /** Creator display names. */
     creators?: string[];
     /** Comments to be displayed on the info panel. This is where pioneer marks would go. */
-    comments?: string[];
+    comments?: ({ author?: string, comment: string })[];
     /** Fundamental counts */
     fundamentals?: {
       /** How many waters went into this */
@@ -101,7 +103,7 @@ export interface Elem {
     /** amount of elements this element plays a part in */
     usageCount?: number;
     /** list of each recipe */
-    usageList?: string[][];
+    usageList?: ({ recipe: string[], result: string[] })[];
     /** amount of recipes this element can be made by */
     recipeCount?: number;
     /** list of each recipe */
@@ -164,6 +166,7 @@ interface ElementalBaseAPIParams<Config extends ElementalConfig = ElementalConfi
   saveFile: SaveFileAPI;
   config: Config;
   ui: ElementalRuntimeUI;
+  store: IStore;
 }
 
 export interface ElementalRules {
@@ -192,8 +195,9 @@ export abstract class ElementalBaseAPI<Config extends ElementalConfig = Elementa
   static type: string = 'unknown';
   
   public baseUrl: string;
+  public config: Config;
+  protected store: IStore;
   protected saveFile: SaveFileAPI;
-  protected config: Config;
   protected ui: ElementalRuntimeUI;
 
   protected rules?: Partial<ElementalRules>;
@@ -207,11 +211,12 @@ export abstract class ElementalBaseAPI<Config extends ElementalConfig = Elementa
     };
   }
 
-  constructor({baseUrl, saveFile, config, ui}: ElementalBaseAPIParams<Config>) {
+  constructor({baseUrl, saveFile, config, ui, store}: ElementalBaseAPIParams<Config>) {
     this.baseUrl = baseUrl
     this.saveFile = saveFile;
     this.config = config;
     this.ui = ui;
+    this.store = store;
   }
   
   /** Called to setup everything. */

@@ -1,7 +1,10 @@
 import { ElementalBaseAPI, SaveFileAPI, getSubAPI, ServerSavefileEntry } from '../../shared/elem';
 import { debounce } from '@reverse/debounce';
 import { Store } from '../../shared/store';
+import localForage from 'localforage';
 import { escapeHTML } from '../../shared/shared';
+import { connectApi } from './api';
+import { builtInServers } from './server-manager';
 
 const data = new Store('data');
 const themes = new Store('theme_data');
@@ -32,10 +35,10 @@ export async function getInstalledServers() {
   return (await data.get('servers'))|| [];
 }
 export async function installServer(baseUrl: string, config: any) {
-  console.log('Install Server', baseUrl)
   baseUrl = removeUrlSuffix(baseUrl);
   const servers = (await data.get('servers') || []) as any;
   const f = servers.find(x => x.baseUrl === baseUrl)
+  const name = config && config.name;
   if(f) {
     f.config = config;
     f.name = config.name;
@@ -64,11 +67,30 @@ export async function getServer(baseUrl: string) {
 export async function uninstallServer(baseUrl: string) {
   baseUrl = removeUrlSuffix(baseUrl);
   const servers = (await data.get('servers') || []) as any;
+  const server = await getServer(baseUrl);
   await data.set('servers', servers.filter(x => x.baseUrl !== baseUrl));
+
+  await connectApi(builtInServers[0], null);
+
+  await data.del('config:' + processBaseUrl(baseUrl));
+  const ending = ':' + processBaseUrl(baseUrl);
+  await Promise.all((await data.keys()).map((key) => {
+    if(key.endsWith(ending)) return data.del(key);
+  }).filter(Boolean))
+
+  const opts = { name: 'ELEMENTAL', storeName: server.config.type + ':' + processBaseUrl(baseUrl) };
+  console.log(opts);
+  await localForage.createInstance({...opts}).dropInstance({...opts});
 }
 
-export function resetAllThemes() {
-  themes.clear();
+export async function resetAllThemes() {
+  await themes.clear();
+  const keys = await caches.keys()
+  await Promise.all(keys.map(function(key) {
+    if (key.startsWith('THEME.')) {
+      return caches.delete(key);
+    }
+  }));
 }
 export async function resetAllElements(api: ElementalBaseAPI) {
   const saveFileName = await getActiveSaveFile(api);

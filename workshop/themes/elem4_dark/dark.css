@@ -15,7 +15,8 @@
 
 .color-btn,
 .suggest-content,
-.dialog-content {
+.dialog-content,
+.inline-storage-icon {
   border-color: white;
 }
 
@@ -36,7 +37,7 @@ button[disabled], select[disabled], input[disabled] {
   color: #888;
 }
 input[type="range"] {
-  background-color: #888;
+  background-color: #555;
 }
 
 ::-webkit-scrollbar {

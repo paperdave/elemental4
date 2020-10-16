@@ -41,7 +41,6 @@ export async function loadSounds() {
 
     theme.sounds[key].forEach(({ url }) => {
       if (!loadedSounds.has(url)) {
-        console.log('Load URL', url)
         loadedSounds.set(url, new Howl({
           src: url,
           preload: true,

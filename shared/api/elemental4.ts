@@ -1,11 +1,8 @@
-import {debounce} from '@reverse/debounce';
-import { CacheMap } from '../cache';
-import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ElementalRules, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OfflinePlayAPI } from "../elem";
+import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OfflinePlayAPI } from "../elem";
 import { E4SuggestionResponse, Entry } from '../elemental4-types';
 import { fetchWithProgress } from '../fetch-progress';
-import { delay, randomString } from '../shared';
+import { randomString, sortCombo } from '../shared';
 import Color from 'color';
-import { Store } from '../store';
 import { SimpleEmitter } from '@reverse/emitter';
 import io from 'socket.io-client';
 import { ChunkedStore } from '../store-chunk';
@@ -32,9 +29,8 @@ export class Elemental4API
              RecentCombinationsAPI,
              OfflinePlayAPI {
   static type = 'elemental4';
-  private static DB_VERSION = 1;
+  private static DB_VERSION = 2;
 
-  private elementStore: ChunkedStore;
   private dbMeta: DBMeta;
 
   private waitNewComboEmitter = new SimpleEmitter();
@@ -42,6 +38,31 @@ export class Elemental4API
 
   private socket: SocketIOClient.Socket;
 
+  private async calculateFundamentals(eLeftI: string | Elem, eRightI: string | Elem, eResultI: string | Elem) {
+    const eLeft = typeof eLeftI === 'string' ? await this.getElement(eLeftI) : eLeftI;
+    const eRight = typeof eRightI === 'string' ? await this.getElement(eRightI) : eRightI;
+    const eResult = typeof eResultI === 'string' ? await this.getElement(eResultI) : eResultI;
+    
+    const complexity = Math.max(eLeft.stats.treeComplexity, eRight.stats.treeComplexity) + 1;
+    if (complexity < eResult.stats.treeComplexity || eResult.stats.treeComplexity === 1) {
+      eResult.stats.treeComplexity = complexity;
+      eResult.stats.simplestRecipe = sortCombo(eLeft.id, eRight.id);
+      eResult.stats.fundamentals = {
+        air: eLeft.stats.fundamentals.air + eRight.stats.fundamentals.air,
+        fire: eLeft.stats.fundamentals.fire + eRight.stats.fundamentals.fire,
+        water: eLeft.stats.fundamentals.water + eRight.stats.fundamentals.water,
+        earth: eLeft.stats.fundamentals.earth + eRight.stats.fundamentals.earth,
+      };
+      const list = eResult.stats.usageList;
+      
+      await this.store.set(eResult.id, eResult);
+      
+      for (let i = 0; i < list.length; i++) {
+        const recipe = list[i];
+        await this.calculateFundamentals(recipe.recipe[0], recipe.recipe[1], recipe.result[0]);
+      }
+    }
+  }
   private processEntry = createQueueExec(async(entry: Entry) => {
     if (entry.entry <= this.dbMeta.lastEntry) {
       return;
@@ -52,7 +73,7 @@ export class Elemental4API
       return;
     }
     if(entry.type === 'element') {
-      await this.elementStore.set(entry.id, {
+      await this.store.set(entry.id, {
         id: entry.id,
         display: {
           categoryName: entry.color.base,
@@ -73,7 +94,7 @@ export class Elemental4API
           recipeList: [],
           usageCount: 0,
           usageList: [],
-          treeComplexity: 0,
+          treeComplexity: 1,
           simplestRecipe: null
         }
       } as Elem);
@@ -102,18 +123,42 @@ export class Elemental4API
       if (this.dbMeta.recentCombos.length > 35) {
         this.dbMeta.recentCombos.pop();
       }
+
+      const recipe = entry.recipe.split('+') as [string, string];
+      
       this.dbMeta.recentCombos.unshift({
-        recipe: entry.recipe.split('+') as [string, string],
+        recipe: recipe,
         result: entry.result
       })
-      await this.elementStore.set(entry.recipe, entry.result);
+      await this.store.set(entry.recipe, entry.result);
       await this.saveFile.set('meta', this.dbMeta);
       this.waitNewComboEmitter.emit();
-      // TODO Calculate Stats LUL
+      
+      const eResult = await this.getElement(entry.result);
+      eResult.stats.recipeCount++;
+      eResult.stats.recipeList.push(recipe);
+
+      const eLeft = await this.getElement(recipe[0]);
+      
+      eLeft.stats.usageCount++;
+      eLeft.stats.usageList.push({ recipe, result: [entry.result] });
+
+      let eRight = eLeft;
+      if (recipe[0] !== recipe[1]) {
+        eRight = await this.getElement(recipe[1]);
+        eRight.stats.usageCount++;
+        eRight.stats.usageList.push({ recipe, result: [entry.result] });
+        this.store.set(eRight.id, eRight);
+      }
+
+      this.store.set(eLeft.id, eLeft);
+      this.store.set(eResult.id, eResult);
+
+      await this.calculateFundamentals(eLeft, eRight, eResult);
     } else if(entry.type === 'comment') {
-      const x = await this.elementStore.get(entry.id);
+      const x = await this.store.get(entry.id);
       x.stats.comments.push(entry.comment);
-      await this.elementStore.set(entry.id, x);
+      await this.store.set(entry.id, x);
     }
     this.dbMeta.lastEntry = entry.entry;
     this.waitNewEntryEmitter.emit(entry)
@@ -137,8 +182,6 @@ export class Elemental4API
       this.saveFile.set('clientName', '[Ask on Element Suggestion]');
     }
 
-    this.elementStore = new ChunkedStore('elemental4:' + this.baseUrl);
-    
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
@@ -159,7 +202,7 @@ export class Elemental4API
       ui?.status('Updating Database');
 
       if(dbFetch === 'full') {
-        this.elementStore.clear();
+        this.store.clear();
         this.dbMeta = {
           lastEntry: 0,
           lastUpdated: Date.now(),
@@ -169,7 +212,7 @@ export class Elemental4API
       }
 
       if (dbFetch !== 'none') {
-        await this.elementStore.bulkTransfer(() => new Promise(async(done) => {
+        await this.store.bulkTransfer(() => new Promise(async(done) => {
           const endpoint = dbFetch === 'full'
             ? '/api/v1/db/all'
             : dbFetch === 'today'
@@ -182,8 +225,6 @@ export class Elemental4API
           let processProgress = 0;
           let totalEntryCount = parseInt(f.headers.get('Elem4-Entry-Length'));
   
-          console.log('Fetching ' + totalEntryCount + ' new entries.')
-          
           progress.on('progress', ({ percent, current, total }) => {
             downloadProgress = percent;
             ui?.status('Updating Database', (downloadProgress + processProgress) / 2);
@@ -248,14 +289,14 @@ export class Elemental4API
   }
   async getStats(): Promise<ServerStats> {
     return {
-      totalElements: await this.elementStore.length()
+      totalElements: await this.store.length()
     }
   }
   async getElement(id: string): Promise<Elem> {
-    return await this.elementStore.get(id) || null;
+    return await this.store.get(id) || null;
   }
   async getCombo(ids: string[]): Promise<string[]> {
-    const str = await this.elementStore.get(ids.join('+')) as string;
+    const str = await this.store.get(ids.join('+')) as string;
     return str ? [str] : [];
   }
   async getStartingInventory(): Promise<string[]> {
@@ -288,7 +329,7 @@ export class Elemental4API
     if (clientName === '[Ask on Element Suggestion]') {
       const name = await this.ui.prompt({
         title: 'Choose a Screen Name',
-        text: 'When suggesting elements, your name can appear on them. Enter a name, or enter nothing to be anonymously credited.',
+        text: 'When suggesting elements, your name can appear on them. Enter a name, or enter nothing to be anonymously credited. This can be changed at any time in Settings -> Server.',
         confirmButton: 'Choose Name',
         cancelButton: null,
       });

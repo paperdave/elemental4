@@ -175,7 +175,6 @@
       let parent
       window.addEventListener('message', (obj) => {
         const data = obj.data;
-        console.log(data);
         if(data.type === 'ping' && !hasInit) {
           parent = obj.currentTarget;
           parent.postMessage({ type: 'ready' }, '*')

@@ -9,8 +9,11 @@ import { SingleplayerAPI } from "./api-singleplayer";
 import { asyncAlert, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi, InitElementNews } from "./element-game";
 import { createLoadingUi } from "./loading";
-import { canCreateSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, setActiveSaveFile } from "./savefile";
+import { canCreateSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
 import { endStatistics, startStatistics } from "./statistics";
+import { RebornElementalAPI } from "../../shared/api/reborn";
+import { builtInServers } from "./server-manager";
+import { ChunkedStore } from "../../shared/store-chunk";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -20,6 +23,7 @@ class IHateTypescript extends ElementalBaseAPI {
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'internal:all-colors': DebugAllColorsAPI,
   'internal:singleplayer': SingleplayerAPI,
+  'reborn': RebornElementalAPI,
   'elemental4': Elemental4API,
   'e4': LedomElementalAPI,
   'elemental5': Elemental5API,
@@ -39,6 +43,8 @@ export async function getSupportedServerTypes() {
 }
 
 export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: ElementalLoadingUi) {
+  baseUrl = baseUrl.replace(/\/(elemental\.json)?$/, '');
+  
   let selfMadeUi = false;
   if(!ui) {
     ui = createLoadingUi();
@@ -63,7 +69,8 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
         confirm: (o) => asyncConfirm(o.title, o.text, o.trueButton, o.falseButton),
         prompt: (o) => asyncPrompt(o.title, o.text, o.defaultText, o.confirmButton, o.cancelButton),
         popup: (o) => Promise.resolve(null),
-      }
+      },
+      store: new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
     });
     let isOpen;
     if (OFFLINE) {
@@ -94,13 +101,19 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     ClearElementGameUi();
     currentAPI = api;
 
-    document.querySelector('#server-name').innerHTML = '<b>Server:</b> ' + escapeHTML(`${json.name || "Untitled Server"} — ${baseUrl}`);
+    document.querySelector('#server-name').innerHTML = '<b>Server:</b> ' + escapeHTML(`${json.name || `Untitled Server (type=${json.type})`} — ${baseUrl}`);
     document.querySelector('#server-title').innerHTML = escapeHTML(json.name || `Unnamed Server (type=${json.type})`);
     document.querySelector('#server-description').innerHTML = escapeHTML(json.description || `[No description provided]`);
     if (json.icon) {
       document.querySelector('#server-icon').setAttribute('style', `background-image:url(${json.icon});background-size:cover;`)
     } else {
-      document.querySelector('#server-icon').setAttribute('style', ``)
+      document.querySelector('#server-icon').setAttribute('style', `background-color:#888;`)
+    }
+
+    if (builtInServers.includes(baseUrl)) {
+      document.querySelector('#server-remove').setAttribute('disabled', 'true');
+    } else {
+      document.querySelector('#server-remove').removeAttribute('disabled');
     }
 
     await InitElementNews();

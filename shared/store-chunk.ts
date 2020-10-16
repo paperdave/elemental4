@@ -1,8 +1,7 @@
-import { debounce } from "@reverse/debounce";
 import { createJoinedQueue } from "./async-queue-exec";
 import { CacheMap } from "./cache";
 import { delay } from "./shared";
-import { Store } from "./store";
+import { Store, IStore } from "./store";
 
 function getGroupId(s: string) {
   for(var i = 0, h = 0; i < s.length; i++)
@@ -10,7 +9,7 @@ function getGroupId(s: string) {
   return (Math.abs(h) % 256).toString(16);
 }
 
-export class ChunkedStore {
+export class ChunkedStore extends IStore {
   private store: Store;
   private dbCache = new CacheMap<string, Record<string, any>>({ ttl: 5, checkTime: 60 });
   private dbWritingPaused: boolean = false;
@@ -18,7 +17,8 @@ export class ChunkedStore {
   private entryWriteCounter: number = 0;
 
   constructor(storeName: string) {
-    this.store = new Store(storeName);
+    super();
+    this.store = new Store(storeName)
   }
   
   async bulkTransfer(cb: () => Promise<void>) {

@@ -1,25 +1,26 @@
 import { asyncAlert, asyncConfirm } from "./dialog";
 import { installTheme, ThemeEntry } from "./theme";
-import { getSupportedServerTypes } from './api';
+import { connectApi, getSupportedServerTypes } from './api';
 import { resolve } from 'url';
 import { version } from "../../package.json";
 import { installServer } from "./savefile";
 import { capitalize } from "@reverse/string";
 import { THEME_VERSION } from "./theme-version";
+import { delay } from "../../shared/shared";
 
 export type DLCType = 'theme' | 'pack' | 'server';
 
 const corsAnywhereBaseUrl = 'https://cors-anywhere.herokuapp.com/';
 async function fetchCorsAnywhere(url: string, options?: RequestInit) {
   try {
-    return await fetch(url, options);
+    return { cors: true, response: await fetch(url, options) };
   } catch (error) {
-    return await fetch(corsAnywhereBaseUrl + url, options);
+    return { cors: false, response: await fetch(corsAnywhereBaseUrl + url, options) };
   }
 }
 
 export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn = false): Promise<ThemeEntry | object | null> {
-  let json
+  let json, cors
   try {
     json = JSON.parse(url);
     url = location.origin + '/'
@@ -28,7 +29,9 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
       url += (url.endsWith('/') ? '' : '/') + 'elemental.json';
     }
     try {
-      json = await fetchCorsAnywhere(url).then(x => x.json());
+      const x = await fetchCorsAnywhere(url).then(async(x) => ({ cors: x.cors, response: await x.response.json() }));
+      json = x.response;
+      cors = x.cors;
     } catch (error) {
       if (isBuiltIn) {
         return null;
@@ -63,12 +66,19 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
     if (intendedType !== 'server' && (isBuiltIn || !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Server, would you still like to add it?', 'Continue'))) {
       return null;
     }
+    if (!cors) {
+      if(!isBuiltIn) await asyncAlert('Error Adding Server', 'This server does not have CORS Headers. Elemental 4 is not allowed to communicate with it.')
+      return null;
+    }
     
     if(json.icon) {
       json.icon = resolve(url, json.icon);
     }
 
-    await installServer(url, json);
+    await installServer(url.replace(/elemental\.json$/, ''), json);
+    if(!isBuiltIn) {
+      await connectApi(url.replace(/elemental\.json$/, ''), json);
+    }
   } else if (json.type === 'elemental4:theme') {
     if(!(
       'format_version' in json &&
@@ -92,12 +102,23 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
     if (json.format_version > THEME_VERSION && !await asyncConfirm('Incorrect Theme Version', 'This theme was made for an older version of Elemental 4, would you still like to use it.', 'Continue')) {
       return null;
     }
+
+    const themeCache = await caches.open('THEME.' + json.id);
     
     if(json.styles) {
-      json.styles = await fetchCorsAnywhere(resolve(url, json.styles)).then(x => x.text());
+      const styles = await fetchCorsAnywhere(resolve(url, json.styles)).then(x => x.response.text());
+      const styleURL = `/cache_data/${json.id}/style`;
+      await themeCache.put(
+        styleURL,
+        new Response(new Blob([styles], { type: 'text/css' }), { status: 200 })
+      );
+      json.styles = `@import "${styleURL}";`;
     }
     if(json.icon) {
-      json.icon = resolve(url, json.icon);
+      const icon = (await fetchCorsAnywhere(resolve(url, json.icon))).response;
+      const iconURL = `/cache_data/${json.id}/icon`;
+      await themeCache.put(iconURL, icon.clone());
+      json.icon = iconURL;
     }
 
     json.isBuiltIn = isBuiltIn;
