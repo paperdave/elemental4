@@ -10,6 +10,7 @@ import { addThemeToUI } from "./settings";
 import { THEME_VERSION } from "./theme-version";
 import { asyncConfirm } from "./dialog";
 import { capitalize } from "@reverse/string";
+import { reloadElementCssColors } from "./element-color";
 
 let init = false;
 
@@ -277,6 +278,7 @@ export async function updateMountedCss(animate = true) {
   document.head.appendChild(style);
   if (oldStyle) {
     oldStyle.remove();
+    reloadElementCssColors()
     if (animate) {
       await delay(20);
       swapOverlay.style.transitionDuration = '300ms';

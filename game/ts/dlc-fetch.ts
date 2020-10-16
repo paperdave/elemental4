@@ -6,7 +6,7 @@ import { version } from "../../package.json";
 import { installServer } from "./savefile";
 import { capitalize } from "@reverse/string";
 import { THEME_VERSION } from "./theme-version";
-import { delay } from "../../shared/shared";
+import { createLoadingUi } from "./loading";
 
 export type DLCType = 'theme' | 'pack' | 'server';
 
@@ -20,6 +20,18 @@ async function fetchCorsAnywhere(url: string, options?: RequestInit) {
 }
 
 export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn = false): Promise<ThemeEntry | object | null> {
+  let ui: ReturnType<typeof createLoadingUi>;
+  if (!isBuiltIn) {
+    ui = createLoadingUi();
+    ui.status('Adding DLC', 0);
+  }
+  const x = await addDLCByUrl2(url, intendedType, isBuiltIn);
+  if(ui) {
+    ui.dispose();
+  }
+  return x;
+}
+async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = false): Promise<ThemeEntry | object | null> {
   let json, cors
   try {
     json = JSON.parse(url);
@@ -119,6 +131,9 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
       const iconURL = `/cache_data/${json.id}/icon`;
       await themeCache.put(iconURL, icon.clone());
       json.icon = iconURL;
+    }
+    if(json.sounds) {
+      // Object.keys(json.sounds)
     }
 
     json.isBuiltIn = isBuiltIn;
