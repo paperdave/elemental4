@@ -170,7 +170,7 @@ export class Elemental4API
       fetch(this.baseUrl + '/api/v1/update-profile', {
         method: 'POST',
         headers: {
-          'Authorization': `Elemental4User "${id}" "${name}"`,
+          'Authorization': `Elemental4User "${id}" "${encodeURIComponent(name)}"`,
         }
       });
     }
