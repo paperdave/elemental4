@@ -319,7 +319,7 @@ export async function updateMountedCss(animate = true) {
   }
   const p5 = document.getElementById('p5_background') as HTMLIFrameElement;
   if (sketchURL) {
-    p5.src = '/p5_background?sketch=' + encodeURIComponent(sketchURL);
+    p5.src = '/p5_background?sketch=' + btoa(sketchURL);
   } else {
     p5.src = 'about:blank';
   }

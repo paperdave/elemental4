@@ -13,7 +13,7 @@
 <body>
   <script>
     const scriptElement = document.createElement('script');
-    scriptElement.src = decodeURIComponent(new URLSearchParams(location.search).get('sketch'));
+    scriptElement.src = atob(new URLSearchParams(location.search).get('sketch'));
     document.body.appendChild(scriptElement)
     scriptElement.onload = () => {
       window.setup = ((f) => () => {
