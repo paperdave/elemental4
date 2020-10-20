@@ -28,72 +28,12 @@
   </script>
 
   <style>
-
     * { box-sizing: border-box; }
     body { margin: 0; font-family: sans-serif; }
-    body.launching #CONTENT {
+    body.launching #content {
       display: none;
     }
-    h1 { margin: 0 auto; padding-top: 48px; width: 450px; }
-
-    #CONTENT {
-      max-width: 500px;
-      margin: auto;
-      width: 100%;
-      text-align: left;
-    }
-    a {
-      color: rgb(192, 63, 16);
-      text-decoration: none;
-    }
-    a:hover {
-      color: #F8571C;
-      text-decoration: underline;
-    }
-    a:active {
-      color: red;
-      text-decoration: underline;
-    }
-    button, select, input:not([type=range]) {
-      margin: auto;
-      border: 1px solid #888;
-      background-color: #DEDEDE;
-      border-radius: 4px;
-      padding: 8px;
-      position: relative;
-      overflow: hidden;
-      color: black;
-    }
-    .progress {
-      height: 6px;
-      position: absolute;
-      background-color: #F8571C;
-      bottom: -2px;
-      left: 0;
-    }
-    button.huge, select.huge {
-      font-size: 18px;
-      padding: 10px;
-    }
-    button:not([disabled]):hover, select:not([disabled]):hover {
-      outline: none;
-      background-color: #e0bcad;
-      border: 1px solid #b96643;
-    }
-    button:not([disabled]):active, select:not([disabled]):active {
-      outline: none;
-      background-color: #ff9d7a;
-    }
-    button:not([disabled]):focus, select:not([disabled]):focus {
-      outline: none;
-      border: 1px solid #F8571C;
-    }
-    button[disabled], select[disabled] {
-      border: 1px solid #AAA;
-      background-color: #FAFAFA;
-      color: #555;
-    }
-    #GAME {
+    #game {
       position: absolute;
       top: 0;
       left: 0;
@@ -105,10 +45,71 @@
       overflow: hidden;
       font-family: Roboto;
     }
-    #GAME.animate-in {
+    #game.animate-in {
       pointer-events: all;
       opacity: 1;
       transition: opacity 0s 10ms;
+    }
+    #content {
+      max-width: 500px;
+      margin: auto;
+      width: 100%;
+      text-align: left;
+      position: relative;
+    }
+    #suggest{
+      transform: translateY(100%);
+    }
+  </style>
+  <style id='remove_styles'>
+    #content h1 { margin: 0 auto; padding-top: 48px; width: 450px; }
+    #content a {
+      color: rgb(192, 63, 16);
+      text-decoration: none;
+    }
+    #content a:hover {
+      color: #F8571C;
+      text-decoration: underline;
+    }
+    #content a:active {
+      color: red;
+      text-decoration: underline;
+    }
+    #content .progress {
+      height: 6px;
+      position: absolute;
+      background-color: #F8571C;
+      bottom: -2px;
+      left: 0;
+    }
+    #launch {
+      margin: auto;
+      border: 1px solid #888;
+      background-color: #DEDEDE;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      color: black;
+      font-size: 18px;
+      padding: 10px 20px;
+    }
+    #launch:not(:disabled):hover {
+      outline: none;
+      background-color: #e0bcad;
+      border: 1px solid #b96643;
+    }
+    #launch:not(:disabled):active {
+      outline: none;
+      background-color: #ff9d7a;
+    }
+    #launch:not(:disabled):focus {
+      outline: none;
+      border: 1px solid #F8571C;
+    }
+    #launch:disabled {
+      border: 1px solid #AAA;
+      background-color: #FAFAFA;
+      color: #555;
     }
     #support {
       text-align: center;
@@ -140,27 +141,13 @@
       border: 1px solid #F8571C;
       border-radius: 4px;
       overflow: hidden;
-    }
-    #suggest{
-      transform: translateY(100%);
-    }
-    input[type='text'], input[type='password'], input[type='email'] {
-      background-color: white;
-      padding-left: 0;
-      text-indent: 10px;
-    }
-    select {
-      appearance: none;
-      background-position: right 50%!important;
-      background-repeat: no-repeat!important;
-      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=)!important;
-      padding-right: 16px!important;
-    }
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    }   
   </style>
 </head>
 <body>
   <script>window.localStorage&&(localStorage.auto_start)&&document.body.classList.add('launching')</script>
-  <section id='CONTENT'>
+  <section id='content'>
     <h1>
       <svg width="450" viewBox="0 0 320 66" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Elemental 4">
         <path d="M53.8438 33.5391H40.9062V41.6719H56.1875V48H32.6797V13.875H56.2344V20.2266H40.9062V27.4219H53.8438V33.5391ZM67.5078 48H59.5859V12H67.5078V48ZM84.6641 48.4688C80.7734 48.4688 77.625 47.3125 75.2188 45C72.8125 42.6719 71.6094 39.6484 71.6094 35.9297V35.2734C71.6094 32.6797 72.0859 30.3906 73.0391 28.4062C74.0078 26.4219 75.4141 24.8906 77.2578 23.8125C79.1016 22.7188 81.2891 22.1719 83.8203 22.1719C87.3828 22.1719 90.1953 23.2812 92.2578 25.5C94.3203 27.7031 95.3516 30.7812 95.3516 34.7344V37.8047H79.6484C79.9297 39.2266 80.5469 40.3438 81.5 41.1562C82.4531 41.9688 83.6875 42.375 85.2031 42.375C87.7031 42.375 89.6562 41.5 91.0625 39.75L94.6719 44.0156C93.6875 45.375 92.2891 46.4609 90.4766 47.2734C88.6797 48.0703 86.7422 48.4688 84.6641 48.4688ZM83.7734 28.2656C81.4609 28.2656 80.0859 29.7969 79.6484 32.8594H87.6172V32.25C87.6484 30.9844 87.3281 30.0078 86.6562 29.3203C85.9844 28.6172 85.0234 28.2656 83.7734 28.2656ZM106.016 22.6406L106.273 25.6172C108.07 23.3203 110.484 22.1719 113.516 22.1719C116.719 22.1719 118.883 23.4453 120.008 25.9922C121.727 23.4453 124.211 22.1719 127.461 22.1719C132.602 22.1719 135.242 25.2812 135.383 31.5V48H127.461V31.9922C127.461 30.6953 127.242 29.75 126.805 29.1562C126.367 28.5625 125.57 28.2656 124.414 28.2656C122.852 28.2656 121.688 28.9609 120.922 30.3516L120.945 30.6797V48H113.023V32.0391C113.023 30.7109 112.812 29.75 112.391 29.1562C111.969 28.5625 111.164 28.2656 109.977 28.2656C108.461 28.2656 107.305 28.9609 106.508 30.3516V48H98.6094V22.6406H106.016ZM152.164 48.4688C148.273 48.4688 145.125 47.3125 142.719 45C140.312 42.6719 139.109 39.6484 139.109 35.9297V35.2734C139.109 32.6797 139.586 30.3906 140.539 28.4062C141.508 26.4219 142.914 24.8906 144.758 23.8125C146.602 22.7188 148.789 22.1719 151.32 22.1719C154.883 22.1719 157.695 23.2812 159.758 25.5C161.82 27.7031 162.852 30.7812 162.852 34.7344V37.8047H147.148C147.43 39.2266 148.047 40.3438 149 41.1562C149.953 41.9688 151.188 42.375 152.703 42.375C155.203 42.375 157.156 41.5 158.562 39.75L162.172 44.0156C161.188 45.375 159.789 46.4609 157.977 47.2734C156.18 48.0703 154.242 48.4688 152.164 48.4688ZM151.273 28.2656C148.961 28.2656 147.586 29.7969 147.148 32.8594H155.117V32.25C155.148 30.9844 154.828 30.0078 154.156 29.3203C153.484 28.6172 152.523 28.2656 151.273 28.2656ZM173.305 22.6406L173.562 25.6172C175.312 23.3203 177.727 22.1719 180.805 22.1719C183.445 22.1719 185.414 22.9609 186.711 24.5391C188.023 26.1172 188.703 28.4922 188.75 31.6641V48H180.828V31.9922C180.828 30.7109 180.57 29.7734 180.055 29.1797C179.539 28.5703 178.602 28.2656 177.242 28.2656C175.695 28.2656 174.547 28.875 173.797 30.0938V48H165.898V22.6406H173.305ZM202.344 16.3359V22.6406H206.516V28.125H202.344V39.7266C202.344 40.6797 202.516 41.3438 202.859 41.7188C203.203 42.0938 203.883 42.2812 204.898 42.2812C205.68 42.2812 206.336 42.2344 206.867 42.1406V47.7891C205.445 48.2422 203.961 48.4688 202.414 48.4688C199.695 48.4688 197.688 47.8281 196.391 46.5469C195.094 45.2656 194.445 43.3203 194.445 40.7109V28.125H191.211V22.6406H194.445V16.3359H202.344ZM223.93 48C223.648 47.4844 223.398 46.7266 223.18 45.7266C221.727 47.5547 219.695 48.4688 217.086 48.4688C214.695 48.4688 212.664 47.75 210.992 46.3125C209.32 44.8594 208.484 43.0391 208.484 40.8516C208.484 38.1016 209.5 36.0234 211.531 34.6172C213.562 33.2109 216.516 32.5078 220.391 32.5078H222.828V31.1719C222.828 28.8438 221.82 27.6797 219.805 27.6797C217.93 27.6797 216.992 28.6016 216.992 30.4453H209.094C209.094 27.9922 210.133 26 212.211 24.4688C214.305 22.9375 216.969 22.1719 220.203 22.1719C223.438 22.1719 225.992 22.9609 227.867 24.5391C229.742 26.1172 230.703 28.2812 230.75 31.0312V42.2578C230.781 44.5859 231.141 46.3672 231.828 47.6016V48H223.93ZM218.984 42.8438C219.969 42.8438 220.781 42.6328 221.422 42.2109C222.078 41.7891 222.547 41.3125 222.828 40.7812V36.7266H220.531C217.781 36.7266 216.406 37.9609 216.406 40.4297C216.406 41.1484 216.648 41.7344 217.133 42.1875C217.617 42.625 218.234 42.8438 218.984 42.8438ZM243.477 48H235.555V12H243.477V48ZM281.047 34.6641H284.516V40.7578H281.047V48H273.148V40.7578H259.953L259.484 35.9297L273.148 13.9453V13.875H281.047V34.6641ZM267.008 34.6641H273.148V24.1641L272.656 24.9609L267.008 34.6641Z" fill="black"/>
@@ -178,12 +165,12 @@
     </p>
     <script>
       window.s=document.getElementById('support');
-      window.supported=s.remove&&(s.remove(),1)&&window.localStorage?1:(s.innerHTML="Device or Browser not supported.<br>Please upgrade to a modern web browser.",false)</script>
+      window.supported=s.remove&&(s.remove(),1)&&window.localStorage&&!('msLaunchUri' in navigator)?1:(s.innerHTML="Device or Browser not supported.<br>Please upgrade to a modern web browser.",0)</script>
     <div class="X" style='display:flex;align-items:center;margin-top:50px;'>
-      <button id='launch' class="huge" style="padding:10px 20px">Play Game</button>
+      <button id='launch'>Play Game</button>
     </div>
     <p class="X" style="margin-bottom:50px;font-size:0.75rem;text-align:center;">
-      (Approximate Download: 8mb)
+      (Approximate Download: 12mb)
     </p>
     <p>
       Developed by <a href="https://davecode.me">Dave Caruso</a> <br>
@@ -200,7 +187,7 @@
       &lt;3
     </p>
   </section>
-  <section id='GAME'></section>
+  <section id='game'></section>
   <script>
     supported&&(() => {
       let launch = document.querySelector("#launch"); 
@@ -258,7 +245,7 @@
                 if(e.key == "singleton_available"){
                   clearInterval(timer);
                   document.body.classList.remove('launching')
-                  document.querySelector('#CONTENT').innerHTML = '<h1>Unfortunately, you cannot run elemental in more than one browser tab at a time.</h1>'
+                  document.querySelector('#content').innerHTML = '<h1>Unfortunately, you cannot run elemental in more than one browser tab at a time.</h1>'
                   window.close();
                 }
               };
@@ -307,9 +294,10 @@
               launch.innerHTML = text + (progress !== undefined ? '<div class="progress" style="width:' + (progress * 100) + '%"></div>' : '');
             },
             showGame: () => {
-              document.body.classList.add('animateFadeAway');
+              document.getElementById('content').style.zIndex = '-100000'
               setTimeout(function() {
-                document.getElementById('CONTENT').remove();
+                document.getElementById('content').remove();
+                document.getElementById('remove_styles').remove();
                 document.body.classList.remove('launching');
               }, 500);
             }

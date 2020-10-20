@@ -46,7 +46,7 @@ async function boot(MenuAPI: MenuAPI) {
   // check for updates
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
-    if (latestVersion !== pkg.version) {
+    if (latestVersion !== pkg.version || (!$production && !MenuAPI.upgraded)) {
       await resetBuiltInThemes();
       const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
       const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
@@ -79,36 +79,44 @@ async function boot(MenuAPI: MenuAPI) {
 
   if('serviceWorker' in navigator) {
     ui.status('Registering Service', 0);
-    const registration = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
 
     ui.status('Caching Game Files', 0);
 
-    const cache = await caches.open(cacheName)
-    await cache.addAll([
-      '/',
-      '/logo.svg',
-      '/air.svg',
-      '/earth.svg',
-      '/fire.svg',
-      '/water.svg',
-      '/logo-workshop.svg',
-      '/no-element.svg',
-      '/game',
-      '/font.css',
-      '/icon/maskable.png',
-      '/icon/normal.png',
-      '/theme.schema.json',
-      '/p5_background',
-      '/theme_editor',
-      '/p5.min.js',
-      '/manifest.json',
-      '/elemental.js?v=' + MenuAPI.cache
-    ]);
+    if(!await caches.has(cacheName)) {
+      const cache = await caches.open(cacheName)
+      await cache.addAll([
+        '/',
+        '/logo.svg',
+        '/air.svg',
+        '/earth.svg',
+        '/fire.svg',
+        '/water.svg',
+        '/logo-workshop.svg',
+        '/no-element.svg',
+        '/game',
+        '/font.css',
+        '/icon/maskable.png',
+        '/icon/normal.png',
+        '/developer.png',
+        '/theme.schema.json',
+        '/p5_background',
+        '/theme_editor',
+        '/p5.min.js',
+        '/manifest.json',
+        '/elemental.js?v=' + MenuAPI.cache
+      ]);
+    }
+
+    if(!await caches.has('monaco_editor')) {
+      const monacoCache = await caches.open('monaco_editor');
+      await monacoCache.addAll(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`));
+    }
   } 
 
-  ui.status('Loading Game', 0);
+  ui.status('Loading Game HTML', 0);
 
-  const gameRoot = document.getElementById('GAME');
+  const gameRoot = document.getElementById('game');
   gameRoot.innerHTML = await fetch('/game').then((x) => x.text());
 
   if (!$production) {
@@ -156,7 +164,7 @@ async function boot(MenuAPI: MenuAPI) {
   
   await delay(10);
 
-  document.getElementById('GAME').classList.add('animate-in');
+  document.getElementById('game').classList.add('animate-in');
   playSound('startup');
 }
 

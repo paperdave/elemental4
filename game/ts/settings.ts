@@ -203,7 +203,7 @@ export async function InitSettings() {
     await addDLCByUrl(text, 'server');
   });
   document.querySelector('#theme-browse').addEventListener('click', () => {
-    window.open('/workshop#themes');
+    window.open('/workshop#themes', '', 'width=800,height=600', true);
   });
   document.querySelector('#theme-devmode').addEventListener('click', () => {
     openDevThemeEditor();
@@ -212,7 +212,6 @@ export async function InitSettings() {
     const conf = getAPI().config;
     if(await asyncConfirm('Remove Server', `Remove ${conf.name || `Untitled Server (type=${conf.type})`}? This will remove all downloaded server data, and your local save files.`)) {
       await uninstallServer(getAPI().baseUrl);
-
     }
   });
 
@@ -319,7 +318,7 @@ export async function updateStorageEstimation() {
     document.getElementById('storage-breakdown').innerHTML = [
       caches > 0 && `<tr><td style='width:max-content'><strong>${fileSize(caches)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-caches'></span></td><td>Game and Theme Caches</td></tr>`,
       indexedDB > 0 && `<tr><td style='width:max-content'><strong>${fileSize(indexedDB)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-indexedDB'></span></td><td>Element and Config Databases</td></tr>`,
-      workers > 0 && `<tr><td style='width:max-content'><strong>${fileSize(workers)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-workers'></span></td><td>Service Worker Registrations</td></tr>`,
+      workers > 0 && `<tr><td style='width:max-content'><strong>${fileSize(workers)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-workers'></span></td><td>Service Worker</td></tr>`,
     ].filter(Boolean).join('');
     document.getElementById('storage-no-breakdown').style.display = 'none';
   } else {

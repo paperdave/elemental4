@@ -181,6 +181,8 @@ export function ElementDom(elem2: Elem) {
 
 // Adds an element and has most element logic
 export async function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
+  if(!element) return;
+  console.log(element);
   const alreadyExistingDom = document.querySelector(`[data-element="${element.id}"]`) as HTMLElement;
   
   if (alreadyExistingDom) {

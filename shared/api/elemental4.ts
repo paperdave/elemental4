@@ -5,7 +5,6 @@ import { randomString, sortCombo } from '../shared';
 import Color from 'color';
 import { SimpleEmitter } from '@reverse/emitter';
 import io from 'socket.io-client';
-import { ChunkedStore } from '../store-chunk';
 import { createQueueExec } from '../async-queue-exec';
 
 const ONE_DAY = 24*60*60*1000;

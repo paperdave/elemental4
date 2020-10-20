@@ -9,7 +9,7 @@ import { SingleplayerAPI } from "./api-singleplayer";
 import { asyncAlert, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi, InitElementNews } from "./element-game";
 import { createLoadingUi } from "./loading";
-import { canCreateSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
+import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
 import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";
 import { builtInServers } from "./server-manager";
@@ -20,13 +20,31 @@ class IHateTypescript extends ElementalBaseAPI {
   baseUrl = '';
 }
 
+export class NullAPI extends ElementalBaseAPI {  
+  static type = 'internal:null'
+  async open(ui?: ElementalLoadingUi): Promise<boolean> {
+    return true;
+  }
+  async close(): Promise<void> {
+
+  }
+  async getStats() {
+    return {}
+  }
+  async getElement(id: string) { return null; }
+  async getCombo(ids: string[]): Promise<string[]> { return [] }
+  async getStartingInventory(): Promise<string[]> { return []; }
+}
+
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'internal:all-colors': DebugAllColorsAPI,
   'internal:singleplayer': SingleplayerAPI,
+  'internal:null': NullAPI,
   'reborn': RebornElementalAPI,
   'elemental4': Elemental4API,
-  'e4': LedomElementalAPI,
   'elemental5': Elemental5API,
+  // 'e4': LedomElementalAPI,
+  // 'ledom': LedomElementalAPI,
 };
 
 let currentAPI: ElementalBaseAPI;
@@ -34,8 +52,21 @@ let currentSaveFile: string;
 let currentSaveFileList: ServerSavefileEntry[];
 
 const builtInApis = {
-  'internal:all-colors': { type: "internal:all-colors", name: "All Colors" },
-  'internal:singleplayer': { type: "internal:singleplayer", name: "Singleplayer with Element Packs" },
+  'internal:all-colors': {
+    type: "internal:all-colors",
+    name: "Theme Debug: All Colors",
+    description: "Contains all colors from the Elemental Palette."
+  },
+  'internal:singleplayer': {
+    type: "internal:singleplayer",
+    name: "Singleplayer with Element Packs",
+    description: "Create Element Packs to create your own Elemental Game, or play back shut down databases."
+  },
+  'internal:null': {
+    type: "internal:null",
+    name: "No Server",
+    description: "You are not connected to any server."
+  },
 }
 
 export async function getSupportedServerTypes() {
@@ -162,8 +193,8 @@ export async function recalculateSavefileDropdown() {
   changeSaveFile.value = 'save:' + currentSaveFile;
   
   (document.getElementById('modify-savefile-create') as HTMLOptionElement).disabled = !canCreateSaveFile(currentAPI, '');
-  (document.getElementById('modify-savefile-rename') as HTMLOptionElement).disabled = !true;  
-  (document.getElementById('modify-savefile-delete') as HTMLOptionElement).disabled = !true;  
+  (document.getElementById('modify-savefile-rename') as HTMLOptionElement).disabled = !canRenameSaveFile(currentAPI, await getActiveSaveFile(currentAPI), '');
+  (document.getElementById('modify-savefile-delete') as HTMLOptionElement).disabled = !canDeleteSaveFile(currentAPI, await getActiveSaveFile(currentAPI));
 }
 
 export function getAPI(): ElementalBaseAPI

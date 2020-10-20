@@ -17,7 +17,7 @@ export async function animateDialogOpen(root: HTMLElement) {
 }
 
 export async function animateDialogClose(root: HTMLElement) {
-  playSound('dialog.open');
+  playSound('dialog.close');
   root.classList.add('dialog-closing');
   await delay(200);
   root.classList.remove('dialog-closing');

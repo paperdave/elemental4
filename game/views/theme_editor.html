@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/themes/elem4_default/style.css">
+  <link rel="stylesheet" href="/cache_data/elem4_default/style">
   <title>Elemental 4 Theme Editor</title>
   <style>
     * { box-sizing: border-box; }
@@ -34,20 +34,20 @@
       font-size: 18px;
       padding: 10px;
     }
-    button:not([disabled]):hover, select:not([disabled]):hover {
+    button:not(:disabled):hover, select:not(:disabled):hover {
       outline: none;
       background: #e0bcad;
       border: 1px solid #b96643;
     }
-    button:not([disabled]):active, select:not([disabled]):active {
+    button:not(:disabled):active, select:not(:disabled):active {
       outline: none;
       background: #ff9d7a;
     }
-    button:not([disabled]):focus, select:not([disabled]):focus {
+    button:not(:disabled):focus, select:not(:disabled):focus {
       outline: none;
       border: 1px solid #F8571C;
     }
-    button[disabled], select[disabled] {
+    button:disabled, select:disabled {
       border: 1px solid #AAA;
       background: #FAFAFA;
       color: #555;
@@ -75,13 +75,22 @@
       line-height: 28px;
     }
     .tab:hover {
-      background-color: rgba(0, 0, 0, 0.15);
+      background-color: rgba(0, 0, 0, 0.15)!important;
+      border: none;
     }
     .tab:active {
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: rgba(0, 0, 0, 0.3)!important;
+      border: none;
     }
     .tab.select {
       background-color: rgba(0, 0, 0, 0.2);
+    }
+    #x_preset {
+      background: none;
+      appearance: none;
+      border: none;
+      border-radius: 0;
+      font: inherit;
     }
   </style>
 </head>
@@ -91,16 +100,28 @@
     <div id='css' class="tab">CSS</div>
     <div id='sketch' class="tab">Sketch</div>
     <div style='flex: 1'></div>
+    <select id="x_preset" class="tab">
+      <option value="-" selected disabled>[Load Preset]</option>
+      <optgroup id='optgroup_template' label="Examples">
+        
+      </optgroup>
+      <optgroup id='optgroup_builtin' label="Built-In Themes">
+
+      </optgroup>
+      <optgroup id='optgroup_custom' label="Custom Themes">
+
+      </optgroup>
+    </select>
+    <div style='flex: 1'></div>
+    <div id='x_colors' class="tab">Test Colors</div>
     <div id='x_reset' class="tab">Reset Theme</div>
     <div id='x_downloadZip' class="tab">Download ZIP</div>
   </div>
   <div id="container">
     <div id="editor"></div>
   </div>
-  <script src="/monaco-editor/min/vs/loader.js"></script>
+  <script src="/vs/loader.js"></script>
   <script>
-    require.config({ paths: { vs: '/monaco-editor/min/vs' } });
-
     require(['vs/editor/editor.main'], async function () {
       const jsonModel = monaco.editor.createModel(
         '',
@@ -125,6 +146,7 @@
               schema: await fetch('/theme.schema.json').then(x => x.json())
           }]
       });
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(await fetch('/p5.d.ts').then(x => x.text()), 'file:///pack/p5.d.ts')
       var editor = monaco.editor.create(document.getElementById('editor'), {
         model: jsonModel
       });
@@ -147,11 +169,17 @@
         x.currentTarget.classList.add('select');
         editor.setModel(sketchModel);
       });
+      document.querySelector('#x_colors').addEventListener('click', () => {
+        parent.postMessage({ type: 'action.test_colors'})
+      });
       document.querySelector('#x_reset').addEventListener('click', () => {
         parent.postMessage({ type: 'action.reset'})
       });
       document.querySelector('#x_downloadZip').addEventListener('click', () => {
         parent.postMessage({ type: 'action.downloadZip'})
+      });
+      document.querySelector('#x_preset').addEventListener('click', (ev) => {
+        parent.postMessage({ type: 'action.preset', preset: ev.currentTarget.value })
       });
 
       [
@@ -184,6 +212,13 @@
           cssModel.setValue(data.theme.style)
           sketchModel.setValue(data.theme.sketch)
           document.body.removeAttribute('style')
+        } else if(data.type === 'presets') {
+          data.list.forEach((item) => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.innerText = item.name;
+            document.getElementById('optgroup_' + item.category).appendChild(opt);
+          });
         }
       })
     });

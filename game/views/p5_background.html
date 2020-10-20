@@ -6,14 +6,14 @@
   <title>Document</title>
   <style>
     * { background-color: transparent }
-    canvas { position: fixed; top: 0; left: 0; animation: x 1s ease-out; }
+    canvas { position: fixed; top: 0; left: 0; animation: x 0.5s ease-out; }
     @keyframes x { 0% { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
   <script>
     const scriptElement = document.createElement('script');
-    scriptElement.src = new URLSearchParams(location.search).get('sketch');
+    scriptElement.src = decodeURIComponent(new URLSearchParams(location.search).get('sketch'));
     document.body.appendChild(scriptElement)
     scriptElement.onload = () => {
       window.setup = ((f) => () => {

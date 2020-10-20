@@ -6,6 +6,7 @@ const path = require("path");
 const minifier = require("html-minifier");
 const terser = require("uglify-es");
 const chalk = require("chalk");
+const url = require("url");
 
 process.chdir(__dirname);
 
@@ -46,31 +47,38 @@ process.chdir(__dirname);
         themes: [],
         packs: [],
     };
+    fs.copySync('workshop', 'dist_client/');
 
     fs.readdirSync('workshop/themes').forEach((id) => {
         const json = (fs.readJSONSync('workshop/themes/' + id + '/elemental.json'));
 
         workshopManifest.themes.push({
-            url: 'https://elemental4.net/themes/' + id,
+            url: '/themes/' + id,
             id: json.id,
             name: json.name,
             author: json.author,
             description: json.description,
-            icon: json.icon ? 'https://elemental4.net/themes/' + id + '/' + json.icon : undefined,
+            icon: json.icon ? url.resolve('/themes/' + id + '/', json.icon) : undefined,
             contains: ['styles', 'colors', 'sounds', 'music', 'sketch'].filter(y => y in json),
         });
+        delete json['$schema'];
+        fs.writeFileSync('dist_client/themes/' + id + '/elemental.json', JSON.stringify(json))
     });
     fs.readdirSync('workshop/packs').forEach((id) => {
         const json = (fs.readJSONSync('workshop/packs/' + id + '/elemental.json'));
 
         workshopManifest.packs.push({
-            url: 'https://elemental4.net/packs/' + id,
+            url: '/packs/' + id,
             id: json.id,
             name: json.name,
             author: json.author,
             description: json.description,
-            icon: json.icon ? 'https://elemental4.net/packs/' + id + '/' + json.icon : undefined
+            icon: json.icon ? url.resolve('/packs/' + id + '/', json.icon) : undefined
         });
+
+        delete json['$schema'];
+
+        fs.writeFileSync('dist_client/packs/' + id + '/elemental.json', JSON.stringify(json))
     });
     fs.ensureDirSync("./dist_client");
 
@@ -120,10 +128,12 @@ process.chdir(__dirname);
         });
         fs.writeFileSync(path.join("./dist_client/", file), output_html);
     });
-    fs.copySync('workshop', 'dist_client/');
     fs.copySync('res', 'dist_client/');
     fs.copySync('game/pwa', 'dist_client/');
     fs.copySync('node_modules/p5/lib/p5.min.js', 'dist_client/p5.min.js');
-    fs.copySync('node_modules/monaco-editor', 'dist_client/monaco-editor');
+    const monacoEditor = require('./monaco-editor-files.json')
+    monacoEditor.files.forEach((f) => {
+        fs.copySync(path.join(__dirname, monacoEditor.base, f), path.join('dist_client/vs/', f));
+    })
     fs.writeFileSync('dist_client/version', require('./package.json').version);
 })();

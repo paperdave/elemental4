@@ -158,7 +158,7 @@ export interface ElementalPopupBackend {
 
 export interface SaveFileAPI {
   get<T>(k: string, def?: T): T;
-  set(k: string, v: any);
+  set(k: string, v: any): void;
 }
 
 interface ElementalBaseAPIParams<Config extends ElementalConfig = ElementalConfig> {
@@ -350,9 +350,9 @@ export interface ServerSavefileEntry {
  *  DO NOT implement to restrict the multiple savefile feature of elemental 4.
  */
 export interface ServerSavefileAPI {
-  getSaveFiles(): Promise<ServerSavefileEntry[]>;
-  readSaveFileElements(id: string): string[];
-  writeNewElementToSaveFile(id: string, elementId: string, all: string[]);
+  getSaveFiles(): ServerSavefileEntry[];
+  readSaveFileElements(id: string): Promise<string[]>;
+  writeNewElementToSaveFile(id: string, elementId: string): Promise<void>;
   canCreateSaveFile(name: string): boolean;
   createNewSaveFile(name: string): Promise<string>;
   canDeleteSaveFile(id: string): boolean;

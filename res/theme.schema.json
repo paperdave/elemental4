@@ -5,7 +5,7 @@
       "type": "object",
       "title": "A Color Definition",
       "description": "Describes a Dynamic Color, which APIs can tweak to get an accurately themed color.",
-      "required": ["color","lightnessMultiplier","saturationMultiplier"],
+      "required": ["color"],
       "properties": {
         "color": {
           "type": "string",
@@ -23,6 +23,37 @@
           "minimum": 0,
           "title": "Lightness Multiplier",
           "description": "Limit how much the lightness slider can affect the color. 1=Full, 0=Static Color. White and Black are forced at 0 lightness, since they represent ends of the grey spectrum."
+        }
+      }
+    },
+    "sound": {
+      "type": "object",
+      "title": "A Sound Definition",
+      "description": "Describes a Sound",
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "Sound URL",
+          "description": "Relative or absolute url to an mp3 or wav file."
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "title": "Volume",
+          "description": "Controls the volume of this sound."
+        },
+        "pitch": {
+          "type": "number",
+          "title": "Pitch",
+          "description": "Controls the pitch of this sound."
+        },
+        "pitchVariance": {
+          "type": "number",
+          "title": "Pitch",
+          "minimum": 0,
+          "description": "Used to vary the pitch across uses. The pitch range is pitch ±pitchVariance"
         }
       }
     }
@@ -90,17 +121,9 @@
         "override"
       ]
     },
-    "music_merge_mode": {
-      "title": "Music Merge Mode",
-      "description": "Decides how music entries from other themes should mix with this one. Combine means it will combine themes with music before it, Override means it will override themes before it.",
-      "enum": [
-        "combine",
-        "override"
-      ]
-    },
     "colors": {
       "title": "Color Definitions",
-      "description": "Decides how music entries from other themes should mix with this one. Combine means it will combine themes with music before it, Override means it will override themes before it.",
+      "description": "The Element Color Palette",
       "type": "object",
       "properties": {
         "white": { "$ref": "#/definitions/color" },
@@ -119,11 +142,99 @@
         "magenta": { "$ref": "#/definitions/color" },
         "hot-pink": { "$ref": "#/definitions/color" }
       }
+    },
+    "sounds": {
+      "title": "Sound Definitions",
+      "description": "Sound definitions",
+      "type": "object",
+      "properties": {
+        "element.combine": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "element.invalid": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "element.pickup": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "element.valid": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "element.valid.rediscover": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "element.drop": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "news.new-element": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "dialog.open": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "dialog.close": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "dialog.attention": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "suggest.created": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "suggest.voted": { "type": "array", "items": { "$ref": "#/definitions/sound" } },
+        "startup": { "type": "array", "items": { "$ref": "#/definitions/sound"}  }
+      }
+    },
+    "music": {
+      "title": "Music",
+      "description": "List of music tracks to add.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "title",
+          "author",
+          "loop",
+          "fade"
+        ],
+        "properties": {
+          "url": {
+            "title": "Music URL",
+            "description": "Relative or Absolute URL to the song.",
+            "type": "string"
+          },
+          "title": {
+            "title": "Music Title",
+            "description": "Title of the track.",
+            "type": "string"
+          },
+          "author": {
+            "title": "Music Author/Artist",
+            "description": "Creator of the track.",
+            "type": "string"
+          },
+          "volume": {
+            "title": "Music Volume",
+            "description": "Volume to play the track at compared to others.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "loop": {
+            "title": "Music Loop Behavior",
+            "description": "array = set loop A and B points\nloop = loop entire song\nno-loop = do not loop the song, but song may be looped if the playlist runs out",
+            "oneOf": [
+              {
+                "enum": [
+                  "loop",
+                  "no-loop"
+                ]
+              },
+              {
+                "type": "array",
+                "items": [{"type": "number"}],
+                "minItems": 2,
+                "maxItems": 2
+              }
+            ]
+          },
+          "fade": {
+            "title": "Music Fade Behavior",
+            "description": "no-fade = Do not fade at all.\nfade-ends = fade the start and end.\nfade-anywhere = fade can start at anywhere, best for long and ambient songs.\nfade-end = only fade end\nfade-start = only fade start",
+            "enum": [
+              "no-fade",
+              "fade-both",
+              "fade-anywhere",
+              "fade-end",
+              "fade-start"
+            ]
+          }
+        }
+      }
+    },
+    "sketch": {
+      "title": "P5.js Sketch",
+      "description": "Theme Sketch. Rendered with p5.js on the element game background. URL is resolved from this file, so it can be relative.",
+      "type": "string"
     }
-  },
-  "sketch": {
-    "title": "P5.js Sketch",
-    "description": "Theme Sketch. Rendered with p5.js on the element game background. URL is resolved from this file, so it can be relative.",
-    "type": "string"
   }
 }
