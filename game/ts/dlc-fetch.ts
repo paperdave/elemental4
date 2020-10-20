@@ -145,11 +145,11 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
       json.sounds = Object.fromEntries(await Promise.all(Object.keys(json.sounds).map(async(key) => {
         return [key, await Promise.all(json.sounds[key].map(async(x) => {
           const soundURL = `/cache_data/${json.id}/sound/${encodeURIComponent(x.url)}`;
-          // if (!cachedSoundURLs.includes(x.url)){
-          //   const sound = (await fetchCorsAnywhere(resolve(url, x.url))).response;
-          //   await themeCache.put(soundURL, sound.clone());      
-          //   cachedSoundURLs.push(x.url);
-          // }
+          if (!cachedSoundURLs.includes(x.url)){
+            const sound = (await fetchCorsAnywhere(resolve(url, x.url))).response;
+            await themeCache.put(soundURL, sound.clone());      
+            cachedSoundURLs.push(x.url);
+          }
           return {
             ...x,
             url: soundURL
