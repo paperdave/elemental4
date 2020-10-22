@@ -133,7 +133,7 @@ export function calculateTheme() {
         tracks: next.music
       })
       if(next.styles) theme.styles = Array.isArray(next.styles) ? theme.styles.concat(...next.styles) : theme.styles.concat(next.styles);
-      if(next.sketch) theme.sketch = theme.sketch;
+      if(next.sketch) theme.sketch = next.sketch;
       if((next as any).style_developer) theme.style_developer = (next as any).style_developer;
       if((next as any).sketch_developer) theme.sketch_developer = (next as any).sketch_developer;
     });
@@ -319,7 +319,7 @@ export async function updateMountedCss(animate = true) {
   }
   const p5 = document.getElementById('p5_background') as HTMLIFrameElement;
   if (sketchURL) {
-    p5.src = '/p5_background?sketch=' + btoa(sketchURL);
+    p5.src = '/p5_background?sketch=' + btoa(await fetch(sketchURL).then(x => x.text()));
   } else {
     p5.src = 'about:blank';
   }

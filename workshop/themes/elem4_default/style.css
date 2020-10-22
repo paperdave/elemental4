@@ -364,10 +364,19 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
   right: 0;
   display: flex;
 }
-button, select, input {
+button, select {
   margin: auto;
   border: 1px solid #888;
   background-color: #DEDEDE;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  color: black;
+  padding: 8px;
+}
+input:not([type="range"]) {
+  margin: auto;
+  border: 1px solid #000;
   border-radius: 4px;
   position: relative;
   overflow: hidden;

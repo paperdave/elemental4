@@ -1,8 +1,7 @@
 // i was doing some stuff to localForage and trying to use a simpler library, but that failed.
 // however the api was just way too nice looking, so i rewrote it.
 
-import { createInstance } from "localforage";
-
+import localForage from "./localForage";
 
 export abstract class IStore {
   abstract get(key: string): Promise<any>;
@@ -19,7 +18,7 @@ export class Store extends IStore {
 
   constructor(storeName: string) {
     super();
-    this.localForage = createInstance({
+    this.localForage = localForage.createInstance({
       name: 'ELEMENTAL',
       storeName: storeName,
     })

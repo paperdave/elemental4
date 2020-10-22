@@ -23,7 +23,8 @@ export async function getServerList(): Promise<ServerEntry[]> {
 }
 export async function installDefaultServers(): Promise<void> {
   const servers = await getInstalledServers() as ServerEntry[];
-  await Promise.all(builtInServers.filter(x => !servers.some(y => y.baseUrl === x)).map(x => {
+  const list = builtInServers.filter(x => !servers.some(y => y.baseUrl === x));
+  await Promise.all(list.map(x => {
     return addDLCByUrl(x, 'server', true);
   }))
 }

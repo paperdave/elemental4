@@ -14,9 +14,19 @@ export function exposeGlobals() {
         'dialog': require('./dialog'),
         'audio': require('./audio'),
         'devTheme': require('./theme-editor'),
+        'shared': {
+            util: require('../../shared/shared'),
+            cache: require('../../shared/cache'),
+            queue: require('../../shared/async-queue-exec'),
+            fetch: require('../../shared/fetch-progress'),
+            elem: require('../../shared/elem'),
+            pack: require('../../shared/elem-pack'),
+            store: require('../../shared/store'),
+            chunked: require('../../shared/store-chunk'),
+        },
         deps: {
             color: require('color'),
-            localforage: require('localforage'),
+            localforage: require('../../shared/localForage'),
         }
     };
 }

@@ -12,24 +12,28 @@
 </head>
 <body>
   <script>
-    const scriptElement = document.createElement('script');
-    scriptElement.src = atob(new URLSearchParams(location.search).get('sketch'));
-    document.body.appendChild(scriptElement)
-    scriptElement.onload = () => {
-      window.setup = ((f) => () => {
-        const c = createCanvas(windowWidth, windowHeight);
-        window.createCanvas = () => c;
-        f && f();
-      })(window.setup);
-      window.windowResized = ((f) => () => {
-        resizeCanvas(windowWidth, windowHeight);
-        f && f();
-      })(window.windowResized);
+    delete window.fetch;
+    delete window.XMLHttpRequest;
+    delete window.indexedDB;
+    delete window.parent;
+    delete window.navigator;
+    delete window.caches;
+    delete window.localStorage;
+    delete window.sessionStorage;
+    eval(atob(new URLSearchParams(location.search).get('sketch')));
+    window.setup = ((f) => () => {
+      const c = createCanvas(windowWidth, windowHeight);
+      window.createCanvas = () => c;
+      f && f();
+    })(window.setup);
+    window.windowResized = ((f) => () => {
+      resizeCanvas(windowWidth, windowHeight);
+      f && f();
+    })(window.windowResized);
 
-      const scriptElement = document.createElement('script');
-      scriptElement.src = '/p5.min.js';
-      document.body.appendChild(scriptElement)
-    }
+    const scriptElement = document.createElement('script');
+    scriptElement.src = '/p5.min.js';
+    document.body.appendChild(scriptElement)
   </script>
 </body>
 </html>

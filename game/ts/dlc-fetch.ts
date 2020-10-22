@@ -134,6 +134,15 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
       );
       json.styles = styleURL;
     }
+    if(json.sketch) {
+      const sketch = await fetchCorsAnywhere(resolve(url, json.sketch)).then(x => x.response.text());
+      const sketchURL = `/cache_data/${json.id}/sketch`;
+      await themeCache.put(
+        sketchURL,
+        new Response(new Blob([sketch], { type: 'text/javascript' }), { status: 200 })
+      );
+      json.sketch = sketchURL;
+    }
     if(json.icon) {
       const icon = (await fetchCorsAnywhere(resolve(url, json.icon))).response;
       const iconURL = `/cache_data/${json.id}/icon`;
