@@ -23,7 +23,7 @@ export function clearSounds() {
 }
 
 let isUnlocked = false;
-let first = false;
+let first = true;
 
 export function playMusicTrack() {
   currentTrack = getNextMusic();
@@ -46,7 +46,7 @@ export function playMusicTrack() {
   currentTrackHowlId = currentTrackHowl.play();
   if(first) {
     currentTrackHowl.fade(0, getConfigNumber('volume-music', 0.5) * 0.5 * (currentTrack.volume ?? 1), 5000, currentTrackHowlId);
-    first = true;
+    first = false;
   } else {
     currentTrackHowl.volume(getConfigNumber('volume-music', 0.5) * 0.5 * (currentTrack.volume ?? 1), currentTrackHowlId);
   }
