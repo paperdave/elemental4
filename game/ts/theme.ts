@@ -26,14 +26,14 @@ export interface ThemeColorConfigWithColor {
   lightnessMultiplier: number;
 }
 
-interface SoundEntry {
+export interface SoundEntry {
   url: string;
   volume?: number;
   pitch?: number;
   pitchVariance?: number;
 }
 
-interface MusicEntry {
+export interface MusicEntry {
   url: string;
   fade: 'fade-anywhere' | 'no-fade' | 'fade-both' | 'fade-start' | 'fade-end';
   loop: [number, number] | 'loop' | 'no-loop';
@@ -44,7 +44,7 @@ interface MusicEntry {
 
 export interface Theme {
   sounds: Record<SoundId, SoundEntry[]>;
-  music: MusicEntry[];
+  music: ThemeMusic[];
   colors: Partial<Record<E4ColorPalette, ThemeColorConfig>>;
   styles: string | string[];
   sketch?: string;
@@ -52,12 +52,18 @@ export interface Theme {
 
 export interface ThemeFlattenedColors {
   sounds: Partial<Record<SoundId, string>>;
-  music: string[];
+  music: ThemeMusic[];
   colors: Record<ElementalColorPalette, ThemeColorConfigWithColor>;
   styles: string[];
   sketch: string;
   style_developer: string;
   sketch_developer: string;
+}
+
+export interface ThemeMusic {
+  id: string,
+  name: string,
+  tracks: MusicEntry[]
 }
 
 export interface ThemeEntry extends Partial<Theme> {
@@ -344,6 +350,6 @@ export async function updateMountedCss(animate = true) {
   swapOverlay.style.pointerEvents = 'none';
 }
 
-export async function getMusicTracks() {
-  return currentTheme.music
+export function getMusicTracks(): MusicEntry[] {
+  return currentTheme.music.flatMap(x => x.tracks)
 }

@@ -280,3 +280,13 @@ export function setConfigString(name: string, value: string) {
   cache[name] = value;
   localStorage['config-' + name] = value;
 }
+export function getConfigNumber(name: string, def: number) {
+  if (name in cache) return cache[name];
+  const v = localStorage['config-' + name];
+  cache[name] = v === undefined ? def : parseFloat(v);
+  return cache[name];
+}
+export function setConfigNumber(name: string, value: number) {
+  cache[name] = value;
+  localStorage['config-' + name] = value.toString();
+}

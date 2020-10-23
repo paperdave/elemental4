@@ -63,12 +63,8 @@ export async function loadDeveloperThemePreset(id: string) {
       sketch: developerThemePresets[id.slice(9)].sketch,
     };
   } else if (id.startsWith('theme:')) {
-    console.log(id)
-    console.log(id.slice(6))
     const x = getThemeList();
-    console.log(x);
     const theme = x.find(y => y.id === id.slice(6));
-    console.log(theme);
     if(theme) {
       devTheme = {
         json: {
@@ -80,7 +76,6 @@ export async function loadDeveloperThemePreset(id: string) {
         style: theme.styles && typeof theme.styles === 'string' ? await fetch(theme.styles).then(x => x.text()) : '',
         sketch: theme.sketch ? await fetch(theme.sketch).then(x => x.text()) : defaultTheme.sketch,
       };
-      console.log(devTheme)
     }
   }
   themeWindow && themeWindow.postMessage({

@@ -3,13 +3,14 @@ import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from 
 import { animateDialogClose, animateDialogOpen, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi } from "./element-game";
 import { createLoadingUi } from "./loading";
-import { resetAllThemes, resetAllElements, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer } from "./savefile";
+import { resetAllThemes, resetAllElements, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber } from "./savefile";
 import { getServerList, setActiveServer } from "./server-manager";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
 import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
+import { updateMusicVolume } from "./audio";
 
 let themeUpdated = false;
 
@@ -289,6 +290,18 @@ export async function InitSettings() {
   });
 
   await updateStorageEstimation();
+
+  const volumeSound = getConfigNumber('volume-sound', 1);
+  const volumeMusic = getConfigNumber('volume-music', 0.5);
+  (document.querySelector('[data-volume-slider="sound"]') as any).value = volumeSound * 100;
+  document.querySelector('[data-volume-slider="sound"]').addEventListener('input', (x) => {
+    setConfigNumber('volume-sound', (x.currentTarget as any).value/100);
+  });
+  (document.querySelector('[data-volume-slider="music"]') as any).value = volumeMusic * 100;
+  document.querySelector('[data-volume-slider="music"]').addEventListener('input', (x) => {
+    setConfigNumber('volume-music', (x.currentTarget as any).value/100);
+    updateMusicVolume();
+  })
 }
 
 interface StorageEstimate {
@@ -327,6 +340,7 @@ export async function updateStorageEstimation() {
       document.getElementById('storage-yes-breakdown').style.display = 'none';
     }
   } catch (error) {
+    console.log(error);
     document.getElementById('storage-yes-breakdown').style.display = 'none';
     document.getElementById('storage-no-breakdown').style.display = 'none';
   }

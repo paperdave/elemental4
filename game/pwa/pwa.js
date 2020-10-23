@@ -5,7 +5,7 @@ var cacheName = 'ELEMENTAL';
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((r) => {
+    caches.match(e.request, { ignoreSearch: true }).then((r) => {
       // match a cached entry, if not it will run fetch
       return r || fetch(e.request);
     })

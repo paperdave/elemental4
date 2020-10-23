@@ -20,6 +20,7 @@ async function fetchCorsAnywhere(url: string, options?: RequestInit) {
 }
 
 export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn = false): Promise<ThemeEntry | object | null> {
+  if(!url) return;
   let ui: ReturnType<typeof createLoadingUi>;
   if (!isBuiltIn) {
     ui = createLoadingUi();
@@ -153,10 +154,10 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
       const cachedSoundURLs = [];
       json.sounds = Object.fromEntries(await Promise.all(Object.keys(json.sounds).map(async(key) => {
         return [key, await Promise.all(json.sounds[key].map(async(x) => {
-          const soundURL = `/cache_data/${json.id}/sound/${encodeURIComponent(x.url)}`;
+          const soundURL = `/cache_data/${json.id}/audio/${encodeURIComponent(x.url)}`;
           if (!cachedSoundURLs.includes(x.url)){
             const sound = (await fetchCorsAnywhere(resolve(url, x.url))).response;
-            await themeCache.put(soundURL, sound.clone());      
+            await themeCache.put(soundURL, sound.clone());
             cachedSoundURLs.push(x.url);
           }
           return {
@@ -165,6 +166,21 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
           };
         }))];
       })))
+    }
+    if(json.music) {
+      const cachedSoundURLs = [];
+      json.music = await Promise.all(json.music.map(async(track) => {
+        const musicURL = `/cache_data/${json.id}/audio/${encodeURIComponent(track.url)}`;
+        if (!cachedSoundURLs.includes(track.url)){
+          const sound = (await fetchCorsAnywhere(resolve(url, track.url))).response;
+          await themeCache.put(musicURL, sound.clone());
+          cachedSoundURLs.push(track.url);
+        }
+        return {
+          ...track,
+          url: musicURL
+        };
+      }))
     }
 
     json.isBuiltIn = isBuiltIn;

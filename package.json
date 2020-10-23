@@ -1,6 +1,6 @@
 {
   "name": "elemental4",
-  "version": "4.0.0-beta19",
+  "version": "4.0.0-beta20",
   "description": "Modern reboot of the old item combination game.",
   "main": "dist_server/server/index.js",
   "private": true,
@@ -11,6 +11,7 @@
     "@reverse/emitter": "^2.0.6",
     "@reverse/encoder": "^1.2.10",
     "@reverse/random": "^1.0.12",
+    "@reverse/state": "^2.1.8",
     "@reverse/string": "^1.1.3",
     "@types/file-saver": "^2.0.1",
     "@types/p5": "^0.9.1",

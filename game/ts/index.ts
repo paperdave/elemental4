@@ -10,7 +10,7 @@ import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { asyncAlert, asyncPrompt } from './dialog';
-import { loadSounds, playSound } from './audio';
+import { loadSounds, playMusicTrack, playSound } from './audio';
 
 declare const $production: string;
 declare const $build_date: string;
@@ -188,6 +188,7 @@ async function boot(MenuAPI: MenuAPI) {
 
   document.getElementById('game').classList.add('animate-in');
   playSound('startup');
+  playMusicTrack();
 }
 async function kill() {
   

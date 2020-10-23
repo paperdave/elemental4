@@ -182,7 +182,6 @@ export function ElementDom(elem2: Elem) {
 // Adds an element and has most element logic
 export async function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
   if(!element) return;
-  console.log(element);
   const alreadyExistingDom = document.querySelector(`[data-element="${element.id}"]`) as HTMLElement;
   
   if (alreadyExistingDom) {
@@ -248,7 +247,7 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
         elementErrorAnimation(dom);
         
         const api = getAPI('suggestion');
-        if(api && !OFFLINE) {
+        if (api) {
           const [base, saturation, lightness] = randomOf([element, element2]).display.color.split('_');
           
           suggestResult = {
