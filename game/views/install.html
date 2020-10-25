@@ -16,7 +16,7 @@
     add(false)
   }, 500);
   function add(running) {
-    window.addEventListener('storage', handler);
+    window.removeEventListener('storage', handler);
     const params = new URLSearchParams(window.location.search)
     const type = params.get('type');
     const url = params.get('url');

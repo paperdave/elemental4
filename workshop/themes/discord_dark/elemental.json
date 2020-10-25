@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../res/theme.schema.json",
   "type": "elemental4:theme",
   "format_version": 1,
   "version": 3,

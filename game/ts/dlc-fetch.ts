@@ -6,7 +6,7 @@ import { version } from "../../package.json";
 import { installServer } from "./savefile";
 import { capitalize } from "@reverse/string";
 import { THEME_VERSION } from "./theme-version";
-import { delay } from "../../shared/shared";
+import { createLoadingUi } from "./loading";
 
 export type DLCType = 'theme' | 'pack' | 'server';
 
@@ -20,6 +20,27 @@ async function fetchCorsAnywhere(url: string, options?: RequestInit) {
 }
 
 export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn = false): Promise<ThemeEntry | object | null> {
+  if(!url) return;
+  let ui: ReturnType<typeof createLoadingUi>;
+  if (!isBuiltIn) {
+    ui = createLoadingUi();
+    ui.status('Adding DLC', 0);
+  }
+  let x;
+  try {
+    const x = await addDLCByUrl2(url, intendedType, isBuiltIn);
+  } catch (error) {
+    console.error(error);
+    if (!isBuiltIn) {
+      await asyncAlert('Error Adding DLC', error.toString());
+    }
+  }
+  if(ui) {
+    ui.dispose();
+  }
+  return x;
+}
+async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = false): Promise<ThemeEntry | object | null> {
   let json, cors
   try {
     json = JSON.parse(url);
@@ -112,13 +133,54 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
         styleURL,
         new Response(new Blob([styles], { type: 'text/css' }), { status: 200 })
       );
-      json.styles = `@import "${styleURL}";`;
+      json.styles = styleURL;
+    }
+    if(json.sketch) {
+      const sketch = await fetchCorsAnywhere(resolve(url, json.sketch)).then(x => x.response.text());
+      const sketchURL = `/cache_data/${json.id}/sketch`;
+      await themeCache.put(
+        sketchURL,
+        new Response(new Blob([sketch], { type: 'text/javascript' }), { status: 200 })
+      );
+      json.sketch = sketchURL;
     }
     if(json.icon) {
       const icon = (await fetchCorsAnywhere(resolve(url, json.icon))).response;
       const iconURL = `/cache_data/${json.id}/icon`;
       await themeCache.put(iconURL, icon.clone());
       json.icon = iconURL;
+    }
+    if(json.sounds) {
+      const cachedSoundURLs = [];
+      json.sounds = Object.fromEntries(await Promise.all(Object.keys(json.sounds).map(async(key) => {
+        return [key, await Promise.all(json.sounds[key].map(async(x) => {
+          const soundURL = `/cache_data/${json.id}/audio/${encodeURIComponent(x.url)}`;
+          if (!cachedSoundURLs.includes(x.url)){
+            const sound = (await fetchCorsAnywhere(resolve(url, x.url))).response;
+            await themeCache.put(soundURL, sound.clone());
+            cachedSoundURLs.push(x.url);
+          }
+          return {
+            ...x,
+            url: soundURL
+          };
+        }))];
+      })))
+    }
+    if(json.music) {
+      const cachedSoundURLs = [];
+      json.music = await Promise.all(json.music.map(async(track) => {
+        const musicURL = `/cache_data/${json.id}/audio/${encodeURIComponent(track.url)}`;
+        if (!cachedSoundURLs.includes(track.url)){
+          const sound = (await fetchCorsAnywhere(resolve(url, track.url))).response;
+          await themeCache.put(musicURL, sound.clone());
+          cachedSoundURLs.push(track.url);
+        }
+        return {
+          ...track,
+          url: musicURL
+        };
+      }))
     }
 
     json.isBuiltIn = isBuiltIn;

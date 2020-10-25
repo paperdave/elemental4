@@ -3,13 +3,14 @@ import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from 
 import { animateDialogClose, animateDialogOpen, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi } from "./element-game";
 import { createLoadingUi } from "./loading";
-import { resetAllThemes, resetAllElements, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer } from "./savefile";
+import { resetAllThemes, resetAllElements, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber } from "./savefile";
 import { getServerList, setActiveServer } from "./server-manager";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
 import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
+import { updateMusicVolume } from "./audio";
 
 let themeUpdated = false;
 
@@ -203,7 +204,7 @@ export async function InitSettings() {
     await addDLCByUrl(text, 'server');
   });
   document.querySelector('#theme-browse').addEventListener('click', () => {
-    window.open('/workshop#themes');
+    window.open('/workshop#themes', '', 'width=800,height=600', true);
   });
   document.querySelector('#theme-devmode').addEventListener('click', () => {
     openDevThemeEditor();
@@ -212,7 +213,6 @@ export async function InitSettings() {
     const conf = getAPI().config;
     if(await asyncConfirm('Remove Server', `Remove ${conf.name || `Untitled Server (type=${conf.type})`}? This will remove all downloaded server data, and your local save files.`)) {
       await uninstallServer(getAPI().baseUrl);
-
     }
   });
 
@@ -290,6 +290,18 @@ export async function InitSettings() {
   });
 
   await updateStorageEstimation();
+
+  const volumeSound = getConfigNumber('volume-sound', 1);
+  const volumeMusic = getConfigNumber('volume-music', 0.5);
+  (document.querySelector('[data-volume-slider="sound"]') as any).value = volumeSound * 100;
+  document.querySelector('[data-volume-slider="sound"]').addEventListener('input', (x) => {
+    setConfigNumber('volume-sound', (x.currentTarget as any).value/100);
+  });
+  (document.querySelector('[data-volume-slider="music"]') as any).value = volumeMusic * 100;
+  document.querySelector('[data-volume-slider="music"]').addEventListener('input', (x) => {
+    setConfigNumber('volume-music', (x.currentTarget as any).value/100);
+    updateMusicVolume();
+  })
 }
 
 interface StorageEstimate {
@@ -303,27 +315,34 @@ interface StorageEstimate {
 }
 
 export async function updateStorageEstimation() {
-  const { quota, usage, usageDetails } = await navigator.storage.estimate() as StorageEstimate
-  document.querySelector('#storage-quota-used').innerHTML = escapeHTML(fileSize(usage));
-  document.querySelector('#storage-quota-total').innerHTML = escapeHTML(fileSize(quota));
-  if(usageDetails) {
-    const caches = usageDetails.caches || 0;
-    const indexedDB = usageDetails.indexedDB || 0;
-    const workers = usageDetails.serviceWorkerRegistrations || 0;
-    const totalBreakdown = caches+indexedDB+workers;
-    document.getElementById('storage-bar').innerHTML = [
-      caches > 0 && `<div style='flex:1 1 ${100*(caches/totalBreakdown)}%' class='storage-caches'></div>`,
-      indexedDB > 0 && `<div style='flex:1 1 ${100*(indexedDB/totalBreakdown)}%' class='storage-indexedDB'></div>`,
-      workers > 0 && `<div style='flex:1 1 ${100*(workers/totalBreakdown)}%' class='storage-workers'></div>`,
-    ].filter(Boolean).join('');
-    document.getElementById('storage-breakdown').innerHTML = [
-      caches > 0 && `<tr><td style='width:max-content'><strong>${fileSize(caches)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-caches'></span></td><td>Game and Theme Caches</td></tr>`,
-      indexedDB > 0 && `<tr><td style='width:max-content'><strong>${fileSize(indexedDB)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-indexedDB'></span></td><td>Element and Config Databases</td></tr>`,
-      workers > 0 && `<tr><td style='width:max-content'><strong>${fileSize(workers)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-workers'></span></td><td>Service Worker Registrations</td></tr>`,
-    ].filter(Boolean).join('');
-    document.getElementById('storage-no-breakdown').style.display = 'none';
-  } else {
+  try {
+    const { quota, usage, usageDetails } = await navigator.storage.estimate() as StorageEstimate
+    document.getElementById('storage-no-anything').style.display = 'none';
+    document.querySelector('#storage-quota-used').innerHTML = escapeHTML(fileSize(usage));
+    document.querySelector('#storage-quota-total').innerHTML = escapeHTML(fileSize(quota));
+    if(usageDetails) {
+      const caches = usageDetails.caches || 0;
+      const indexedDB = usageDetails.indexedDB || 0;
+      const workers = usageDetails.serviceWorkerRegistrations || 0;
+      const totalBreakdown = caches+indexedDB+workers;
+      document.getElementById('storage-bar').innerHTML = [
+        caches > 0 && `<div style='flex:1 1 ${100*(caches/totalBreakdown)}%' class='storage-caches'></div>`,
+        indexedDB > 0 && `<div style='flex:1 1 ${100*(indexedDB/totalBreakdown)}%' class='storage-indexedDB'></div>`,
+        workers > 0 && `<div style='flex:1 1 ${100*(workers/totalBreakdown)}%' class='storage-workers'></div>`,
+      ].filter(Boolean).join('');
+      document.getElementById('storage-breakdown').innerHTML = [
+        caches > 0 && `<tr><td style='width:max-content'><strong>${fileSize(caches)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-caches'></span></td><td>Game and Theme Caches</td></tr>`,
+        indexedDB > 0 && `<tr><td style='width:max-content'><strong>${fileSize(indexedDB)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-indexedDB'></span></td><td>Element and Config Databases</td></tr>`,
+        workers > 0 && `<tr><td style='width:max-content'><strong>${fileSize(workers)}</strong></td><td style='display:flex;align-items:center;justify-content:center'><span class='inline-storage-icon storage-workers'></span></td><td>Service Worker</td></tr>`,
+      ].filter(Boolean).join('');
+      document.getElementById('storage-no-breakdown').style.display = 'none';
+    } else {
+      document.getElementById('storage-yes-breakdown').style.display = 'none';
+    }
+  } catch (error) {
+    console.log(error);
     document.getElementById('storage-yes-breakdown').style.display = 'none';
+    document.getElementById('storage-no-breakdown').style.display = 'none';
   }
 }
 

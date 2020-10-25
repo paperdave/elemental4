@@ -1,0 +1,19 @@
+{
+  "files": [
+    "loader.js",
+    "editor/editor.main.js",
+    "editor/editor.main.css",
+    "editor/editor.main.nls.js",
+    "language/json/jsonMode.js",
+    "language/json/jsonWorker.js",
+    "language/css/cssMode.js",
+    "language/css/cssWorker.js",
+    "language/typescript/tsMode.js",
+    "language/typescript/tsWorker.js",
+    "basic-languages/css/css.js",
+    "basic-languages/javascript/javascript.js",
+    "base/worker/workerMain.js",
+    "base/browser/ui/codicons/codicon/codicon.ttf"
+  ],
+  "base": "node_modules/monaco-editor/min/vs"
+}

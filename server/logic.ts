@@ -122,7 +122,7 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
       await logSuggestion(
         getCurrentTime(),
         recipe,
-        suggest.text,
+        suggest.text.replace(/\s+/g, ' '),
         suggest.color.base,
         suggest.color.saturation,
         suggest.color.lightness,
@@ -195,7 +195,7 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
           await logSuggestion(
             getCurrentTime(),
             recipe,
-            suggest.text,
+            suggest.text.replace(/\s+/g, ' '),
             suggest.color.base,
             suggest.color.saturation,
             suggest.color.lightness,
@@ -304,7 +304,7 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
             await logSuggestion(
               getCurrentTime(),
               recipe,
-              suggest.text,
+              suggest.text.replace(/\s+/g, ' '),
               suggest.color.base,
               suggest.color.saturation,
               suggest.color.lightness,
@@ -325,7 +325,7 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
             await logSuggestion(
               getCurrentTime(),
               recipe,
-              suggest.text,
+              suggest.text.replace(/\s+/g, ' '),
               suggest.color.base,
               suggest.color.saturation,
               suggest.color.lightness,

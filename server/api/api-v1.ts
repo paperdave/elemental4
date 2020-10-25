@@ -253,6 +253,12 @@ export default function() {
                 let data = ((await Promise.all(files.map(x => readFile(path.join(GAME_DATA_FOLDER, 'db', x + '.e4db'))))).join('') + newEntries.map(x => JSON.stringify(x)).join('\n') + '\n').replace(/\n\n+/g, '\n');
                 let length = data.split('\n').length - 1;
 
+                if (data.trim() === '') {
+                    res.contentType('text/elemental4-data')
+                    res.setHeader('Elem4-Entry-Length', 0);
+                    res.send('');
+                    return;
+                }
                 res.contentType('text/elemental4-data')
                 res.setHeader('Elem4-Entry-Length', length);
                 res.send(data);

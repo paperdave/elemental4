@@ -2,7 +2,7 @@ import Color from "color";
 import { ElementalColorPalette } from "../../shared/elem";
 import { E4ColorPalette } from "../../shared/elemental4-types";
 import { delay } from "../../shared/shared";
-import { addDLCByUrl } from "./dlc-fetch";
+import { addDLCByUrl, DLCType } from "./dlc-fetch";
 import { version } from "../../package.json";
 import { getInstalledThemes, installThemes, uninstallThemes } from "./savefile";
 import { SoundId } from "./audio";
@@ -10,6 +10,8 @@ import { addThemeToUI } from "./settings";
 import { THEME_VERSION } from "./theme-version";
 import { asyncConfirm } from "./dialog";
 import { capitalize } from "@reverse/string";
+import { reloadElementCssColors } from "./element-color";
+import { createQueueExec } from "../../shared/async-queue-exec";
 
 let init = false;
 
@@ -24,15 +26,25 @@ export interface ThemeColorConfigWithColor {
   lightnessMultiplier: number;
 }
 
-interface SoundEntry {
+export interface SoundEntry {
   url: string;
-  pitch: number;
-  pitchVariance: number;
+  volume?: number;
+  pitch?: number;
+  pitchVariance?: number;
+}
+
+export interface MusicEntry {
+  url: string;
+  fade: 'fade-anywhere' | 'no-fade' | 'fade-both' | 'fade-start' | 'fade-end';
+  loop: [number, number] | 'loop' | 'no-loop';
+  title: string;
+  author: string;
+  volume?: number;
 }
 
 export interface Theme {
   sounds: Record<SoundId, SoundEntry[]>;
-  music: string[];
+  music: ThemeMusic[];
   colors: Partial<Record<E4ColorPalette, ThemeColorConfig>>;
   styles: string | string[];
   sketch?: string;
@@ -40,9 +52,18 @@ export interface Theme {
 
 export interface ThemeFlattenedColors {
   sounds: Partial<Record<SoundId, string>>;
-  music: string[];
+  music: ThemeMusic[];
   colors: Record<ElementalColorPalette, ThemeColorConfigWithColor>;
-  styles: string;
+  styles: string[];
+  sketch: string;
+  style_developer: string;
+  sketch_developer: string;
+}
+
+export interface ThemeMusic {
+  id: string,
+  name: string,
+  tracks: MusicEntry[]
 }
 
 export interface ThemeEntry extends Partial<Theme> {
@@ -71,8 +92,6 @@ export function getThemeList(): ThemeEntry[] {
   return themes;
 }
 
-const joinIfArray = (x: string|string[]) => typeof x === 'string' ? x : x.join('\n');
-
 let currentTheme: ThemeFlattenedColors;
 
 export function getTheme(): ThemeFlattenedColors {
@@ -94,8 +113,10 @@ export function calculateTheme() {
     sounds: {},
     music: [],
     colors: {},
-    styles: '',
-    sketch: ''
+    styles: [],
+    sketch: '',
+    sketch_developer: '',
+    style_developer: '',
   };
 
   themesEnabled
@@ -104,11 +125,23 @@ export function calculateTheme() {
     .map(x => all.find(y => y.id === x))
     .filter(Boolean)
     .forEach((next) => {
-      if(next.sounds) theme.sounds = { ...theme.sounds, ...next.sounds }
+      if(next.sounds) {
+        if (next.sound_merge_mode === 'merge') {
+          theme.sounds = { ...theme.sounds, ...next.sounds }
+        } else {
+          theme.sounds = next.sounds
+        }
+      }
       if(next.colors) theme.colors = { ...theme.colors, ...next.colors }
-      if(next.music) theme.music = [ ...theme.music, ...next.music ]
-      if(next.styles) theme.styles = joinIfArray(theme.styles) + '\n' + joinIfArray(next.styles);
-      if(next.sketch) theme.sketch = theme.sketch;
+      if(next.music) theme.music = theme.music.concat({
+        id: next.id,
+        name: next.name,
+        tracks: next.music
+      })
+      if(next.styles) theme.styles = Array.isArray(next.styles) ? theme.styles.concat(...next.styles) : theme.styles.concat(next.styles);
+      if(next.sketch) theme.sketch = next.sketch;
+      if((next as any).style_developer) theme.style_developer = (next as any).style_developer;
+      if((next as any).sketch_developer) theme.sketch_developer = (next as any).sketch_developer;
     });
   
   currentTheme = {
@@ -146,6 +179,9 @@ export function calculateTheme() {
     music: theme.music,
     sounds: theme.sounds,
     styles: theme.styles,
+    sketch: theme.sketch,
+    sketch_developer: theme.sketch_developer,
+    style_developer: theme.style_developer,
   };
 }
 
@@ -190,7 +226,7 @@ export function uninstallTheme(id) {
 
 function getCSS() {
   const theme = getTheme();
-  return theme.styles + '\n' + ([
+  const css = theme.styles.map(x => `@import "${x}";`).join('\n') + '\n' + ([
     'white',
     'black',
     'grey',
@@ -206,7 +242,8 @@ function getCSS() {
     'purple',
     'magenta',
     'hot-pink',
-  ] as E4ColorPalette[]).map(x => `[data-color="${x}"]{--color:${theme.colors[x].color}}`).join('');
+  ] as E4ColorPalette[]).map(x => `[data-color="${x}"]{--color:${theme.colors[x].color}}`).join('\n');
+  return css;
 }
 
 const swapOverlay = document.querySelector('#THEME_SWAP_OVERLAY') as HTMLElement;
@@ -227,7 +264,7 @@ export async function MountThemeCSS() {
   );
   await delay(100)
   init = true;
-  updateMountedCss();
+  await updateMountedCss();
 
   try {
     const obj = JSON.parse(localStorage.getItem('workshop_add'))
@@ -241,15 +278,20 @@ export async function MountThemeCSS() {
     
   }
 
+  const addDLCPopup = createQueueExec(async(url: string, type: DLCType) => {
+    if(await asyncConfirm('Add ' + capitalize(type) + '?', `You are about to install DLC from "${url}", make sure you trust the content you are installing.`, 'Add DLC')) {
+      await addDLCByUrl(url, type);
+    }
+  })
+
   window.addEventListener('storage', async(e) => {
     if(e.key == "workshop_add") {
       try {
         const obj = JSON.parse(localStorage.getItem('workshop_add') || 'x')
         localStorage.removeItem('workshop_add');
         if (obj.url && obj.type) {
-          if(await asyncConfirm('Add ' + capitalize(obj.type) + '?', `You are about to install DLC from ${obj.url}, make sure you trust the content you are installing.`, 'Add DLC')) {
-            addDLCByUrl(obj.url, obj.type);
-          }
+          await addDLCPopup(obj.url, obj.type);
+          localStorage.setItem('close_workshop_dialog', obj.date)
         }
       } catch (error) {
 
@@ -257,7 +299,9 @@ export async function MountThemeCSS() {
     }
   })
 }
+let themeSketchObjectUrl = null;
 export async function updateMountedCss(animate = true) {
+  console.log('Update Mounted CSS')
   swapOverlay.style.pointerEvents = 'all';
   const string = JSON.stringify(themesEnabled);
   if(string === '[]') {
@@ -268,6 +312,24 @@ export async function updateMountedCss(animate = true) {
   const oldStyle = style;
   style = document.createElement("style");
   calculateTheme();
+
+  if (themeSketchObjectUrl) {
+    URL.revokeObjectURL(themeSketchObjectUrl);
+    themeSketchObjectUrl = null;
+  }
+  
+  const theme = getTheme();
+  let sketchURL = theme.sketch || '';
+  if (theme.sketch_developer) {
+    sketchURL = themeSketchObjectUrl = URL.createObjectURL(new Blob([ theme.sketch_developer ]))
+  }
+  const p5 = document.getElementById('p5_background') as HTMLIFrameElement;
+  if (sketchURL) {
+    p5.src = '/p5_background?sketch=' + btoa(await fetch(sketchURL).then(x => x.text()));
+  } else {
+    p5.src = 'about:blank';
+  }
+
   style.innerHTML = getCSS();
   if (oldStyle && animate) {
     swapOverlay.style.opacity = '1';
@@ -276,7 +338,9 @@ export async function updateMountedCss(animate = true) {
   }
   document.head.appendChild(style);
   if (oldStyle) {
+    await delay(20);
     oldStyle.remove();
+    reloadElementCssColors()
     if (animate) {
       await delay(20);
       swapOverlay.style.transitionDuration = '300ms';
@@ -284,4 +348,8 @@ export async function updateMountedCss(animate = true) {
     }
   }
   swapOverlay.style.pointerEvents = 'none';
+}
+
+export function getMusicTracks(): MusicEntry[] {
+  return currentTheme.music.flatMap(x => x.tracks)
 }

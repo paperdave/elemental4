@@ -1,7 +1,7 @@
 import { ElementalBaseAPI, SaveFileAPI, getSubAPI, ServerSavefileEntry } from '../../shared/elem';
 import { debounce } from '@reverse/debounce';
 import { Store } from '../../shared/store';
-import localForage from 'localforage';
+import localForage from '../../shared/localForage';
 import { escapeHTML } from '../../shared/shared';
 import { connectApi } from './api';
 import { builtInServers } from './server-manager';
@@ -101,30 +101,44 @@ export function processBaseUrl(url: string) {
 }
 const saveFileCache: Record<string, Set<string>> = {};
 export async function getOwnedElements(api: ElementalBaseAPI) {
-  const url = processBaseUrl(api.baseUrl);
+  const saveFileApi = getSubAPI(api, 'serverSaveFile');
   const saveFileName = await getActiveSaveFile(api);
-  if(!saveFileCache[saveFileName + ':' + url]) {
-    const storage = await data.get('savefile:' + saveFileName + ':' + url) as string[];
-    if (storage) {
-      saveFileCache[saveFileName + ':' + url] = new Set(storage);
-    } else {
-      saveFileCache[saveFileName + ':' + url] = new Set(await api.getStartingInventory());
+  if (saveFileApi) {
+    return await saveFileApi.readSaveFileElements(saveFileName);
+  } else {
+    const url = processBaseUrl(api.baseUrl);
+    if(!saveFileCache[saveFileName + ':' + url]) {
+      const storage = await data.get('savefile:' + saveFileName + ':' + url) as string[];
+      if (storage) {
+        saveFileCache[saveFileName + ':' + url] = new Set(storage);
+      } else {
+        saveFileCache[saveFileName + ':' + url] = new Set(await api.getStartingInventory());
+      }
     }
+    return [...saveFileCache[saveFileName + ':' + url]]
   }
-  return [...saveFileCache[saveFileName + ':' + url]]
 }
 export async function setElementAsOwned(api: ElementalBaseAPI, id: string) {
+  const saveFileApi = getSubAPI(api, 'serverSaveFile');
   const saveFileName = await getActiveSaveFile(api);
-  const url = processBaseUrl(api.baseUrl);
-  await getOwnedElements(api);
-  saveFileCache[saveFileName + ':' + url].add(id);
-  await data.set('savefile:' + saveFileName + ':' + url, [...saveFileCache[saveFileName + ':' + url]]);
+  if (saveFileApi) {
+    await saveFileApi.writeNewElementToSaveFile(saveFileName, id);
+  } else {
+    const url = processBaseUrl(api.baseUrl);
+    await getOwnedElements(api);
+    saveFileCache[saveFileName + ':' + url].add(id);
+    await data.set('savefile:' + saveFileName + ':' + url, [...saveFileCache[saveFileName + ':' + url]]);
+  }
 }
 
 export async function getAPISaveFiles(api: ElementalBaseAPI): Promise<ServerSavefileEntry[]> {
   const saveFileApi = getSubAPI(api, 'serverSaveFile');
   if (saveFileApi) {
-    return saveFileApi.getSaveFiles();
+    try {
+      return saveFileApi.getSaveFiles();
+    } catch (error) {
+      return [];
+    }
   } else {
     return await data.get('savefile_list:' + processBaseUrl(api.baseUrl)) as ServerSavefileEntry[] || [{ id: 'main', name: 'Main Save' }];
   }
@@ -133,15 +147,23 @@ export function canCreateSaveFile(api: ElementalBaseAPI, name: string): boolean 
   if(name.length > 16) return false;
   const saveFileApi = getSubAPI(api, 'serverSaveFile');
   if (saveFileApi) {
-    return saveFileApi.canCreateSaveFile(name);
+    try {
+      return saveFileApi.canCreateSaveFile(name);
+    } catch (error) {
+      return false
+    }
   } else {
     return true;
   }
 }
-export async function createNewSaveFile(api: ElementalBaseAPI, name: string): Promise<string> {
+export async function createNewSaveFile(api: ElementalBaseAPI, name: string): Promise<string|false> {
   const saveFileApi = getSubAPI(api, 'serverSaveFile');
   if (saveFileApi) {
-    return saveFileApi.createNewSaveFile(name);
+    try {
+      return saveFileApi.createNewSaveFile(name);
+    } catch (error) {
+      return false;
+    }
   } else {
     const saves = await data.get('savefile_list:' + processBaseUrl(api.baseUrl)) as ServerSavefileEntry[] || [{ id: 'main', name: 'Main Save' }];
     const id = Math.random().toString().slice(2,10);
@@ -154,7 +176,11 @@ export function canRenameSaveFile(api: ElementalBaseAPI, id: string, name: strin
   if(name.length > 16) return false;
   const saveFileApi = getSubAPI(api, 'serverSaveFile');
   if (saveFileApi) {
-    return saveFileApi.canRenameSaveFile(id, name);
+    try {
+      return saveFileApi.canRenameSaveFile(id, name);
+    } catch (error) {
+      return false
+    }
   } else {
     return true;
   }
@@ -162,7 +188,11 @@ export function canRenameSaveFile(api: ElementalBaseAPI, id: string, name: strin
 export async function renameSaveFile(api: ElementalBaseAPI, id: string, name: string): Promise<boolean> {
   const saveFileApi = getSubAPI(api, 'serverSaveFile');
   if (saveFileApi) {
-    return saveFileApi.renameSaveFile(id, name);
+    try {
+      return saveFileApi.renameSaveFile(id, name);
+    } catch (error) {
+      return false;
+    }
   } else {
     const saves = await data.get('savefile_list:' + processBaseUrl(api.baseUrl)) as ServerSavefileEntry[] || [{ id: 'main', name: 'Main Save' }];
     const find = saves.find(x => x.id === id)
@@ -177,7 +207,11 @@ export function canDeleteSaveFile(api: ElementalBaseAPI, id: string): boolean {
   if((document.querySelector('#change-savefile') as HTMLSelectElement).options.length === 1) return false;
   const saveFileApi = getSubAPI(api, 'serverSaveFile');
   if (saveFileApi) {
-    return saveFileApi.canDeleteSaveFile(id);
+    try {
+      return saveFileApi.canDeleteSaveFile(id);
+    } catch (error) {
+      return false
+    }
   } else {
     return true;
   }
@@ -194,7 +228,15 @@ export async function deleteSaveFile(api: ElementalBaseAPI, id: string): Promise
 }
 export async function getActiveSaveFile(api: ElementalBaseAPI): Promise<string> {
   if(!activeSavefileCache[api.baseUrl]) {
-    activeSavefileCache[api.baseUrl] = await data.get('savefile_name:' + processBaseUrl(api.baseUrl)) || 'main';
+    activeSavefileCache[api.baseUrl] = await data.get('savefile_name:' + processBaseUrl(api.baseUrl));
+    if (!activeSavefileCache[api.baseUrl]) {
+      const saveFileApi = getSubAPI(api, 'serverSaveFile');
+      if (saveFileApi) {
+        activeSavefileCache[api.baseUrl] = saveFileApi.getSaveFiles()[0].id
+      } else {
+        activeSavefileCache[api.baseUrl] = 'main';
+      }
+    }
   }
   return activeSavefileCache[api.baseUrl]
 }
@@ -237,4 +279,14 @@ export function getConfigString(name: string, def: string) {
 export function setConfigString(name: string, value: string) {
   cache[name] = value;
   localStorage['config-' + name] = value;
+}
+export function getConfigNumber(name: string, def: number) {
+  if (name in cache) return cache[name];
+  const v = localStorage['config-' + name];
+  cache[name] = v === undefined ? def : parseFloat(v);
+  return cache[name];
+}
+export function setConfigNumber(name: string, value: number) {
+  cache[name] = value;
+  localStorage['config-' + name] = value.toString();
 }

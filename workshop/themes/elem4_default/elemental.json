@@ -11,12 +11,12 @@
   "icon": "./icon.png",
   "sound_merge_mode": "override",
   "sounds": {
-    "element.combine": [{ "url": "/sound/element-combine.mp3" }],
-    "element.invalid": [{ "url": "/sound/element-invalid.mp3" }],
-    "element.pickup": [{ "url": "/sound/element-pickup.mp3" }],
-    "element.valid": [{ "url": "/sound/element-valid.mp3" }],
-    "element.valid.rediscover": [{ "url": "/sound/element-valid.mp3" }],
-    "element.drop": [{ "url": "/sound/element-drop.mp3" }],
+    "element.combine": [{ "url": "sound/element-combine.mp3" }],
+    "element.invalid": [{ "url": "sound/element-invalid.mp3" }],
+    "element.pickup": [{ "url": "sound/element-pickup.mp3" }],
+    "element.valid": [{ "url": "sound/element-valid.mp3" }],
+    "element.valid.rediscover": [{ "url": "sound/element-valid.mp3" }],
+    "element.drop": [{ "url": "sound/element-drop.mp3" }],
     "news.new-element": [],
     "dialog.open": [],
     "dialog.close": [],
@@ -28,9 +28,9 @@
   "music_merge_mode": "combine",
   "music": [
     {
-      "fade": "both",
-      "loop": "full",
-      "url": "/music/music1.mp3",
+      "fade": "fade-both",
+      "loop": "loop",
+      "url": "music/music1.mp3",
       "title": "Elemental 4 Song",
       "author": "Justin Tan"
     }

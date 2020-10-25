@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../res/theme.schema.json",
+  "type": "elemental4:theme",
+  "format_version": 1,
+  "id": "terraria",
+  "version": 1,
+  "name": "Terraria Theme",
+  "description": "A theme that gives the game Terraria Colors.",
+  "author": "ThrRichard",
+  "icon": "https://lh3.googleusercontent.com/BoAvMI_6JGNRBp_3gFaVuLuqW_4J-rjtbR_giKFoJRvZmDiPtDlnLMur9cT7sTTfeos",
+  "styles": "./style.css"
+}

@@ -5,7 +5,6 @@ import { randomString, sortCombo } from '../shared';
 import Color from 'color';
 import { SimpleEmitter } from '@reverse/emitter';
 import io from 'socket.io-client';
-import { ChunkedStore } from '../store-chunk';
 import { createQueueExec } from '../async-queue-exec';
 
 const ONE_DAY = 24*60*60*1000;
@@ -112,7 +111,7 @@ export class Elemental4API
         //   method: 'POST',
         //   body: JSON.stringify({ comment: mark }),
         //   headers: {
-        //     'Authorization': `Elemental4User "${this.saveFile.get('clientSecret')}" "${this.saveFile.get('clientName')}"`,
+        //     'Authorization': `Elemental4User "${this.saveFile.get('clientSecret')}" "${encodeURIComponent(this.saveFile.get('clientName'))}"`,
         //     'Content-Type': 'application/json'
         //   }
         // }).then(r=>r.text()).then(() => {
@@ -319,7 +318,7 @@ export class Elemental4API
         vote: false,
       }),
       headers: {
-        'Authorization': `Elemental4User "${this.saveFile.get('clientSecret')}" "${this.saveFile.get('clientName')}"`,
+        'Authorization': `Elemental4User "${this.saveFile.get('clientSecret')}" "${encodeURIComponent(this.saveFile.get('clientName'))}"`,
         'Content-Type': 'application/json'
       }
     }).then(x => x.json()) as E4SuggestionResponse;
@@ -343,7 +342,7 @@ export class Elemental4API
         vote: true,
       }),
       headers: {
-        'Authorization': `Elemental4User "${this.saveFile.get('clientSecret')}" "${this.saveFile.get('clientName')}"`,
+        'Authorization': `Elemental4User "${this.saveFile.get('clientSecret')}" "${encodeURIComponent(this.saveFile.get('clientName'))}"`,
         'Content-Type': 'application/json'
       }
     }).then(x => x.json()) as E4SuggestionResponse;

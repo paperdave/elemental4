@@ -1,6 +1,6 @@
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats } from "../elem";
 
-export class BlankAPI extends ElementalBaseAPI {  
+export class BlankExampleAPI extends ElementalBaseAPI {  
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
     return true;
   }
@@ -21,5 +21,4 @@ export class BlankAPI extends ElementalBaseAPI {
   async getStartingInventory(): Promise<string[]> {
     return ['1','2','3','4'];
   }
-
 }

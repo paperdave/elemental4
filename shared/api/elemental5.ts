@@ -1,9 +1,62 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats } from "../elem";
+import { Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ElementalRules, ServerSavefileAPI, ServerSavefileEntry, ServerStats } from "../elem";
 
-export class Elemental5API extends ElementalBaseAPI {
+const colorMap: Record<string, ElementalColorPalette> = {
+  tan: 'brown',
+  white: 'white',
+  black: 'black',
+  grey: 'grey',
+  brown: 'dark-brown',
+  dark_red: 'dark-red',
+  red: 'red',
+  orange: 'orange',
+  dark_yellow: 'dark-yellow',
+  yellow: 'yellow',
+  green: 'green',
+  aqua: 'aqua',
+  light_blue: 'blue',
+  blue: 'dark-blue',
+  dark_blue: 'navy-blue',
+  purple: 'purple',
+  magenta: 'magenta',
+  pink: 'pink'
+}
+
+export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI {
   static type = 'elemental5';
 
+  private accounts: ServerSavefileEntry[];
+  
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
+    this.accounts = this.saveFile.get('accounts', []);
+    
+    if (this.accounts.length === 0) {
+      while (true) {
+        let token = await this.ui.prompt({
+          title: 'Elemental 5 Login',
+          text: 'Go to https://dev.elemental5.net and copy your API Token to login.',
+          defaultText: '',
+          confirmButton: 'Log In',
+        });
+        if (!token) {
+          return false;
+        }
+        
+        const response = await fetch(this.baseUrl + '/validate_user_string?user_string=' + token).then((x) => x.json())
+        if (response.valid !== "true") {
+          this.saveFile.set('user_string', 'dummy');
+          continue
+        }
+        this.accounts = [
+          {
+            id: token,
+            name: 'Default User'
+          }
+        ];
+        this.saveFile.set('accounts', this.accounts);
+        break
+      }
+    }
+
     return true;
   }
   async close(): Promise<void> {
@@ -15,13 +68,65 @@ export class Elemental5API extends ElementalBaseAPI {
     }
   }
   async getElement(id: string): Promise<Elem> {
-    return null;
+    const elem = (await this.store.get(encodeURIComponent(id))) || null;
+    if(elem) {
+      return {
+        id: elem.name,
+        display: {
+          text: elem.name,
+          color: colorMap[elem.color],
+        },
+        stats: {
+          creators: [elem.pioneer]
+        }
+      }
+    }
   }
   async getCombo(ids: string[]): Promise<string[]> {
-    return [];
+    return (await this.store.get(ids.map(x => encodeURIComponent(x)).join('+'))) || [];
   }
   async getStartingInventory(): Promise<string[]> {
-    return ['1','2','3','4'];
+    return [];
   }
-
+  getSaveFiles(): ServerSavefileEntry[] {
+    return this.accounts;
+  }
+  async readSaveFileElements(id: string): Promise<string[]> {
+    const elementCount = this.saveFile.get('element_count.' + id, 0);
+    const update = await fetch(this.baseUrl + '/sync_elements?user_string=' + id + '&num_elements=' + elementCount).then(x => x.text());
+    
+    if (update !== 'up_to_date') {
+      const json = JSON.parse(update);
+      await Promise.all(json.map((entry) => {
+        return this.store.set(encodeURIComponent(entry.name), entry);
+      }));
+      const inventory = json.map(x => x.name);
+      this.saveFile.set('inventory.' + id, inventory)
+      this.saveFile.set('element_count.' + id, json.length);
+      return inventory;
+    } else {
+      return this.saveFile.get('inventory.' + id);
+    }
+  }
+  async writeNewElementToSaveFile(id: string, elementId: string) {
+    this.saveFile.set('inventory.' + id, [...new Set(this.saveFile.get('inventory.' + id, []).concat(elementId).filter(Boolean))]);
+  }
+  canCreateSaveFile(name: string): boolean {
+    return false;
+  }
+  createNewSaveFile(name: string): Promise<string> {
+    throw new Error("Method not implemented.");
+  }
+  canDeleteSaveFile(id: string): boolean {
+    return false;
+  }
+  deleteSaveFile(id: string): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
+  canRenameSaveFile(id: string, name: string): boolean {
+    return false;
+  }
+  renameSaveFile(id: string, name: string): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
 }

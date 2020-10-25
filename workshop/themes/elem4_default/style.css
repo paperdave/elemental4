@@ -287,8 +287,7 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
     transform: translateX(0);
   }
 }
-#GAME{background-color:transparent;user-select:none;-webkit-font-smoothing:antialiased;font-smoothing:antialiased}
-#GAME.animate-in{background-color:var(--background-element-game);color:var(--text-main);transition:background-color 100ms}
+#game{background-color:transparent;user-select:none;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;color:var(--text-main)}
 .top-bar{
   background-color: var(--background-top-bar);
   position: absolute;
@@ -365,6 +364,84 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
   right: 0;
   display: flex;
 }
+button, select {
+  margin: auto;
+  border: 1px solid #888;
+  background-color: #DEDEDE;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  color: black;
+  padding: 8px;
+}
+input:not([type="range"]) {
+  margin: auto;
+  border: 1px solid #000;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  color: black;
+  padding: 8px;
+}
+button.huge, select.huge {
+  font-size: 18px;
+  padding: 10px;
+}
+button:not(:disabled):hover, select:not(:disabled):hover {
+  outline: none;
+  background-color: #e0bcad;
+  border: 1px solid #b96643;
+}
+button:not(:disabled):active, select:not(:disabled):active {
+  outline: none;
+  background-color: #ff9d7a;
+}
+button:not(:disabled):focus, select:not(:disabled):focus {
+  outline: none;
+  border: 1px solid var(--primary);
+}
+button:disabled, select:disabled {
+  border: 1px solid #AAA;
+  background-color: #FAFAFA;
+  color: #555;
+}
+select {
+  appearance: none;
+  background-position: right 50%!important;
+  background-repeat: no-repeat!important;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=)!important;
+  padding-right: 16px!important;
+}
+input[type='text'], input[type='password'], input[type='email'] {
+  background-color: white;
+  padding-left: 0;
+  text-indent: 10px;
+}
+.quick-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+.quick-loader main {
+  width: 300px;
+  height: 50px;
+  position: relative;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: white;
+  padding: 15px;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
 .element-game-root {
   overflow-x: hidden;
   overflow-y: scroll;
@@ -419,7 +496,7 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
   animation: element-restock 0.65s cubic-bezier(.29,.25,.09,1) 0.25s both;
 }
 .elem.ghost { opacity: 0.5; }
-.elem:not([disabled]):not(textarea):hover::after { /* the hover color */
+.elem:not(:disabled):not(textarea):hover::after { /* the hover color */
   background-color: var(--background-hover);
   display: block;
   position: absolute;
@@ -433,7 +510,7 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
 .elem.animate-in {
   animation: element-appear 200ms ease-out both;
 }
-.elem:not([disabled]):not(textarea):active::after { /* the hover color */
+.elem:not(:disabled):not(textarea):active::after { /* the hover color */
   background-color: var(--background-active);
 }
 .elem.held {
@@ -1203,4 +1280,18 @@ button.secondary {
 }
 .storage-workers {
   background-color: #e6dc7f;
+}
+#p5_background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0;
+  background-color: var(--background-element-game);
+}
+#game.animate-in #p5_background {
+  opacity: 1;
+  transition: opacity 150ms
 }

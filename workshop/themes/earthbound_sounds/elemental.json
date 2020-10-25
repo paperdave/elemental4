@@ -1,0 +1,80 @@
+{
+  "$schema": "../../../res/theme.schema.json",
+  "type": "elemental4:theme",
+  "format_version": 1,
+  "id": "earthbound_sounds",
+  "version": 1,
+  "name": "Earthbound Sounds",
+  "description": "Earthbound: The War Against Scilence!",
+  "author": "Adr",
+  "icon": "./icon.png",
+  "sounds": {
+    "element.combine": [
+      {
+        "url": "./present.wav"
+      }
+    ],
+    "element.invalid": [
+      {
+        "url": "./error.wav"
+      }
+    ],
+    "element.pickup": [
+      {
+        "url": "./cursverti.wav",
+        "volume": 0.9
+      }
+    ],
+    "element.valid": [
+      {
+        "url": "./itemget2.wav"
+      }
+    ],
+    "element.valid.rediscover": [
+      {
+        "url": "./itemget1.wav"
+      }
+    ],
+    "element.drop": [
+      {
+        "url": "./statsdown.wav",
+        "volume": 0.85
+      }
+    ],
+    "news.new-element": [
+      {
+        "url": "./help.wav"
+      }
+    ],
+    "dialog.open": [
+      {
+        "url": "./click.wav"
+      }
+    ],
+    "dialog.close": [
+      {
+        "url": "./dooropen1.wav"
+      }
+    ],
+    "dialog.attention": [
+      {
+        "url": "./miss.wav"
+      }
+    ],
+    "suggest.created": [
+      {
+        "url": "./eb_fanfare.wav"
+      }
+    ],
+    "suggest.voted": [
+      {
+        "url": "./attack1.wav"
+      }
+    ],
+    "startup": [
+      {
+        "url": "./boss.wav"
+      }
+    ]
+  }
+}

@@ -234,7 +234,7 @@ export async function storageAddElement(elem: StorageElementRequest) {
   await logElement(
     getCurrentTime(),
     id,
-    elem.text,
+    elem.text.replace(/\s+/g, ' '),
     elementNameToStorageID(elem.text),
     elem.color.base,
     elem.color.saturation,

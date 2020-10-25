@@ -1,6 +1,23 @@
 import Color from "color";
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, ElementalColorPalette } from "../elem";
 
+const mainPalette = [
+  "white",
+  "black",
+  "grey",
+  "brown",
+  "red",
+  "orange",
+  "yellow",
+  "yellow-green",
+  "green",
+  "aqua",
+  "blue",
+  "dark-blue",
+  "purple",
+  "magenta",
+  "hot-pink",
+]
 export class DebugAllColorsAPI extends ElementalBaseAPI {
   async open(ui?: ElementalLoadingUi): Promise<boolean> { return true; }
   async close(): Promise<void> {}
@@ -11,7 +28,7 @@ export class DebugAllColorsAPI extends ElementalBaseAPI {
       display: {
         text: id,
         color: id,
-        categoryName: 'All Colors',
+        categoryName: mainPalette.includes(id) ? 'Main Palette' : 'Extended Palette (Derived from Main Palette)',
       },
       id
     };

@@ -8,17 +8,32 @@ const cache = {};
 const colorStyleTag = document.createElement('style');
 document.head.appendChild(colorStyleTag);
 
-export function getClassFromDisplay(display: Elem['display']): string {
-  const key = `${display.color},${display.image}`;
-  if (key in cache) return cache[key];
+export function getClassFromDisplay(display: Elem['display'], forceRecalculate?: boolean): string {
+  const key = `${display.color}:::${display.image}`;
+  if (!forceRecalculate && key in cache) return cache[key];
 
-  const c = 'palette_' + Object.keys(cache).length;
+  const c = cache[key] || 'p' + Object.keys(cache).length;
   cache[key] = c;
 
-  const rule = `.${c} { ${getCSSFromDisplay(display)}; }`;
-  colorStyleTag.sheet.insertRule(rule, 0);
+  const rule = `.${c}{${getCSSFromDisplay(display)};}`;
+  colorStyleTag.sheet.insertRule(rule, colorStyleTag.sheet.cssRules.length);
 
   return c;
+}
+
+export function reloadElementCssColors() {
+  const rules = colorStyleTag.sheet.cssRules.length;
+  for (let i = 0; i < rules; i++) {
+    colorStyleTag.sheet.deleteRule(0);
+  }
+  Object.keys(cache).forEach((key) => {
+    const [color, image] = key.split(':::')
+    getClassFromDisplay({
+      text: 'Element',
+      color,
+      image,
+    }, true)
+  })
 }
 
 export function getCSSFromDisplay(display: Elem['display']): string {

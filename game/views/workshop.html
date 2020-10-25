@@ -16,23 +16,12 @@
 
   <title>Elemental 4: Remake Revival</title>
   
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114357124-2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-114357124-2');
-  </script>
-
   <style>
-
     * { box-sizing: border-box; }
     body { margin: 0; font-family: sans-serif; }
     h1 { margin: 0 auto; padding-top: 48px; width: max-content; }
 
-    #CONTENT {
+    #content {
       max-width: 600px;
       margin: auto;
       width: 100%;
@@ -64,20 +53,20 @@
       font-size: 18px;
       padding: 10px;
     }
-    button:not([disabled]):hover, select:not([disabled]):hover {
+    button:not(:disabled):hover, select:not(:disabled):hover {
       outline: none;
       background: #e0bcad;
       border: 1px solid #b96643;
     }
-    button:not([disabled]):active, select:not([disabled]):active {
+    button:not(:disabled):active, select:not(:disabled):active {
       outline: none;
       background: #ff9d7a;
     }
-    button:not([disabled]):focus, select:not([disabled]):focus {
+    button:not(:disabled):focus, select:not(:disabled):focus {
       outline: none;
       border: 1px solid #F8571C;
     }
-    button[disabled], select[disabled] {
+    button:disabled, select:disabled {
       border: 1px solid #AAA;
       background: #FAFAFA;
       color: #555;
@@ -132,10 +121,88 @@
       white-space:pre-wrap;
       text-overflow: ellipsis;
     }
+    @keyframes dialog-open {
+      0% {
+        transform: scale(0.8);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes dialog-wrapper-open {
+      0% {
+        background-color: transparent;
+        display: none;
+      }
+      0.1% {
+        display: flex;
+      }
+      100% {
+        background-color: rgba(0, 0, 0, 0.25);
+        display: flex;
+      }
+    }
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    .dialog {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.25);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      display: none;
+      z-index: 10000;
+    }
+    .dialog-open {
+      display: flex;
+    }
+    .dialog-opening {
+      animation: dialog-wrapper-open 0.15s linear both;
+    }
+    .dialog-opening .dialog-content {
+      animation: dialog-open 0.1s both ease-out, fade-in 0.1s linear both;
+    }
+    .dialog-closing {
+      animation: dialog-wrapper-open 0.15s linear both reverse;
+    }
+    .dialog-closing .dialog-content {
+      animation: dialog-open 0.1s both ease-out reverse, fade-in 0.1s linear both reverse;
+    }
+    .dialog-content {
+      background-color: white;
+      width: 100%;
+      max-width: 350px;
+      border: 1px solid black;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.33);
+    }
+    .dialog-buttons {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: row-reverse;
+    }
+    .dialog-generic-content {
+      padding: 10px;
+    }
+    .dialog-generic-content > :first-child {
+      margin-top: 0;
+    }
+    .dialog-generic-content > :last-child {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
-  <section id='CONTENT'>
+  <section id='content'>
     <h1>
       <svg width="490" viewBox="0 0 379 66" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Elemental 4: DLC Workshop">
         <path d="M21.1641 33.5391H8.2265V41.6719H23.5078V48H0V13.875H23.5547V20.2266H8.2265V27.4219H21.1641V33.5391ZM34.8281 48H26.9062V12H34.8281V48ZM51.9844 48.4688C48.0937 48.4688 44.9453 47.3125 42.5391 45C40.1328 42.6719 38.9297 39.6484 38.9297 35.9297V35.2734C38.9297 32.6797 39.4062 30.3906 40.3594 28.4062C41.3281 26.4219 42.7344 24.8906 44.5781 23.8125C46.4219 22.7188 48.6094 22.1719 51.1406 22.1719C54.7031 22.1719 57.5156 23.2812 59.5781 25.5C61.6406 27.7031 62.6719 30.7812 62.6719 34.7344V37.8047H46.9687C47.25 39.2266 47.8672 40.3438 48.8203 41.1562C49.7734 41.9688 51.0078 42.375 52.5234 42.375C55.0234 42.375 56.9765 41.5 58.3828 39.75L61.9922 44.0156C61.0078 45.375 59.6094 46.4609 57.7969 47.2734C56 48.0703 54.0625 48.4688 51.9844 48.4688ZM51.0937 28.2656C48.7812 28.2656 47.4062 29.7969 46.9687 32.8594H54.9375V32.25C54.9687 30.9844 54.6484 30.0078 53.9765 29.3203C53.3047 28.6172 52.3437 28.2656 51.0937 28.2656ZM73.3363 22.6406L73.5933 25.6172C75.3903 23.3203 77.8043 22.1719 80.8363 22.1719C84.0393 22.1719 86.2033 23.4453 87.3283 25.9922C89.0473 23.4453 91.5313 22.1719 94.7813 22.1719C99.9223 22.1719 102.562 25.2812 102.703 31.5V48H94.7813V31.9922C94.7813 30.6953 94.5623 29.75 94.1253 29.1562C93.6873 28.5625 92.8903 28.2656 91.7343 28.2656C90.1723 28.2656 89.0083 28.9609 88.2423 30.3516L88.2653 30.6797V48H80.3433V32.0391C80.3433 30.7109 80.1323 29.75 79.7113 29.1562C79.2893 28.5625 78.4843 28.2656 77.2973 28.2656C75.7813 28.2656 74.6253 28.9609 73.8283 30.3516V48H65.9297V22.6406H73.3363ZM119.484 48.4688C115.593 48.4688 112.445 47.3125 110.039 45C107.632 42.6719 106.429 39.6484 106.429 35.9297V35.2734C106.429 32.6797 106.906 30.3906 107.859 28.4062C108.828 26.4219 110.234 24.8906 112.078 23.8125C113.922 22.7188 116.109 22.1719 118.64 22.1719C122.203 22.1719 125.015 23.2812 127.078 25.5C129.14 27.7031 130.172 30.7812 130.172 34.7344V37.8047H114.468C114.75 39.2266 115.367 40.3438 116.32 41.1562C117.273 41.9688 118.508 42.375 120.023 42.375C122.523 42.375 124.476 41.5 125.882 39.75L129.492 44.0156C128.508 45.375 127.109 46.4609 125.297 47.2734C123.5 48.0703 121.562 48.4688 119.484 48.4688ZM118.593 28.2656C116.281 28.2656 114.906 29.7969 114.468 32.8594H122.437V32.25C122.468 30.9844 122.148 30.0078 121.476 29.3203C120.804 28.6172 119.843 28.2656 118.593 28.2656ZM140.625 22.6406L140.882 25.6172C142.632 23.3203 145.047 22.1719 148.125 22.1719C150.765 22.1719 152.734 22.9609 154.031 24.5391C155.343 26.1172 156.023 28.4922 156.07 31.6641V48H148.148V31.9922C148.148 30.7109 147.89 29.7734 147.375 29.1797C146.859 28.5703 145.922 28.2656 144.562 28.2656C143.015 28.2656 141.867 28.875 141.117 30.0938V48H133.218V22.6406H140.625ZM169.664 16.3359V22.6406H173.836V28.125H169.664V39.7266C169.664 40.6797 169.836 41.3438 170.179 41.7188C170.523 42.0938 171.203 42.2812 172.218 42.2812C173 42.2812 173.656 42.2344 174.187 42.1406V47.7891C172.765 48.2422 171.281 48.4688 169.734 48.4688C167.015 48.4688 165.008 47.8281 163.711 46.5469C162.414 45.2656 161.765 43.3203 161.765 40.7109V28.125H158.531V22.6406H161.765V16.3359H169.664ZM191.25 48C190.968 47.4844 190.718 46.7266 190.5 45.7266C189.047 47.5547 187.015 48.4688 184.406 48.4688C182.015 48.4688 179.984 47.75 178.312 46.3125C176.64 44.8594 175.804 43.0391 175.804 40.8516C175.804 38.1016 176.82 36.0234 178.851 34.6172C180.882 33.2109 183.836 32.5078 187.711 32.5078H190.148V31.1719C190.148 28.8438 189.14 27.6797 187.125 27.6797C185.25 27.6797 184.312 28.6016 184.312 30.4453H176.414C176.414 27.9922 177.453 26 179.531 24.4688C181.625 22.9375 184.289 22.1719 187.523 22.1719C190.758 22.1719 193.312 22.9609 195.187 24.5391C197.062 26.1172 198.023 28.2812 198.07 31.0312V42.2578C198.101 44.5859 198.461 46.3672 199.148 47.6016V48H191.25ZM186.304 42.8438C187.289 42.8438 188.101 42.6328 188.742 42.2109C189.398 41.7891 189.867 41.3125 190.148 40.7812V36.7266H187.851C185.101 36.7266 183.726 37.9609 183.726 40.4297C183.726 41.1484 183.968 41.7344 184.453 42.1875C184.937 42.625 185.554 42.8438 186.304 42.8438ZM210.797 48H202.875V12H210.797V48ZM248.367 34.6641H251.836V40.7578H248.367V48H240.468V40.7578H227.273L226.804 35.9297L240.468 13.9453V13.875H248.367V34.6641ZM234.328 34.6641H240.468V24.1641L239.976 24.9609L234.328 34.6641Z" fill="black"/>
@@ -158,25 +225,29 @@
     <div id="packs"></div>
   </section>
   <div class="dialog">
-    <div class="dialog-content">
-      test
+    <div class="dialog-content dialog-generic-content">
+      <h2>Sent Request</h2>
+      <p>
+        Check the running Elemental 4 tab to continue
+        installing this DLC item. (Browser will not let me
+        force your selected tab)
+      </p>
+      <p>
+        (This box will close automatically)
+      </p>
     </div>
   </div>
 
   <script>
-    let gameRunning;
+    let gameRunning = false;
+    let id = 0;
 
-    let timer;
     localStorage.singleton_time = Date.now();
-    const handler = (e) => {
+    window.addEventListener('storage', (e) => {
       if(e.key == "singleton_available"){
-        clearInterval(timer);
         gameRunning = true;
       }
-    };
-    timer = setTimeout(() => {
-      gameRunning = false;
-    }, 200);
+    });
 
     function escapeHTML(html) {
       return html.replace(/&/g, '&amp;')
@@ -185,15 +256,29 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#x27;');
     }
-    function add(type, url) {
-      if (gameRunning) {
-        localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: Date.now() }));
-
-      } else {
-        localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: Date.now() }));
+    function add(type, urlPart) {
+      id = Date.now();
+      const url = location.origin + urlPart;
+      localStorage.setItem('workshop_add', JSON.stringify({ type, url, date: id }));
+      document.querySelector('.dialog').classList.add('dialog-open');
+      document.querySelector('.dialog').classList.add('dialog-opening');
+      setTimeout(() => {
+        document.querySelector('.dialog').classList.remove('dialog-opening');
+      }, 200);
+      if (!gameRunning) {
         window.open('/')
       }
     }
+
+    window.addEventListener('storage', (ev) => {
+      if (ev.key === 'close_workshop_dialog' && ev.newValue.toString() === id.toString()) {
+        document.querySelector('.dialog').classList.add('dialog-closing');
+        setTimeout(() => {
+          document.querySelector('.dialog').classList.remove('dialog-open');
+          document.querySelector('.dialog').classList.remove('dialog-closing');
+        }, 200);
+      }
+    })
 
     const themes = document.querySelector('#themes');
     const packs = document.querySelector('#packs');
@@ -223,8 +308,7 @@
         installBtn.classList.add('huge');
         installBtn.addEventListener('click', () => {
           add('theme', theme.url)
-        })
-
+        });
         dom.appendChild(info);
         dom.appendChild(installBtn);
         themes.appendChild(dom);
@@ -253,8 +337,7 @@
         installBtn.classList.add('huge');
         installBtn.addEventListener('click', () => {
           add('pack', theme.url)
-        })
-
+        });
         dom.appendChild(info);
         dom.appendChild(installBtn);
         packs.appendChild(dom);

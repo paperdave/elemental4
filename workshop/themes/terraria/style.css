@@ -1,0 +1,35 @@
+:root {
+  --text-main: black;
+  --background-main: #2e6829;
+  --background-element-game: #184b11;
+  --text-warning: rgb(255, 251, 0);
+  --primary: #00ff22;
+  --link-click: rgba(255, 145, 0, 0.993);
+
+  --background-hover: rgba(127,127,127,0.15);
+  --background-active: rgba(127,127,127,0.4);
+  --background-selected: rgba(127,127,127,0.3);
+  --text-hover: rgba(127,127,127,0.15);
+  --text-active: rgba(127,127,127,0.4);
+  --text-selected: rgba(127,127,127,0.3);
+
+  --text-top-bar: var(--background-main);
+  --background-top-bar: var(--text-main);
+  --background-button: var(--primary);
+  --background-button-discord: #7289DA;
+  --background-button-source: #7eda72;
+
+  --text-info: var(--text-main);
+  --background-info:var(--background-main);
+
+  --text-dialog: var(--text-main);
+  --background-dialog: var(--background-main);
+  --text-suggest: var(--text-dialog);
+  --background-suggest: var(--background-dialog);
+  --background-suggest-title: var(--background-top-bar);
+  --text-suggest-title: var(--text-top-bar);
+
+  --border-info: 1px solid #00ff15;
+
+  --popup-background: #378b30;
+}
