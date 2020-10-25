@@ -11,6 +11,7 @@
 #    with name `elem4` and `elem4-anarchy` (pm2 start . --name elemental4)
 #
 #### THE ACTUAL SCRIPT ####
+git checkout .
 git pull
 
 npm install -D
