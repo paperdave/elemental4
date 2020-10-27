@@ -83,11 +83,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
   }
   await endStatistics()
   try {
-    const json = config || builtInApis[baseUrl] || (
-      OFFLINE
-        ? (await getServer(baseUrl)).config
-        : await fetch(baseUrl + '/elemental.json').then(x => x.json())
-    );
+    const json = config || builtInApis[baseUrl] || (await fetch(baseUrl + '/elemental.json').then(x => x.json()));
     installServer(baseUrl, json)
     const API = apiTypeMap[json.type];
 

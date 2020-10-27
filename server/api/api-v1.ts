@@ -7,7 +7,7 @@ import path from 'path'
 import { pathExists, readFile } from 'fs-extra';
 
 function formatDate(x: Date) {
-    return `${x.getFullYear()}-${(x.getMonth()+1).toString().padStart(2,'0')}-${x.getDate().toString().padStart(2, '0')}`;
+    return `${x.getUTCFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
 }
 
 /** API Router v1 */

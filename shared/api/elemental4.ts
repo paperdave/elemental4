@@ -10,7 +10,7 @@ import { createQueueExec } from '../async-queue-exec';
 const ONE_DAY = 24*60*60*1000;
 
 function formatDate(x: Date) {
-  return `${x.getFullYear()}-${(x.getMonth()+1).toString().padStart(2,'0')}-${x.getDate().toString().padStart(2, '0')}`;
+  return `${x.getUTCFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
 }
 
 interface DBMeta {
@@ -28,7 +28,7 @@ export class Elemental4API
              RecentCombinationsAPI,
              OfflinePlayAPI {
   static type = 'elemental4';
-  private static DB_VERSION = 2;
+  private static DB_VERSION = 3;
 
   private dbMeta: DBMeta;
 
@@ -186,7 +186,7 @@ export class Elemental4API
       this.dbMeta = await this.saveFile.get('meta');
       if(this.dbMeta.version !== Elemental4API.DB_VERSION) {
         dbFetch = 'full';
-      } else if (Date.now() - this.dbMeta.lastUpdated < (1*ONE_DAY)) {
+      } else if (formatDate(new Date()) === formatDate(new Date(this.dbMeta.lastUpdated))) {
         dbFetch = 'today';
       } else if (Date.now() - this.dbMeta.lastUpdated > (30*ONE_DAY)) {
         dbFetch = 'full';

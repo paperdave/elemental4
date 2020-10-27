@@ -151,12 +151,12 @@ export async function storageClose() {
 
 function get32DaysAgo() {
   const x = new Date(new Date().getTime() - (32 * 24 * 60 * 60 * 1000))
-  return `${x.getFullYear()}-${(x.getMonth()+1).toString().padStart(2,'0')}-${x.getDate().toString().padStart(2, '0')}`;
+  return `${x.getFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
 }
 
 function getToday() {
   const x = new Date();
-  return `${x.getFullYear()}-${(x.getMonth()+1).toString().padStart(2,'0')}-${x.getDate().toString().padStart(2, '0')}`;
+  return `${x.getUTCFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
 }
 
 export async function processDayPassing() {
@@ -218,11 +218,12 @@ export async function storageAddElement(elem: StorageElementRequest) {
   const id = elementCount;
 
   await storageAddEntry({
+    type: 'element',
     id: id.toString(),
+    createdOn: Date.now(),
     color: elem.color,
     text: elem.text,
     creators: await Promise.all([elem.creator1, elem.creator2].filter(Boolean).map((x) => getPublicId(x))),
-    type: 'element',
   } as ElementEntry);
 
   await dbRun(`INSERT INTO element_comments (id, user1, comment1, user2, comment2) VALUES ($id, $user1, 0, $user2, 0)`, {

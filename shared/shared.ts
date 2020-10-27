@@ -35,22 +35,22 @@ export function delayFrame() {
     return new Promise(r => requestAnimationFrame(r));
 }
 export function formatDate(date: Date) {
-    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday","Saturday"][date.getDay()];
-    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"][date.getMonth()];
-    const day = date.getDate();
+    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday","Saturday"][date.getUTCDay()];
+    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"][date.getUTCMonth()];
+    const day = date.getUTCDate();
     const daysuffix = day === 1 ? "st" : (day === 2 ? "nd" : "th");
-    let hour = date.getHours();
+    let hour = date.getUTCHours();
     let ampm = "AM";
     if(hour > 12) {
         hour -= 12;
         ampm = "PM";
     }
-    let minute:string|number = date.getMinutes();
+    let minute:string|number = date.getUTCMinutes();
     if (minute < 10) {
         minute = "0" + minute;
     }
 
-    return `${weekday}, ${month} ${day}${daysuffix} at ${hour}:${minute}${ampm}`;
+    return `${weekday}, ${month} ${day}${daysuffix} at ${hour}:${minute}${ampm} UTC`;
 }
 export function escapeHTML(html: string): string {
     return html.replace(/&/g, '&amp;')
