@@ -20,53 +20,61 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		firebase.initializeApp(firebaseConfig);
 		firebase.analytics();
 		this.db = firebase.database();
-
-		while (true) {
-			var uid = this.saveFile.get("user", "default")
-			if (uid == "default") {
+		var uid = this.saveFile.get("user", "default")
+		if (uid == "default") {
+			while (true) {
+				ui.status("Requesting login info", 0);
 				let creds = await this.ui.prompt({
-						title: 'Nv7 Elemental Login',
-						text: 'Put in your password and email somehow',
-						defaultText: '',
-						confirmButton: 'Log In',
-					});
-					
-					var err: string
-					var code = -1
+					title: 'Nv7 Elemental Login',
+					text: 'Put in your password and email somehow',
+					defaultText: '',
+					confirmButton: 'Log In',
+				});
 
-					if (creds) {
-						var result = await new Promise((resolve, reject) => {
-							var count = 0;
-							firebase.auth().createUserWithEmailAndPassword(creds, "Reee12345_12365").catch(function(error) {
-								resolve(error.message);
-							});
-							firebase.auth().onAuthStateChanged((user) => {
-								if (user) {;
-									this.uid = user.uid;
-									this.saveFile.set("user", this.uid);
-									count++;
-									if (count == 2) {
-										resolve(true);
-									}
-								}
-							});
+				ui.status("Processing login info", 0);
+
+				if (creds) {
+					ui.status("Processing login info", 1);
+					var result = await new Promise((resolve, reject) => {
+						ui.status("Authenticating", 0);
+						var count = 0;
+						firebase.auth().createUserWithEmailAndPassword(creds, "Reee12345_12365").catch(function(error) {
+							ui.status("Authenticating", 1);
+							resolve(error.message);
 						});
+						firebase.auth().onAuthStateChanged((user) => {
+							if (user) {
+								this.uid = user.uid;
+								this.saveFile.set("user", this.uid);
+								count++;
+								ui.status("Authenticating", 0.5);
+								if (count == 2) {
+									ui.status("Authenticating", 1);
+									resolve(true);
+								}
+							}
+						});
+					});
 
-						if (result == true) {
-							return true;
-						} else {
-							await this.ui.alert({
-								"text": result as string,
-								"title": "Error",
-								"button": "Ok",
-							});
-						}
+					if (result == true) {
+						ui.status("Loading game", 0);
+						return true;
+					} else {
+						ui.status("Showing error", 0);
+						await this.ui.alert({
+							"text": result as string,
+							"title": "Error",
+							"button": "Ok",
+						});
 					}
-				} else {
-					this.uid = uid;
-					return true;
 				}
-		} 
+			}
+		} else {
+			ui.status("Authenticated", 0);
+			this.uid = uid;
+			ui.status("Loading game", 0);
+			return true;
+		}
   }
   async close(): Promise<void> {
 
