@@ -2,7 +2,7 @@ import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
 import { DebugAllColorsAPI } from "../../shared/api/debug-allcolors";
 import { LedomElementalAPI } from "../../shared/api/ledom";
-import { NV7ElementalAPI } from "../../shared/api/nv7";
+import { NV7ElementalAPI } from "../../shared/api/nv7/nv7";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
 import { escapeHTML } from "../../shared/shared";
 import { OFFLINE } from "./index";
