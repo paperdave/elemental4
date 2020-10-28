@@ -2,6 +2,7 @@ import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
 import { DebugAllColorsAPI } from "../../shared/api/debug-allcolors";
 import { LedomElementalAPI } from "../../shared/api/ledom";
+import { NV7ElementalAPI } from "../../shared/api/nv7";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
 import { escapeHTML } from "../../shared/shared";
 import { OFFLINE } from "./index";
@@ -45,6 +46,7 @@ const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'elemental5': Elemental5API,
   // 'e4': LedomElementalAPI,
   // 'ledom': LedomElementalAPI,
+  'nv7': NV7ElementalAPI,
 };
 
 let currentAPI: ElementalBaseAPI;
@@ -67,6 +69,11 @@ const builtInApis = {
     name: "No Server",
     description: "You are not connected to any server."
   },
+  'internal:dev': {
+    type: "nv7",
+    name: "Dev server",
+    description: "Nv7's Dev server"
+  }
 }
 
 export async function getSupportedServerTypes() {
