@@ -23,7 +23,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		var uid = this.saveFile.get("user", "default")
 		if (uid == "default") {
 			while (true) {
-				ui.status("Requesting login info", 0);
+				ui.status("Requesting Login Info", 0);
 				let creds = await this.ui.prompt({
 					title: 'Nv7 Elemental Login',
 					text: 'Put in your password and email somehow',
@@ -31,10 +31,10 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 					confirmButton: 'Log In',
 				});
 
-				ui.status("Processing login info", 0);
+				ui.status("Processing Login Info", 0);
 
 				if (creds) {
-					ui.status("Processing login info", 1);
+					ui.status("Processing Login Info", 1);
 					var result = await new Promise((resolve, reject) => {
 						ui.status("Authenticating", 0);
 						var count = 0;
@@ -57,10 +57,10 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 					});
 
 					if (result == true) {
-						ui.status("Loading game", 0);
+						ui.status("Loading Game", 0);
 						return true;
 					} else {
-						ui.status("Showing error", 0);
+						ui.status("Showing Error", 0);
 						await this.ui.alert({
 							"text": result as string,
 							"title": "Error",
@@ -72,7 +72,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		} else {
 			ui.status("Authenticated", 0);
 			this.uid = uid;
-			ui.status("Loading game", 0);
+			ui.status("Loading Game", 0);
 			return true;
 		}
   }
