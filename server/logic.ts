@@ -33,27 +33,21 @@ interface SuggestOptions {
 }
 
 async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isUpvote }: SuggestOptions): Promise<E4SuggestionResponse> {  
-  console.log('---------');
-  console.log('New Suggestion');
   try {
     const x = await storageCheckIP(ip);
     if (!x) {
-      console.log('Did Not Pass Check');
       return {
         result: 'vote-fraud-detected'
       }
     }
   } catch (error) {
-    console.log(error);
     return {
       result: 'vote-fraud-detect-down'
     }
   }
-  console.log('Passed');
 
   try {
     const voterHash = sha256(ip);
-    console.log('voterHash', voterHash);
 
     const res = await storageGetSuggestion(recipe);
     
@@ -62,7 +56,6 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
         return { result: 'voted' };
       }
       if (DEFAULT_THRESHOLD < 1) {
-        console.log('Anarchy Mode');
         let id = storageGetElementNumberFromName(suggest.text);
         let doCreatorMark = false;
         if (!id) {
@@ -89,7 +82,6 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
           doCreatorMark
         }
       }
-      console.log('Insert Fully New Suggestion');
       // Add a complete new suggestion.
       await storageSetSuggestion(recipe, {
         recipe,
@@ -132,15 +124,12 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
         false,
         ''
       )
-      console.log('Good');
       return {
         result: 'suggested',
       }
       
     } else {
       if (res.finished) {
-        console.log('Finished');
-        console.log('Good');
         return {
           result: 'already-added',
           newElement: res.result
@@ -345,7 +334,6 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
       }
     }
   } catch (error) {
-    console.log(error);
     return {
       result: 'internal-error',
     }

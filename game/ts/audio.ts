@@ -66,18 +66,30 @@ export function playMusicTrack(track) {
       } else {
         const next = getNextMusic();
         const loops = randomInt(0, 4) === 0 ? randomInt(4, 12) : 0;
-        let loopsSoFar = 0;
-        if(loops === 0) {
-          console.log('no loop')
-          currentTrackHowl.loop(false, currentTrackHowlId);
-          currentTrackHowl.once('end', () => {
-            playMusicTrack(next);
-          })
+        if (!next) {
+          if(loops === 0) {
+            currentTrackHowl.loop(false, currentTrackHowlId);
+            currentTrackHowl.once('end', () => {
+              playMusicTrack(next);
+            })
+          } else {
+            let loopsSoFar = 0;
+            currentTrackHowl.loop(true, currentTrackHowlId);
+            const handler = () => {
+              loopsSoFar++;
+              if(loopsSoFar > loops) {
+                playMusicTrack(next);
+                currentTrackHowl.off('end', handler);
+              } else if (loopsSoFar === loops) {
+                setTimeout(() => {
+                  currentTrackHowl.loop(false, currentTrackHowlId);
+                }, 100);
+              }
+            };
+            currentTrackHowl.on('end', handler);
+          }
         } else {
-          currentTrackHowl.loop(true, currentTrackHowlId);
-          currentTrackHowl.on('end', () => {
-            loopsSoFar++;
-          })
+
         }
       }
     }
@@ -91,7 +103,7 @@ export function updateMusicVolume() {
 }
 
 export function getNextMusic() {
-  return randomOf([...musicTracks]);
+  return randomOf([...musicTracks].filter(x => x !== currentTrack));
 }
 
 export function playSound(x: SoundId) {
@@ -141,6 +153,4 @@ export async function loadSounds() {
     }
     musicTracks.add(track);
   });
-
-  console.log(musicTracks)
 }

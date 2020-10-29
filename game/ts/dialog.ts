@@ -241,6 +241,5 @@ export async function PromptDialog(opt: PromptDialogOptions): Promise<undefined|
       },
     ].filter(Boolean)
   });
-  console.log(output)
   return output.button === 'confirm' && output.input;
 }

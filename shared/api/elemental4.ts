@@ -1,4 +1,4 @@
-import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI } from "../elem";
+import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, SuggestionColorInformation } from "../elem";
 import { E4SuggestionResponse, Entry } from '../elemental4-types';
 import { fetchWithProgress } from '../fetch-progress';
 import { randomString, sortCombo } from '../shared';
@@ -316,8 +316,10 @@ export class Elemental4API
     return ['1','2','3','4'];
   }
 
-  getSuggestionColorInformation() {
-    return 'dynamic-elemental4' as const;
+  getSuggestionColorInformation(): SuggestionColorInformation<'dynamic-elemental4'> {
+    return {
+      type: 'dynamic-elemental4'
+    };
   }
 
   async getSuggestions(ids: string[]): Promise<Suggestion<'dynamic-elemental4'>[]> {

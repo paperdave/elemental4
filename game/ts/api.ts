@@ -12,6 +12,8 @@ import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";
 import { allBuiltInServers } from "./server-manager";
 import { ChunkedStore } from "../../shared/store-chunk";
+import { LedomElementalAPI } from "../../shared/api/ledom";
+import { resolve } from "url";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -129,7 +131,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     document.querySelector('#server-title').innerHTML = escapeHTML(json.name || `Unnamed Server (type=${json.type})`);
     document.querySelector('#server-description').innerHTML = escapeHTML(json.description || `[No description provided]`);
     if (json.icon) {
-      document.querySelector('#server-icon').setAttribute('style', `background-image:url(${json.icon});background-size:cover;`)
+      document.querySelector('#server-icon').setAttribute('style', `background-image:url(${resolve(baseUrl, json.icon)});background-size:cover;`)
     } else {
       document.querySelector('#server-icon').setAttribute('style', `background-color:#888;`)
     }

@@ -36,22 +36,20 @@ export async function getInstalledServers() {
   return (await data.get('servers')) || [];
 }
 export async function installServer(baseUrl: string, config: any) {
-  if (baseUrl.startsWith('internal:')) {
-    return;
-  }
-  baseUrl = removeUrlSuffix(baseUrl);
   const servers = (await data.get('servers') || []) as any;
-  const f = servers.find(x => x.baseUrl === baseUrl)
-  const name = config && config.name;
-  if(f) {
-    f.config = config;
-    f.name = config.name;
-  } else {
-    servers.push({ baseUrl, name, config });
+  if (!baseUrl.startsWith('internal:')) {
+    baseUrl = removeUrlSuffix(baseUrl);
+    const f = servers.find(x => x.baseUrl === baseUrl)
+    const name = config && config.name;
+    if(f) {
+      f.config = config;
+      f.name = config.name;
+    } else {
+      servers.push({ baseUrl, name, config });
+    }
+    await data.set('servers', servers);
   }
-  await data.set('servers', servers);
-
-  console.log('remount servers')
+  
   const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
   serverSelect.querySelectorAll('*:not(:first-child)').forEach((x) => {
     x.remove();
@@ -105,7 +103,6 @@ export async function uninstallServer(baseUrl: string) {
   }).filter(Boolean))
 
   const opts = { name: 'ELEMENTAL', storeName: server.config.type + ':' + processBaseUrl(baseUrl) };
-  console.log(opts);
   await localForage.createInstance({...opts}).dropInstance({...opts});
 }
 

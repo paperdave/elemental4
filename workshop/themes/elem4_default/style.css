@@ -288,6 +288,12 @@ body[data-element-scale="large"] { --element-scale: 1.35; }
     transform: translateX(0);
   }
 }
+a {
+  color: var(--primary);
+}
+a:active {
+  color: var(--link-click);
+}
 #game{background-color:transparent;user-select:none;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;color:var(--text-main)}
 .top-bar{
   background-color: var(--background-top-bar);
@@ -1214,9 +1220,8 @@ h2 + .form-dialog-group {
 }
 .form-dialog-input {
   display: flex;
-  flex-direction: column;
 }
-.form-dialog-input > input {
+.form-dialog-input > * {
   flex: 1
 }
 #suggest-loader {

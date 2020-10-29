@@ -214,13 +214,6 @@ export interface PromptDialogOptions {
   confirmButton?: string,
   cancelButton?: string,
 }
-export interface PromptDialogOptions {
-  title: string,
-  text: string,
-  defaultInput?: string,
-  confirmButton?: string,
-  cancelButton?: string,
-}
 
 export interface ElementalRuntimeUI {
   /** Wrapper around alert(), but async. Client will provide a user interface. */
@@ -284,9 +277,13 @@ export abstract class ElementalBaseAPI<Config extends ElementalConfig = Elementa
   abstract async getCombo(ids: string[]): Promise<string[]>;
 }
 
+export interface SuggestionColorInformation<Type extends SuggestionColorType> {
+  type: Type;
+}
+
 /** Suggestion API. Implement it if your API supports suggestions */
 export interface SuggestionAPI<Type extends SuggestionColorType> {
-  getSuggestionColorInformation: () => SuggestionColorInformation<SuggestionColorType>;
+  getSuggestionColorInformation: () => SuggestionColorInformation<Type>;
 
   /** Fetch suggestions. */
   getSuggestions: (ids: string[]) => Promise<Suggestion<Type>[]>;

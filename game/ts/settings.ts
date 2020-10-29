@@ -371,7 +371,6 @@ export async function updateStorageEstimation() {
       document.getElementById('storage-yes-breakdown').style.display = 'none';
     }
   } catch (error) {
-    console.log(error);
     document.getElementById('storage-yes-breakdown').style.display = 'none';
     document.getElementById('storage-no-breakdown').style.display = 'none';
   }
