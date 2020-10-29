@@ -1199,10 +1199,22 @@ input[type="range"]::-moz-range-thumb {
 .dialog-buttons button {
   margin-left: 10px;
 }
-.dialog-form {
+h2 + .form-dialog-group {
+  margin-top: 0;
+}
+.form-dialog-group {
+  margin-top: 16px;
+}
+.form-dialog-group > :first-child {
+  margin-top: 0;
+}
+.form-dialog-group > :last-child {
+  margin-bottom: 0;
+}
+.form-dialog-input {
   display: flex;
 }
-.dialog-form > * {
+.form-dialog-input > input {
   flex: 1
 }
 #suggest-loader {

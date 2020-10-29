@@ -8,7 +8,7 @@ import { getInstalledThemes, installThemes, uninstallThemes } from "./savefile";
 import { SoundId } from "./audio";
 import { addThemeToUI } from "./settings";
 import { THEME_VERSION } from "./theme-version";
-import { asyncConfirm } from "./dialog";
+import { ConfirmDialog } from "./dialog";
 import { capitalize } from "@reverse/string";
 import { reloadElementCssColors } from "./element-color";
 import { createQueueExec } from "../../shared/async-queue-exec";
@@ -270,7 +270,11 @@ export async function MountThemeCSS() {
     const obj = JSON.parse(localStorage.getItem('workshop_add'))
     localStorage.removeItem('workshop_add');
     if (obj && obj.url && obj.type) {
-      if(await asyncConfirm('Add ' + capitalize(obj.type) + '?', `You are about to install DLC from ${obj.url}, make sure you trust the content you are installing.`, 'Add DLC')) {
+      if(await ConfirmDialog({
+        title: 'Add ' + capitalize(obj.type) + '?',
+        text: `You are about to install DLC from \`${obj.url}\`, make sure you trust the content you are installing.`,
+        trueButton: 'Add DLC'
+      })) {
         await addDLCByUrl(obj.url, obj.type);
       }
     }
@@ -279,7 +283,11 @@ export async function MountThemeCSS() {
   }
 
   const addDLCPopup = createQueueExec(async(url: string, type: DLCType) => {
-    if(await asyncConfirm('Add ' + capitalize(type) + '?', `You are about to install DLC from "${url}", make sure you trust the content you are installing.`, 'Add DLC')) {
+    if(await ConfirmDialog({
+      title: 'Add ' + capitalize(type) + '?',
+      text: `You are about to install DLC from \`${url}\`, make sure you trust the content you are installing.`,
+      trueButton: 'Add DLC'
+    })) {
       await addDLCByUrl(url, type);
     }
   })

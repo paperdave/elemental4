@@ -1,4 +1,4 @@
-import { asyncAlert, asyncConfirm } from "./dialog";
+import { AlertDialog, ConfirmDialog } from "./dialog";
 import { installTheme, ThemeEntry } from "./theme";
 import { connectApi, getSupportedServerTypes } from './api';
 import { resolve } from 'url';
@@ -32,7 +32,10 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
   } catch (error) {
     console.error(error);
     if (!isBuiltIn) {
-      await asyncAlert('Error Adding DLC', error.toString());
+      await AlertDialog({
+        title: 'Error Adding DLC',
+        text: error.toString()
+      });
     }
   }
   if(ui) {
@@ -57,7 +60,7 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
       if (isBuiltIn) {
         return null;
       }
-      await asyncAlert('Error Adding DLC', 'Could not find an elemental.json file at this URL.');
+      await AlertDialog({ title: 'Error Adding DLC', text: 'Could not find an elemental.json file at this URL.' });
       return null;
     }
   }
@@ -69,7 +72,7 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
     if (isBuiltIn) {
       return null;
     }
-    await asyncAlert('Error Adding DLC', 'Found a malformed elemental.json file');
+    await AlertDialog({ title: 'Error Adding DLC', text: 'Found a malformed elemental.json file' });
     return null;
   }
   
@@ -80,15 +83,15 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
       if (isBuiltIn) {
         return null;
       }
-      await asyncAlert('Error Adding DLC', 'The specified server is missing metadata.');
+      await AlertDialog({ title: 'Error Adding DLC', text: 'The specified server is missing metadata.' });
       return null;
     }
 
-    if (intendedType !== 'server' && (isBuiltIn || !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Server, would you still like to add it?', 'Continue'))) {
+    if (intendedType !== 'server' && (isBuiltIn || !await ConfirmDialog({ title: 'Not a ' + capitalize(intendedType), text: 'The url you provided points to an Elemental 4 Server, would you still like to add it?', trueButton: 'Continue' }))) {
       return null;
     }
     if (!cors) {
-      if(!isBuiltIn) await asyncAlert('Error Adding Server', 'This server does not have CORS Headers. Elemental 4 is not allowed to communicate with it.')
+      if(!isBuiltIn) await AlertDialog({ title: 'Error Adding Server', text: 'This server does not have CORS Headers. Elemental 4 is not allowed to communicate with it.' })
       return null;
     }
     
@@ -110,17 +113,17 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
       if (isBuiltIn) {
         return null;
       }
-      await asyncAlert('Error Adding DLC', 'The specified theme is missing metadata.');
+      await AlertDialog({ title: 'Error Adding DLC', text: 'The specified theme is missing metadata.' });
       return null;
     }
     
-    if (intendedType !== 'theme' && !await asyncConfirm('Not a ' + capitalize(intendedType), 'The url you provided points to an Elemental 4 Theme, would you still like to add it?', 'Continue')) {
+    if (intendedType !== 'theme' && !await ConfirmDialog({ title: 'Not a ' + capitalize(intendedType), text: 'The url you provided points to an Elemental 4 Theme, would you still like to add it?', trueButton: 'Continue'} )) {
       return null;
     }
-    if (json.format_version < THEME_VERSION && !await asyncConfirm('Incorrect Theme Version', 'This theme was made for an older version of Elemental 4, would you still like to use it.', 'Continue')) {
+    if (json.format_version < THEME_VERSION && !await ConfirmDialog({ title: 'Incorrect Theme Version', text: 'This theme was made for an older version of Elemental 4, would you still like to use it.', trueButton: 'Continue'} )) {
       return null;
     }
-    if (json.format_version > THEME_VERSION && !await asyncConfirm('Incorrect Theme Version', 'This theme was made for an older version of Elemental 4, would you still like to use it.', 'Continue')) {
+    if (json.format_version > THEME_VERSION && !await ConfirmDialog({ title: 'Incorrect Theme Version', text: 'This theme was made for an older version of Elemental 4, would you still like to use it.', trueButton: 'Continue'} )) {
       return null;
     }
 
@@ -193,13 +196,13 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
     if (isBuiltIn) {
       return null;
     }
-    await asyncAlert('Error Adding DLC', 'Singleplayer mode has not been added yet.');
+    await AlertDialog({ title: 'Error Adding DLC', text: 'Singleplayer mode has not been added yet.' });
     return null;
   } else {
     if (isBuiltIn) {
       return null;
     }
-    await asyncAlert('Error Adding DLC', 'Don\'t know how to add server type "' + json.type + '"');
+    await AlertDialog({ title: 'Error Adding DLC', text: 'Don\'t know how to add server type "' + json.type + '"' });
     return null;
   }
 }
