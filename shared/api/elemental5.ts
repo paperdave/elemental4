@@ -34,8 +34,8 @@ export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI
       while (true) {
         let token = await this.ui.prompt({
           title: 'Elemental 5 Login',
-          text: 'Go to https://dev.elemental5.net and copy your API Token to login.',
-          defaultText: '',
+          text: 'Go to [dev.elemental5.net](https://dev.elemental5.net) and copy your API Token to login.',
+          defaultInput: '',
           confirmButton: 'Log In',
         });
         if (!token) {
