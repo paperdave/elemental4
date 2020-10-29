@@ -254,7 +254,7 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
       for (var key in inputs) {
         out[key] = inputs[key].value;
       }
-      out["button"] = x;
+      out.button = x;
       done(out);
     })
   })
