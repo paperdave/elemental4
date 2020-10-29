@@ -1201,6 +1201,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .dialog-form {
   display: flex;
+  flex-direction: column;
 }
 .dialog-form > * {
   flex: 1

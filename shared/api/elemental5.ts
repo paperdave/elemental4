@@ -31,6 +31,37 @@ export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI
     
     if (this.accounts.length === 0) {
       while (true) {
+        let thing = await this.ui.advancedDialog({
+          title: "TestDialog",
+          parts: [
+            "#### hello, markdown!",
+            {
+              id: "email",
+              type: "email",
+              placeholder: "Email",
+              default: "ree@ree.com",
+              required: true,
+            },
+            {
+              id: "passwd",
+              type: "password",
+              placeholder: "Password",
+              required: true,
+            },
+          ],
+          buttons: [
+            {
+              id: "yesboi",
+              label: "Log in",
+            },
+            {
+              id: "cancel",
+              label: "Cancel",
+            },
+          ]
+        })
+        console.log(thing);
+
         let token = await this.ui.prompt({
           title: 'Elemental 5 Login',
           text: 'Go to https://dev.elemental5.net and copy your API Token to login.',

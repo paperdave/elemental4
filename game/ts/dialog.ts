@@ -212,22 +212,24 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
     dialog.close(true);
   }
 
-  let inputs: Promise<Record<string, HTMLInputElement>>
-  var conv = require("showdown").Converter();
+  var inputs: Record<string, HTMLInputElement> = {} as Record<string, HTMLInputElement>;
+  var showdown = require("showdown");
+  var conv = new showdown.Converter();
   var firstInput: string = null;
-  for (var part in parts) {
-    if (typeof part == "string") {
+  for (var i = 0; i < parts.length; i++) {
+    if (typeof parts[i] == "string") {
       var div = document.createElement("div");
-      div.innerHTML = conv.makeHTML(part as string);
+      div.innerHTML = conv.makeHtml(parts[i]);
       formElement.appendChild(div);
     } else {
-      var inputPart = part as DialogInput;
+      var inputPart = parts[i] as DialogInput;
       inputs[inputPart.id] = document.createElement("input");
       inputs[inputPart.id].type = inputPart.type;
       inputs[inputPart.id].required = inputPart.required;
       inputs[inputPart.id].value = inputPart.default || "";
       inputs[inputPart.id].placeholder = inputPart.placeholder;
       inputs[inputPart.id].disabled = inputPart.disabled;
+      inputs[inputPart.id].style.display = "block";
       formElement.appendChild(inputs[inputPart.id]);
       if (!firstInput) {
         firstInput = inputPart.id;
@@ -248,10 +250,12 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
   return new Promise((done) => {
     inputs[firstInput].focus();
     dialog.on('close', (x) => {
-      let out: Record<string, string>;
+      console.log(x);
+      let out: Record<string, string> = {} as Record<string, string>;
       for (var key in inputs) {
         out[key] = inputs[key].value;
       }
+      out["button"] = x;
       done(out);
     })
   })
