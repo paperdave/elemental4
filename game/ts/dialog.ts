@@ -49,9 +49,9 @@ export interface DialogButton {
 export interface DialogInput {
   id: string;
   placeholder?: string;
-  default?:string;
-  required:boolean;
-  type?: "text"|"password"|"email";
+  default?: string;
+  required?: boolean;
+  type?: "text" | "password" | "email";
   disabled?: boolean;
 }
 
@@ -213,24 +213,30 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
     dialog.close(true);
   }
 
-  var inputs: Record<string, HTMLInputElement> = {} as Record<string, HTMLInputElement>;
-  var conv = new Converter();
-  var firstInput: string = null;
+  const inputs: Record<string, HTMLInputElement> = {};
+  const conv = new Converter();
+  let firstInput: string = null;
   for (var i = 0; i < parts.length; i++) {
     if (typeof parts[i] == "string") {
-      var div = document.createElement("div");
+      const div = document.createElement("div");
+      div.classList.add('form-dialog-group');
       div.innerHTML = conv.makeHtml(parts[i]);
       formElement.appendChild(div);
     } else {
-      var inputPart = parts[i] as DialogInput;
-      inputs[inputPart.id] = document.createElement("input");
-      inputs[inputPart.id].type = inputPart.type;
-      inputs[inputPart.id].required = inputPart.required;
-      inputs[inputPart.id].value = inputPart.default || "";
-      inputs[inputPart.id].placeholder = inputPart.placeholder;
-      inputs[inputPart.id].disabled = inputPart.disabled;
-      inputs[inputPart.id].style.display = "block";
-      formElement.appendChild(inputs[inputPart.id]);
+      const div = document.createElement("div");
+      div.classList.add('form-dialog-input');
+      div.classList.add('form-dialog-group');
+
+      const inputPart = parts[i] as DialogInput;
+      const input = document.createElement("input");
+      input.type = inputPart.type;
+      input.required = inputPart.required;
+      input.value = inputPart.default || "";
+      input.placeholder = inputPart.placeholder || "";
+      input.disabled = inputPart.disabled;
+      inputs[inputPart.id] = input;
+      div.appendChild(inputs[inputPart.id]);
+      formElement.appendChild(div);
       if (!firstInput) {
         firstInput = inputPart.id;
       }
@@ -248,14 +254,12 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
   });
 
   return new Promise((done) => {
-    inputs[firstInput].focus();
     dialog.on('close', (x) => {
-      console.log(x);
-      let out: Record<string, string> = {} as Record<string, string>;
+      const out: Record<string, string> = {};
       for (var key in inputs) {
         out[key] = inputs[key].value;
       }
-      out["button"] = x;
+      out.button = x;
       done(out);
     })
   })
