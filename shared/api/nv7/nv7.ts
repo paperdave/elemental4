@@ -1,8 +1,8 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI, RecentCombinationsAPI, RecentCombination} from "../../elem";
 import firebase from "firebase";
 import {login} from "./login";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'> {  
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI {  
 	private db
 	public uid: string
 	public saveFile
@@ -56,5 +56,13 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 
 	getSuggestionType() {
 		return 'dynamic-elemental4' as const;
-	}
+  }
+  
+  async waitForNewRecent(): Promise<void> {
+    return;
+  }
+
+  async getRecentCombinations(): Promise<RecentCombination[]> {
+    return;
+  }
 }
