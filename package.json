@@ -1,6 +1,6 @@
 {
   "name": "elemental4",
-  "version": "4.0.0-beta24",
+  "version": "4.0.0-beta25",
   "description": "Modern reboot of the old item combination game.",
   "main": "dist_server/server/index.js",
   "private": true,
