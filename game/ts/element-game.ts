@@ -9,7 +9,6 @@ import { E4Suggestion } from "../../shared/elemental4-types";
 import { randomOf } from "@reverse/random";
 import DomToImage from 'dom-to-image';
 import { incrementStatistic } from "./statistics";
-import { OFFLINE } from ".";
 import { playSound } from "./audio";
 
 function formatCategory(x: string) {

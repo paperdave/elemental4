@@ -12,6 +12,7 @@ import { asyncConfirm } from "./dialog";
 import { capitalize } from "@reverse/string";
 import { reloadElementCssColors } from "./element-color";
 import { createQueueExec } from "../../shared/async-queue-exec";
+import localStorage from '../../shared/localStorage';
 
 let init = false;
 

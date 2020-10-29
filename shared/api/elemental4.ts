@@ -1,4 +1,4 @@
-import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OfflinePlayAPI } from "../elem";
+import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI } from "../elem";
 import { E4SuggestionResponse, Entry } from '../elemental4-types';
 import { fetchWithProgress } from '../fetch-progress';
 import { randomString, sortCombo } from '../shared';
@@ -24,9 +24,8 @@ export class Elemental4API
   extends ElementalBaseAPI
   implements CustomPaletteAPI,
              SuggestionAPI<'dynamic-elemental4'>,
-             CustomPaletteAPI,
-             RecentCombinationsAPI,
-             OfflinePlayAPI {
+             OptionsMenuAPI,
+             RecentCombinationsAPI  {
   static type = 'elemental4';
   private static DB_VERSION = 3;
 
@@ -175,7 +174,7 @@ export class Elemental4API
     }
   }
 
-  async open(ui?: ElementalLoadingUi, isOffline = false): Promise<boolean> {
+  async open(ui?: ElementalLoadingUi): Promise<boolean> {
     if (this.saveFile.get('clientSecret', '[unset]') === '[unset]') {
       this.saveFile.set('clientSecret', randomString(32));
       this.saveFile.set('clientName', '[Ask on Element Suggestion]');
@@ -197,7 +196,7 @@ export class Elemental4API
       dbFetch = 'full';
     }
 
-    if (!isOffline) {
+    try {
       ui?.status('Updating Database');
 
       if(dbFetch === 'full') {
@@ -211,7 +210,7 @@ export class Elemental4API
       }
 
       if (dbFetch !== 'none') {
-        await this.store.bulkTransfer(() => new Promise(async(done) => {
+        await this.store.bulkTransfer(() => new Promise(async(done, err) => {
           const endpoint = dbFetch === 'full'
             ? '/api/v1/db/all'
             : dbFetch === 'today'
@@ -250,14 +249,32 @@ export class Elemental4API
           });
   
           let data = '';
+          let stop = false;
+          const queue = createQueueExec((entry: any) => {
+            if(stop)return;
+            return processEntry(entry)
+          })
           progress.on('data', (chunk) => {
+            if(stop)return;
             const split = (data + chunk).split('\n');
             data = split.pop();
             split.forEach((x) => {
-              processEntry(JSON.parse(x));
+              let json;
+              try {
+                json = JSON.parse(x);
+              } catch (error) {
+                console.log(error)
+                err(error);
+              }
+              queue(json).catch((e) => {
+                stop = true;
+                err(e)
+              });
             });
           });
-        }))
+        })).catch((e) => {
+          console.error(e)
+        })
         this.dbMeta.lastUpdated = Date.now();
       }
 
@@ -269,7 +286,7 @@ export class Elemental4API
       this.socket.on('new-entry', (entry) => {
         this.processEntry(entry);
       })
-    } else {
+    } catch(e) {
       // you need at least the first four elements.
       if(!await this.getElement('4')) {
         await this.ui.alert({
@@ -279,9 +296,6 @@ export class Elemental4API
       }
     }   
     return true;
-  }
-  offlineOpen(ui?: ElementalLoadingUi): Promise<boolean> {
-    return this.open(ui, true);
   }
   async close(): Promise<void> {
     this.socket.close();
@@ -302,7 +316,7 @@ export class Elemental4API
     return ['1','2','3','4'];
   }
 
-  getSuggestionType() {
+  getSuggestionColorInformation() {
     return 'dynamic-elemental4' as const;
   }
 

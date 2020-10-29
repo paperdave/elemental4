@@ -1,8 +1,9 @@
-import { randomOf } from '@reverse/random';
+import { randomOf, randomInt } from '@reverse/random';
 import { Howl, Howler } from 'howler';
 import { getMusicTracks, getTheme, MusicEntry, SoundEntry } from './theme';
 import { sounds } from '../../workshop/themes/elem4_default/elemental.json';
 import { getConfigNumber } from './savefile';
+
 export type SoundId = keyof typeof sounds;
 
 let urlToHowl = new Map<string, Howl>();
@@ -25,20 +26,20 @@ export function clearSounds() {
 let isUnlocked = false;
 let first = true;
 
-export function playMusicTrack() {
-  currentTrack = getNextMusic();
+export function playMusicTrack(track) {
+  currentTrack = track;
   if(!currentTrack) return;
   currentTrackHowl = urlToHowl.get(currentTrack.url);
   if(!currentTrackHowl) return;
   let error = false;
   let timer;
-
+  
   if(!isUnlocked) {
     currentTrackHowl.on('playerror', () => {
       error = true;
       clearTimeout(timer);
       currentTrackHowl.once('unlock', () => {
-        playMusicTrack();
+        playMusicTrack(currentTrack);
       })
     });
   }
@@ -50,13 +51,37 @@ export function playMusicTrack() {
   } else {
     currentTrackHowl.volume(getConfigNumber('volume-music', 0.5) * 0.5 * (currentTrack.volume ?? 1), currentTrackHowlId);
   }
-  const duration = currentTrackHowl.duration(currentTrackHowlId)
-
-  if(!error) {
-    timer = setTimeout(() => {
-      playMusicTrack();
-    }, duration * 1000)
-  }
+  setTimeout(() => {
+    let duration
+    duration = currentTrackHowl.duration(currentTrackHowlId)
+  
+    currentTrackHowl.loop(true, currentTrackHowlId);
+    if(!error) {
+      if (currentTrack.loop === 'no-loop') {
+        currentTrackHowl.loop(false, currentTrackHowlId);
+        const next = getNextMusic();
+        timer = setTimeout(() => {
+          playMusicTrack(next || track);
+        }, duration * 1000 + (next ? 0 : randomInt(5000, 30000)))
+      } else {
+        const next = getNextMusic();
+        const loops = randomInt(0, 4) === 0 ? randomInt(4, 12) : 0;
+        let loopsSoFar = 0;
+        if(loops === 0) {
+          console.log('no loop')
+          currentTrackHowl.loop(false, currentTrackHowlId);
+          currentTrackHowl.once('end', () => {
+            playMusicTrack(next);
+          })
+        } else {
+          currentTrackHowl.loop(true, currentTrackHowlId);
+          currentTrackHowl.on('end', () => {
+            loopsSoFar++;
+          })
+        }
+      }
+    }
+  }, 100);
 }
 
 export function updateMusicVolume() {

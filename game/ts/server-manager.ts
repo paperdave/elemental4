@@ -8,22 +8,27 @@ interface ServerEntry {
   config: ElementalConfig,
 }
 
-export const builtInServers = [
+export const builtInOfficialServers = [
   'https://main.elemental4.net',
   'https://anarchy.elemental4.net',
-
-  // Not affiliated with Elemental 4, but I did work with these people to ensure their game works with mine.
+  'internal:singleplayer',
+];
+export const builtInThirdPartyServers = [
   'https://elemental.hparcells.tk',
-  // 'https://elemental5.net',
-  // 'https://ledomsoft.com:3101',
-].filter(Boolean) as string[];
+  'https://dev.elemental5.net/api',
+  // 'https://e4api.ledomsoft.com',
+];
+export const allBuiltInServers = [
+  ...builtInOfficialServers,
+  ...builtInThirdPartyServers
+]
 
 export async function getServerList(): Promise<ServerEntry[]> {
   return await getInstalledServers() as ServerEntry[];
 }
 export async function installDefaultServers(): Promise<void> {
   const servers = await getInstalledServers() as ServerEntry[];
-  const list = builtInServers.filter(x => !servers.some(y => y.baseUrl === x));
+  const list = allBuiltInServers.filter(x => !servers.some(y => y.baseUrl === x) && x.startsWith('https://'));
   await Promise.all(list.map(x => {
     return addDLCByUrl(x, 'server', true);
   }))
@@ -34,6 +39,6 @@ export async function setActiveServer(baseUrl: string) {
 }
 
 export async function getActiveServer() {
-  const name = getConfigString('server', 'https://main.elemental4.net');
+  const name = getConfigString('server', allBuiltInServers[0]);
   return (await getServerList()).find(x => x.baseUrl === name) || { baseUrl: name, name: 'Unknown Server' }
 }

@@ -18,6 +18,6 @@ DATALOG_SHEET_ID=
 
 SERVER_NAME=Elemental 4 Server
 SERVER_DESCRIPTION=An Elemental 4 Server
-SERVER_ICON=https://elemental4.net/icon.png
+SERVER_ICON=https://elemental4.net/custom-server.png
 
 `);

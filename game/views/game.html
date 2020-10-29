@@ -34,6 +34,17 @@
 </div>
 <div id="root">
   <div id="element-game-root" class="element-game-root">
+    <div id="null_server" style="display:none;">
+      <h1 style="margin-bottom:0">Not Connected to any Server</h1>
+      <p style="text-align: center;">
+        Either a network error happened, or a problem <br>
+        with loading the desired server.
+      </p>
+      <div style="margin-top:8px">
+        <button id='server-connect-main'>Connect to Elemental 4 Main</button>
+        <button id='open-server-settings'>Server Settings</button>
+      </div>
+    </div>
     <iframe id='p5_background' src="about:blank" frameborder="0" sandbox="allow-scripts"></iframe>
   </div>
   <div id="element-sidebar">
@@ -76,9 +87,9 @@
       <div class="settings-category selected" data-action='general'>
         General
       </div>
-      <!-- <div class="settings-category" data-action='input'>
+      <div class="settings-category" data-action='input'>
         Keyboard
-      </div> -->
+      </div>
       <div class="settings-category" data-action='theme'>
         Themes
       </div>
@@ -176,7 +187,7 @@
     <div class="settings-content settings-server" data-settings='server'>
       <h2>Server</h2>
       <p>
-        You can change elemental servers to another one. You have a separate savefile per server, and can add more if you want.
+        You can change elemental servers to another one. You have a separate savefile per server, and can add more if you want. Third Party servers are alternate games which have had their API rewritten in Elemental 4, and may not include all features of the original game.
       </p>
       <div class="theme-item server-display">
         <div id='server-icon' class="theme-move-buttons">

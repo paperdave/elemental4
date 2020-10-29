@@ -117,7 +117,7 @@ export interface Elem {
   }
 }
 
-export type SuggestionColorType = 'dynamic-elemental4' | 'freehand' | 'palette-elemental5';
+export type SuggestionColorType = 'dynamic-elemental4' | 'freehand' | 'palette';
 
 export interface SuggestionRequest<Type extends SuggestionColorType> {
   text: string;
@@ -150,9 +150,8 @@ type ElementalPopupBackendAddHandler =
 
 export interface ElementalPopupBackend {
   postMessage: (message: any) => void;
-  on: ElementalPopupBackendAddHandler;
-  off: ElementalPopupBackendAddHandler;
-  once: ElementalPopupBackendAddHandler;
+  addMessageListener: ElementalPopupBackendAddHandler;
+  removeMessageListener: ElementalPopupBackendAddHandler;
   close: () => void;
 }
 
@@ -240,7 +239,7 @@ export abstract class ElementalBaseAPI<Config extends ElementalConfig = Elementa
 
 /** Suggestion API. Implement it if your API supports suggestions */
 export interface SuggestionAPI<Type extends SuggestionColorType> {
-  getSuggestionType: () => Type;
+  getSuggestionColorInformation: () => SuggestionColorInformation<SuggestionColorType>;
 
   /** Fetch suggestions. */
   getSuggestions: (ids: string[]) => Promise<Suggestion<Type>[]>;
@@ -361,11 +360,6 @@ export interface ServerSavefileAPI {
   renameSaveFile(id: string, name: string): Promise<boolean>;
 }
 
-export interface OfflinePlayAPI {
-  /** Called to setup everything. */
-  offlineOpen(ui?: ElementalLoadingUi): Promise<boolean>;
-}
-
 export interface ElementalSubAPIs {
   suggestion: SuggestionAPI<any>;
   customPalette: CustomPaletteAPI;
@@ -373,7 +367,6 @@ export interface ElementalSubAPIs {
   serverSaveFile: ServerSavefileAPI;
   recentCombinations: RecentCombinationsAPI;
   hint: HintAPI;
-  offline: OfflinePlayAPI;
 }
 
 const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
@@ -383,7 +376,6 @@ const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
   serverSaveFile: ['getSaveFiles'],
   recentCombinations: ['getRecentCombinations'],
   hint: ['getHint'],
-  offline: ['offlineOpen'],
 }
 
 export function getSubAPI(api: ElementalBaseAPI): ElementalBaseAPI

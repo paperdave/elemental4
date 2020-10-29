@@ -1,4 +1,5 @@
-import '../../shared/localForage'
+import localForage from '../../shared/localForage';
+import localStorage from '../../shared/localStorage';
 import { MountThemeCSS, resetBuiltInThemes } from './theme';
 import { InitSettings } from './settings';
 import { InitElementGameUi } from './element-game';
@@ -10,7 +11,7 @@ import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { asyncAlert, asyncPrompt } from './dialog';
-import { loadSounds, playMusicTrack, playSound } from './audio';
+import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 
 declare const $production: string;
 declare const $build_date: string;
@@ -18,7 +19,6 @@ declare const $password: string;
 
 const cacheName = 'ELEMENTAL';
 
-export let OFFLINE = false;
 export let SKIPPED_UPDATES = false;
 
 type MenuAPI = {
@@ -62,6 +62,8 @@ async function boot(MenuAPI: MenuAPI) {
           caches.delete(cacheName);
         }
 
+        window.localForage = localForage;
+        window.localStorage_ = localStorage;
         eval(text);
 
         // pass the current menu api / ui.
@@ -183,12 +185,14 @@ async function boot(MenuAPI: MenuAPI) {
   localStorage.cache = MenuAPI.cache;
 
   MenuAPI.showGame && MenuAPI.showGame();
+
+  localStorage.setItem('auto_start', 'true');
   
   await delay(10);
 
   document.getElementById('game').classList.add('animate-in');
   playSound('startup');
-  playMusicTrack();
+  playMusicTrack(getNextMusic());
 }
 async function kill() {
   

@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ElementalRules, ServerStats } from "../elem";
+import { Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ElementalRules, ServerStats, Suggestion, SuggestionRequest, SuggestionResponse } from "../elem";
 import { sortCombo } from "../shared";
 import { ChunkedStore } from "../store-chunk";
 
@@ -93,5 +93,47 @@ export class RebornElementalAPI extends ElementalBaseAPI {
   }
   async getStartingInventory(): Promise<string[]> {
     return ['1','2','3','4'];
+  }
+
+  getSuggestionColorInformation() {
+    return {
+      type: 'palette',
+      palette: [
+        { id: 'blue', color: { base: 'blue', lightness: 0, saturation: 0 } },
+        { id: 'dark-brown', color: { base: 'dark-brown', lightness: 0, saturation: 0 } },
+        { id: 'orange', color: { base: 'orange', lightness: 0, saturation: 0 } },
+        { id: 'dark-blue', color: { base: 'dark-blue', lightness: 0, saturation: 0 } },
+        { id: 'navy-blue', color: { base: 'navy-blue', lightness: 0, saturation: 0 } },
+        { id: 'light-grey', color: { base: 'light-grey', lightness: 0, saturation: 0 } },
+        { id: 'dark-purple', color: { base: 'dark-purple', lightness: 0, saturation: 0 } },
+        { id: 'dark-red', color: { base: 'dark-red', lightness: 0, saturation: 0 } },
+        { id: 'grey', color: { base: 'grey', lightness: 0, saturation: 0 } },
+        { id: 'dark-green', color: { base: 'dark-green', lightness: 0, saturation: 0 } },
+        { id: 'green', color: { base: 'green', lightness: 0, saturation: 0 } },
+        { id: 'yellow', color: { base: 'yellow', lightness: 0, saturation: 0 } },
+        { id: 'dark-yellow', color: { base: 'dark-yellow', lightness: 0, saturation: 0 } },
+        { id: 'white', color: { base: 'white', lightness: 0, saturation: 0 } },
+        { id: 'brown', color: { base: 'brown', lightness: 0, saturation: 0 } },
+        { id: 'black', color: { base: 'black', lightness: 0, saturation: 0 } },
+        { id: 'red', color: { base: 'red', lightness: 0, saturation: 0 } },
+        { id: 'purple', color: { base: 'purple', lightness: 0, saturation: 0 } },
+        { id: 'pink', color: { base: 'pink', lightness: 0, saturation: 0 } },
+        { id: 'magenta', color: { base: 'magenta', lightness: 0, saturation: 0 } },
+      ]
+    };
+  }
+
+  async getSuggestions(ids: string[]): Promise<Suggestion<'palette'>[]> {
+    return [];
+  }
+  
+  async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<'palette'>): Promise<void> {
+    return null;
+  }
+  
+  async createSuggestion(ids: string[], suggestion: SuggestionRequest<'palette'>): Promise<SuggestionResponse> {
+    return {
+      suggestType: 'failed',
+    };
   }
 }

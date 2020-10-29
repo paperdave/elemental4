@@ -1,5 +1,5 @@
 // handles application program interface v1
-import { Router } from 'express';
+import e, { Router } from 'express';
 import { logicSuggestElement } from '../logic';
 import { DEV_VOTE_NO_CHECK, GAME_DATA_FOLDER, IP_FORWARDING } from '../constants';
 import { storageAddElementComment, storageDumpNames, storageGetEntriesAfter, storageGetEntryCount, storageGetSuggestion, storageSetUserName } from '../storage';
@@ -241,9 +241,8 @@ export default function() {
         if (isNaN(d.getTime())) {
             next();
         } else {
+            const today = formatDate(new Date())
             if (await pathExists(path.join(GAME_DATA_FOLDER, 'db', date + '.e4db'))) {
-                const today = formatDate(new Date())
-
                 const files = [];
                 while (date !== today) {
                     files.push(date);
@@ -262,8 +261,15 @@ export default function() {
                 res.contentType('text/elemental4-data')
                 res.setHeader('Elem4-Entry-Length', length);
                 res.send(data);
+            } else {
+                if(today === date) {
+                    res.contentType('text/elemental4-data')
+                    res.setHeader('Elem4-Entry-Length', 0);
+                    res.send('');
+                } else {
+                    next();
+                }
             }
-            next();
         }
     });
 

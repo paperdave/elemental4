@@ -3,6 +3,8 @@ import JSZip from "jszip";
 import { enableTheme, getThemeList, installTheme, updateMountedCss } from "./theme";
 import { saveAs } from "file-saver";
 import * as defaultTheme from "../theme_editor_presets/default";
+import { connectApi } from "./api";
+import localStorage from '../../shared/localStorage';
 
 let devTheme
 try {
@@ -134,6 +136,9 @@ export async function openDevThemeEditor() {
     }
     if (data.type === 'action.downloadZip') {
       downloadDeveloperTheme();
+    }
+    if (data.type === 'action.test_colors') {
+      connectApi('internal:all-colors', null, null);
     }
   })
   if(!interval) {

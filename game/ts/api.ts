@@ -4,7 +4,6 @@ import { DebugAllColorsAPI } from "../../shared/api/debug-allcolors";
 import { LedomElementalAPI } from "../../shared/api/ledom";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
 import { escapeHTML } from "../../shared/shared";
-import { OFFLINE } from "./index";
 import { SingleplayerAPI } from "./api-singleplayer";
 import { asyncAlert, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi, InitElementNews } from "./element-game";
@@ -12,7 +11,7 @@ import { createLoadingUi } from "./loading";
 import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
 import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";
-import { builtInServers } from "./server-manager";
+import { allBuiltInServers } from "./server-manager";
 import { ChunkedStore } from "../../shared/store-chunk";
 
 // @ts-ignore
@@ -20,8 +19,13 @@ class IHateTypescript extends ElementalBaseAPI {
   baseUrl = '';
 }
 
+const IsNullAPI = Symbol('IsNullAPI');
+
 export class NullAPI extends ElementalBaseAPI {  
   static type = 'internal:null'
+
+  public [IsNullAPI] = true;
+  
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
     return true;
   }
@@ -43,19 +47,19 @@ const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'reborn': RebornElementalAPI,
   'elemental4': Elemental4API,
   'elemental5': Elemental5API,
-  // 'e4': LedomElementalAPI,
-  // 'ledom': LedomElementalAPI,
+  'e4': LedomElementalAPI,
 };
 
 let currentAPI: ElementalBaseAPI;
 let currentSaveFile: string;
 let currentSaveFileList: ServerSavefileEntry[];
 
-const builtInApis = {
+export const builtInApis = {
   'internal:all-colors': {
     type: "internal:all-colors",
     name: "Theme Debug: All Colors",
-    description: "Contains all colors from the Elemental Palette."
+    description: "Contains all colors from the Elemental Palette.",
+    icon: '/all-colors-server.png',
   },
   'internal:singleplayer': {
     type: "internal:singleplayer",
@@ -65,8 +69,9 @@ const builtInApis = {
   'internal:null': {
     type: "internal:null",
     name: "No Server",
-    description: "You are not connected to any server."
-  },
+    description: "You are not connected to any server.",
+    icon: '/null-server.png',
+  }
 }
 
 export async function getSupportedServerTypes() {
@@ -99,17 +104,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       },
       store: new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
     });
-    let isOpen;
-    if (OFFLINE) {
-      const offlineApi = getSubAPI(api, 'offline');
-      if(offlineApi) {
-        isOpen = await offlineApi.offlineOpen(ui);
-      } else {
-        throw new Error("Server requires an internet connection.");
-      }
-    } else {
-      isOpen = await api.open(ui);
-    }
+    let isOpen = await api.open(ui);
     if (!isOpen) {
       throw new Error("Could not open API connection.");
     }
@@ -128,7 +123,9 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     ClearElementGameUi();
     currentAPI = api;
 
-    document.querySelector('#server-name').innerHTML = '<b>Server:</b> ' + escapeHTML(`${json.name || `Untitled Server (type=${json.type})`} — ${baseUrl}`);
+    (document.querySelector('#element-sidebar') as HTMLElement).style.display = getSubAPI(api, 'suggestion') ? 'block' : 'none';
+    (document.querySelector('#null_server') as HTMLElement).style.display = api[IsNullAPI] ? 'flex' : 'none';
+    document.querySelector('#server-name').innerHTML = api[IsNullAPI] ? '' : '<b>Server:</b> ' + escapeHTML(`${json.name || `Untitled Server (type=${json.type})`} — ${baseUrl}`);
     document.querySelector('#server-title').innerHTML = escapeHTML(json.name || `Unnamed Server (type=${json.type})`);
     document.querySelector('#server-description').innerHTML = escapeHTML(json.description || `[No description provided]`);
     if (json.icon) {
@@ -137,7 +134,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       document.querySelector('#server-icon').setAttribute('style', `background-color:#888;`)
     }
 
-    if (builtInServers.includes(baseUrl)) {
+    if (allBuiltInServers.includes(baseUrl)) {
       document.querySelector('#server-remove').setAttribute('disabled', 'true');
     } else {
       document.querySelector('#server-remove').removeAttribute('disabled');
