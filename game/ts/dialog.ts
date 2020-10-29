@@ -217,7 +217,8 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
   const conv = new Converter();
   let firstInput: string = null;
   for (var i = 0; i < parts.length; i++) {
-    if (typeof parts[i] == "string") {
+    const part = parts[i];
+    if (typeof part == "string") {
       const div = document.createElement("div");
       div.classList.add('form-dialog-group');
       div.innerHTML = conv.makeHtml(parts[i]);
@@ -227,18 +228,17 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
       div.classList.add('form-dialog-input');
       div.classList.add('form-dialog-group');
 
-      const inputPart = parts[i] as DialogInput;
       const input = document.createElement("input");
-      input.type = inputPart.type;
-      input.required = inputPart.required;
-      input.value = inputPart.default || "";
-      input.placeholder = inputPart.placeholder || "";
-      input.disabled = inputPart.disabled;
-      inputs[inputPart.id] = input;
-      div.appendChild(inputs[inputPart.id]);
+      input.type = part.type;
+      input.required = part.required;
+      input.value = part.default || "";
+      input.placeholder = part.placeholder || "";
+      input.disabled = part.disabled;
+      inputs[part.id] = input;
+      div.appendChild(inputs[part.id]);
       formElement.appendChild(div);
       if (!firstInput) {
-        firstInput = inputPart.id;
+        firstInput = part.id;
       }
     }
   }
