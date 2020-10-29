@@ -2,7 +2,6 @@ import { delay, escapeHTML } from "../../shared/shared";
 import { Emitter } from '@reverse/emitter';
 import { playSound } from "./audio";
 import { Converter } from 'showdown';
-import escape from 'markdown-escape';
 import { AlertDialogOptions, ConfirmDialogOptions, PromptDialogOptions, CustomDialogOptions, DialogButton } from "../../shared/elem";
 
 export async function animateDialogOpen(root: HTMLElement) {
