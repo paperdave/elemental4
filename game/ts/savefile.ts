@@ -2,9 +2,10 @@ import { ElementalBaseAPI, SaveFileAPI, getSubAPI, ServerSavefileEntry } from '.
 import { debounce } from '@reverse/debounce';
 import { Store } from '../../shared/store';
 import localForage from '../../shared/localForage';
+import localStorage from '../../shared/localStorage';
 import { escapeHTML } from '../../shared/shared';
 import { connectApi } from './api';
-import { builtInServers } from './server-manager';
+import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers } from './server-manager';
 
 const data = new Store('data');
 const themes = new Store('theme_data');
@@ -32,32 +33,55 @@ export async function setStatistics(api: ElementalBaseAPI, stats: any): Promise<
 }
 
 export async function getInstalledServers() {
-  return (await data.get('servers'))|| [];
+  return (await data.get('servers')) || [];
 }
 export async function installServer(baseUrl: string, config: any) {
-  baseUrl = removeUrlSuffix(baseUrl);
   const servers = (await data.get('servers') || []) as any;
-  const f = servers.find(x => x.baseUrl === baseUrl)
-  const name = config && config.name;
-  if(f) {
-    f.config = config;
-    f.name = config.name;
-  } else {
-    servers.push({ baseUrl, name, config });
+  if (!baseUrl.startsWith('internal:')) {
+    baseUrl = removeUrlSuffix(baseUrl);
+    const f = servers.find(x => x.baseUrl === baseUrl)
+    const name = config && config.name;
+    if(f) {
+      f.config = config;
+      f.name = config.name;
+    } else {
+      servers.push({ baseUrl, name, config });
+    }
+    await data.set('servers', servers);
   }
-  await data.set('servers', servers);
-
+  
   const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
   serverSelect.querySelectorAll('*:not(:first-child)').forEach((x) => {
     x.remove();
   })
+  const officialOptGroup = document.createElement('optgroup');
+  officialOptGroup.label = 'Official Servers';
+  const thirdPartyOptGroup = document.createElement('optgroup');
+  thirdPartyOptGroup.label = 'Third Party Servers';
+  const customOptGroup = document.createElement('optgroup');
+  customOptGroup.label = 'Custom Servers';
+
+  serverSelect.appendChild(officialOptGroup);
+  serverSelect.appendChild(thirdPartyOptGroup);
+  serverSelect.appendChild(customOptGroup);
+
   servers.forEach((server) => {
     const option = document.createElement('option');
     option.value = server.baseUrl;
     option.innerHTML = escapeHTML(`${server.name} - ${processBaseUrl(server.baseUrl)}`);
-    serverSelect.appendChild(option);
+
+    if (builtInOfficialServers.includes(server.baseUrl)) {
+      officialOptGroup.appendChild(option);
+    } else if(builtInThirdPartyServers.includes(server.baseUrl)) {
+      thirdPartyOptGroup.appendChild(option);
+    } else {
+      customOptGroup.appendChild(option);
+    }
   });
   serverSelect.value = 'internal:change-btn';
+  if (officialOptGroup.childElementCount === 0) officialOptGroup.remove();
+  if (thirdPartyOptGroup.childElementCount === 0) thirdPartyOptGroup.remove();
+  if (customOptGroup.childElementCount === 0) customOptGroup.remove();
 }
 export async function getServer(baseUrl: string) {
   baseUrl = removeUrlSuffix(baseUrl);
@@ -70,7 +94,7 @@ export async function uninstallServer(baseUrl: string) {
   const server = await getServer(baseUrl);
   await data.set('servers', servers.filter(x => x.baseUrl !== baseUrl));
 
-  await connectApi(builtInServers[0], null);
+  await connectApi(allBuiltInServers[0], null);
 
   await data.del('config:' + processBaseUrl(baseUrl));
   const ending = ':' + processBaseUrl(baseUrl);
@@ -79,7 +103,6 @@ export async function uninstallServer(baseUrl: string) {
   }).filter(Boolean))
 
   const opts = { name: 'ELEMENTAL', storeName: server.config.type + ':' + processBaseUrl(baseUrl) };
-  console.log(opts);
   await localForage.createInstance({...opts}).dropInstance({...opts});
 }
 

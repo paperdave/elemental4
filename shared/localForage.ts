@@ -4,8 +4,11 @@ declare global {
   }
 }
 
-if (typeof window.localForage === 'undefined') {
-  window.localForage = require('localforage')
+let f = window.localForage;
+if (typeof f === 'undefined') {
+  f = require('localforage');
 }
 
-export default window.localForage;
+delete window.localForage;
+
+export default f;

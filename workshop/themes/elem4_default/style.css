@@ -35,9 +35,10 @@
 
   --element-scale: 1;
 }
-body[data-element-scale="tiny"] { --element-scale: 0.65; }
-body[data-element-scale="small"] { --element-scale: 0.75; }
-body[data-element-scale="large"] { --element-scale: 1.5; }
+body[data-element-scale="tiny"] { --element-scale: 0.60; }
+body[data-element-scale="small"] { --element-scale: 0.70; }
+body[data-element-scale="normal"] { --element-scale: 0.90; }
+body[data-element-scale="large"] { --element-scale: 1.35; }
 @keyframes top-bar-slide-in {
   from{transform:translateY(-30px)}
   to{transform:translateY(0)}
@@ -286,6 +287,12 @@ body[data-element-scale="large"] { --element-scale: 1.5; }
   100% {
     transform: translateX(0);
   }
+}
+a {
+  color: var(--primary);
+}
+a:active {
+  color: var(--link-click);
 }
 #game{background-color:transparent;user-select:none;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;color:var(--text-main)}
 .top-bar{
@@ -1214,7 +1221,7 @@ h2 + .form-dialog-group {
 .form-dialog-input {
   display: flex;
 }
-.form-dialog-input > input {
+.form-dialog-input > * {
   flex: 1
 }
 #suggest-loader {
@@ -1302,6 +1309,18 @@ button.secondary {
   z-index: -1;
   opacity: 0;
   background-color: var(--background-element-game);
+}
+#null_server {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 #game.animate-in #p5_background {
   opacity: 1;

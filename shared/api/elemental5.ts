@@ -25,6 +25,7 @@ export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI
   static type = 'elemental5';
 
   private accounts: ServerSavefileEntry[];
+  private token: string;
   
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
     this.accounts = this.saveFile.get('accounts', []);
@@ -49,7 +50,7 @@ export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI
         this.accounts = [
           {
             id: token,
-            name: 'Default User'
+            name: 'User'
           }
         ];
         this.saveFile.set('accounts', this.accounts);
@@ -83,7 +84,22 @@ export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI
     }
   }
   async getCombo(ids: string[]): Promise<string[]> {
-    return (await this.store.get(ids.map(x => encodeURIComponent(x)).join('+'))) || [];
+    const combo = (await this.store.get(ids.map(x => encodeURIComponent(x)).join('+')));
+    if(combo) {
+      return combo;
+    } else {
+      const res = await fetch(this.baseUrl + '/combine_elements?user_string=' + this.token + '&element1=' + encodeURIComponent(ids[0])+ '&element2=' + encodeURIComponent(ids[1])).then(x => x.json());
+      if (res.type === 'already_has_element') {
+        return [];
+      } else if (res.type === 'invalid_user_elements') {
+        return [];
+      } else if (res.type === 'combined') {
+        await this.store.set(encodeURIComponent(res.result.name), res.result);
+        await this.store.set(ids.map(x => encodeURIComponent(x)).join('+'), [res.result.name]);
+        return [res.result.name];
+      }
+      return []
+    }
   }
   async getStartingInventory(): Promise<string[]> {
     return [];
@@ -92,6 +108,7 @@ export class Elemental5API extends ElementalBaseAPI implements ServerSavefileAPI
     return this.accounts;
   }
   async readSaveFileElements(id: string): Promise<string[]> {
+    this.token = id;
     const elementCount = this.saveFile.get('element_count.' + id, 0);
     const update = await fetch(this.baseUrl + '/sync_elements?user_string=' + id + '&num_elements=' + elementCount).then(x => x.text());
     

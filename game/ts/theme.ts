@@ -12,6 +12,7 @@ import { ConfirmDialog } from "./dialog";
 import { capitalize } from "@reverse/string";
 import { reloadElementCssColors } from "./element-color";
 import { createQueueExec } from "../../shared/async-queue-exec";
+import localStorage from '../../shared/localStorage';
 
 let init = false;
 
@@ -309,7 +310,6 @@ export async function MountThemeCSS() {
 }
 let themeSketchObjectUrl = null;
 export async function updateMountedCss(animate = true) {
-  console.log('Update Mounted CSS')
   swapOverlay.style.pointerEvents = 'all';
   const string = JSON.stringify(themesEnabled);
   if(string === '[]') {

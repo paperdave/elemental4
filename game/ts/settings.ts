@@ -1,15 +1,16 @@
 import { escapeHTML } from "../../shared/shared";
 import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from "./api";
-import { animateDialogClose, animateDialogOpen, ConfirmDialog, CustomDialog, PromptDialog } from "./dialog";
 import { createLoadingUi } from "./loading";
-import { resetAllThemes, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber } from "./savefile";
-import { getServerList, setActiveServer } from "./server-manager";
+import { resetAllThemes, getConfigBoolean, setConfigBoolean, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber, getInstalledServers } from "./savefile";
+import { builtInOfficialServers, setActiveServer } from "./server-manager";
+import { animateDialogClose, animateDialogOpen, ConfirmDialog, CustomDialog, PromptDialog } from "./dialog";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
 import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
 import { updateMusicVolume } from "./audio";
+import localStorage from '../../shared/localStorage';
 import escapeMarkdown from 'markdown-escape';
 
 let themeUpdated = false;
@@ -139,6 +140,19 @@ export async function InitSettings() {
       focus('general');
     }
   });
+  document.querySelector("#open-server-settings").addEventListener('click', () => {
+    if (!settingsOpen) {
+      if (document.querySelector('.animate-panel')) {
+        document.querySelector('.suggest-close').dispatchEvent(new MouseEvent('click'));
+      }
+      settingsOpen = true;
+      animateDialogOpen(elemSettingsDialog)
+      focus('server');
+    }
+  });
+  document.querySelector("#server-connect-main").addEventListener('click', () => {
+    connectApi(builtInOfficialServers[0], null, null);
+  });
   document.querySelector("#show-category-names").addEventListener('click', (ev) => {
     const v = (ev.currentTarget as HTMLInputElement).checked;
     setConfigBoolean('show-category-names', v);
@@ -231,17 +245,10 @@ export async function InitSettings() {
   });
 
   const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
-  const servers = await getServerList();
-  servers.forEach((server) => {
-    const option = document.createElement('option');
-    option.value = server.baseUrl;
-    option.innerHTML = escapeHTML(`${server.name} - ${processBaseUrl(server.baseUrl)}`);
-    serverSelect.appendChild(option);
-  });
   serverSelect.value = 'internal:change-btn';
   serverSelect.addEventListener('change', async() => {
     const value = serverSelect.value;
-    const server = servers.find(x => x.baseUrl === value);
+    const server = (await getInstalledServers()).find(x => x.baseUrl === value);
     if (server) {
       const ui = createLoadingUi();
       ui.status('Connecting to ' + processBaseUrl(server.baseUrl), 0)
@@ -364,7 +371,6 @@ export async function updateStorageEstimation() {
       document.getElementById('storage-yes-breakdown').style.display = 'none';
     }
   } catch (error) {
-    console.log(error);
     document.getElementById('storage-yes-breakdown').style.display = 'none';
     document.getElementById('storage-no-breakdown').style.display = 'none';
   }

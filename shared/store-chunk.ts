@@ -21,11 +21,18 @@ export class ChunkedStore extends IStore {
     this.store = new Store(storeName)
   }
   
-  async bulkTransfer(cb: () => Promise<void>) {
-    this.dbWritingPaused = true;
-    await cb();
-    this.dbWritingPaused = false;
-    this.writeAllGroups()
+  bulkTransfer(cb: () => Promise<void>) {
+    return new Promise((res, rej) => {
+      this.dbWritingPaused = true;
+      cb().then(() => {
+        this.dbWritingPaused = false;
+        this.writeAllGroups().then(() => {
+          res();
+        })
+      }).catch((err) => {
+        rej(err)
+      });
+    })
   }
 
   private createQueue = createJoinedQueue();
