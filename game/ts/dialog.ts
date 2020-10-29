@@ -213,7 +213,7 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
     dialog.close(true);
   }
 
-  var inputs: Record<string, HTMLInputElement> = {} as Record<string, HTMLInputElement>;
+  var inputs: Record<string, HTMLInputElement> = {};
   var conv = new Converter();
   var firstInput: string = null;
   for (var i = 0; i < parts.length; i++) {
@@ -229,7 +229,6 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
       inputs[inputPart.id].value = inputPart.default || "";
       inputs[inputPart.id].placeholder = inputPart.placeholder;
       inputs[inputPart.id].disabled = inputPart.disabled;
-      inputs[inputPart.id].style.display = "block";
       formElement.appendChild(inputs[inputPart.id]);
       if (!firstInput) {
         firstInput = inputPart.id;
@@ -251,7 +250,7 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
     inputs[firstInput].focus();
     dialog.on('close', (x) => {
       console.log(x);
-      let out: Record<string, string> = {} as Record<string, string>;
+      let out: Record<string, string> = {};
       for (var key in inputs) {
         out[key] = inputs[key].value;
       }
