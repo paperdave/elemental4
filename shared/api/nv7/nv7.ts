@@ -2,7 +2,7 @@ import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats
 import firebase from "firebase";
 import {login} from "./login";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI {  
+export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>,*/ RecentCombinationsAPI {  
 	private db
 	public uid: string
 	public saveFile
@@ -46,17 +46,17 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
   async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<void> {
 
 	}
-  async createSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<SuggestionResponse> {
-		return;
-	}
+  // async createSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<SuggestionResponse> {
+	// 	return;
+	// }
 	
-	async getSuggestions(ids: string[]): Promise<Suggestion<'dynamic-elemental4'>[]> {
-		return;
-	}
+	// async getSuggestions(ids: string[]): Promise<Suggestion<'dynamic-elemental4'>[]> {
+	// 	return;
+	// }
 
-	getSuggestionType() {
-		return 'dynamic-elemental4' as const;
-  }
+	// getSuggestionType() {
+	// 	return 'dynamic-elemental4' as const;
+  // }
   
   async waitForNewRecent(): Promise<void> {
     return;
