@@ -6,17 +6,43 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
   var uid = api.saveFile.get("user", "default")
   if (uid == "default") {
     while (true) {
+      var registering = true;
       ui.status("Requesting Login Info", 0);
-      let creds = await api.ui.prompt({
+      
+      let creds = await api.ui.dialog({
         title: 'Nv7 Elemental Login',
-        text: 'Put in your password and email somehow',
-        defaultText: '',
-        confirmButton: 'Log In',
+        parts: [
+          {
+            id: "email",
+            type: "email",
+            placholder: "example@example.com",
+            required: true,
+          },
+          {
+            id: "password",
+            type: "password",
+            required: true,
+          }
+        ],
+        buttons: [
+          {
+            id: 1,
+            label: (!registering && "Log In") || (registering && "Register"),
+          },
+          {
+            id: 0,
+            label: (!registering && "Register") || (registering && "Log In"),
+          },
+          {
+            id: -1,
+            label: "Cancel",
+          }
+        ]
       });
 
       ui.status("Processing Login Info", 0);
 
-      if (creds) {
+      if (creds["button"] == 1) {
         ui.status("Processing Login Info", 1);
         var result = await new Promise((resolve, reject) => {
           ui.status("Authenticating", 0);
@@ -50,6 +76,8 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
             "button": "Ok",
           });
         }
+      } else if (creds["button"] == 0) {
+        registering = !registering
       }
     }
   } else {

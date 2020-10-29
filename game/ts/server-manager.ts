@@ -11,7 +11,7 @@ interface ServerEntry {
 export const builtInServers = [
   'https://main.elemental4.net',
   'https://anarchy.elemental4.net',
-  'internal:dev',
+  'https://elementalserver-8c6d0.web.app',
 
   // Not affiliated with Elemental 4, but I did work with these people to ensure their game works with mine.
   'https://elemental.hparcells.tk',

@@ -69,11 +69,6 @@ const builtInApis = {
     name: "No Server",
     description: "You are not connected to any server."
   },
-  'internal:dev': {
-    type: "nv7",
-    name: "Dev server",
-    description: "Nv7's Dev server"
-  }
 }
 
 export async function getSupportedServerTypes() {
