@@ -9,7 +9,7 @@ import { ElementalLoadingUi } from '../../shared/elem';
 import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
-import { asyncAlert, asyncPrompt } from './dialog';
+import { AlertDialog, PromptDialog } from './dialog';
 import { loadSounds, playMusicTrack, playSound } from './audio';
 
 declare const $production: string;
@@ -160,7 +160,7 @@ async function boot(MenuAPI: MenuAPI) {
   if ($password) {
     ui.status('Requesting Password', 0);
     
-    const entry = await asyncPrompt('Password Required for Beta', 'To enter in the beta, you need to know the Password.', '');
+    const entry = await PromptDialog({ title: 'Password Required for Beta', text: 'To enter in the beta, you need to know the Password.' });
 
     if (entry !== $password) {
       location.reload();
@@ -173,7 +173,7 @@ async function boot(MenuAPI: MenuAPI) {
   try {
     await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
   } catch (error) {
-    await asyncAlert('Error Connecting', `Failed to connect to ${initialServer.baseUrl}.`);
+    await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
     setActiveServer('internal:null');
     await connectApi('internal:null', null, ui as ElementalLoadingUi)
   }

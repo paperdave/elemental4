@@ -1,6 +1,6 @@
 import { escapeHTML } from "../../shared/shared";
 import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from "./api";
-import { animateDialogClose, animateDialogOpen, asyncConfirm, SimpleDialog, asyncPrompt } from "./dialog";
+import { animateDialogClose, animateDialogOpen, ConfirmDialog, CustomDialog, PromptDialog } from "./dialog";
 import { createLoadingUi } from "./loading";
 import { resetAllThemes, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber } from "./savefile";
 import { getServerList, setActiveServer } from "./server-manager";
@@ -10,6 +10,7 @@ import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
 import { updateMusicVolume } from "./audio";
+import escapeMarkdown from 'markdown-escape';
 
 let themeUpdated = false;
 
@@ -95,7 +96,11 @@ export async function InitSettings() {
       const action = elem.getAttribute('data-reset-button');
 
       if(action === 'build') {
-        if (await asyncConfirm('Re-download game bundle?', 'This may help fix updates. It will not modify user data.', 'Reset')) {
+        if (await ConfirmDialog({
+          title: 'Re-download game bundle?',
+          text: 'This may help fix updates. It will not modify user data.',
+          trueButton: 'Reset'
+        })) {
           localStorage.setItem('auto_start', 'true');
           localStorage.removeItem('cache');
           if (await caches.has('ELEMENTAL')) {
@@ -104,13 +109,19 @@ export async function InitSettings() {
           location.reload();
         }
       } else if (action === 'themes') {
-        if ((await asyncPrompt('Clear Downloaded Themes?', 'Type "Delete Themes" to confirm.', ''))?.toLowerCase() === 'delete themes' ) {
+        if ((await PromptDialog({
+          title: 'Clear Downloaded Themes?',
+          text: 'Type "Delete Themes" to confirm.'
+        }))?.toLowerCase() === 'delete themes' ) {
           await resetAllThemes();
           localStorage.removeItem('themes-enabled');
           location.reload();
         }
       } else if (action === 'all') {
-        if ((await asyncPrompt('Delete Everything?', 'Clear Packs, Themes, and ALL PROGRESS on ALL SERVERS? You will be logged out, unlinking your suggestions from this account. This will not remove your created suggestions from the server. Type "Delete All Data" to confirm.', ''))?.toLowerCase() === 'delete all data' ) {
+        if ((await PromptDialog({
+          title: 'Delete Everything?',
+          text: 'Clear Packs, Themes, and ALL PROGRESS on ALL SERVERS? You will be logged out, unlinking your suggestions from this account. This will not remove your created suggestions from the server. Type "Delete All Data" to confirm.'
+        }))?.toLowerCase() === 'delete all data' ) {
           localStorage.clear();
           localStorage.setItem('clear_idb', '1');
           location.reload();
@@ -179,28 +190,29 @@ export async function InitSettings() {
     themeUpdated = false;
   });
   document.querySelector('#theme-add').addEventListener('click', async() => {
-    const text = await asyncPrompt(
-      'Add Theme',
-      'Paste the theme URL or JSON content here.',
-      '',
-      'Add Theme',
-      'Cancel',
-      true
-    );
+    const text = await PromptDialog({
+      title: 'Add Theme',
+      text: 'Paste the Theme URL or JSON content here.',
+      confirmButton: 'Add Theme',
+      cancelButton: 'Cancel',
+    });
 
-    addDLCByUrl(text, 'theme');
+    if (text) {
+      addDLCByUrl(text, 'theme');
+    }
   });
   document.querySelector('#server-add').addEventListener('click', async() => {
-    const text = await asyncPrompt(
-      'Add Server',
-      'Paste the server URL here.',
-      '',
-      'Add Server',
-      'Cancel',
-      true
-    );
+    
+    const text = await PromptDialog({
+      title: 'Add Server',
+      text: 'Paste the Server URL here.',
+      confirmButton: 'Add Server',
+      cancelButton: 'Cancel',
+    });
 
-    await addDLCByUrl(text, 'server');
+    if (text) {
+      await addDLCByUrl(text, 'server');
+    }
   });
   document.querySelector('#theme-browse').addEventListener('click', () => {
     window.open('/workshop#themes', '', 'width=800,height=600', true);
@@ -210,7 +222,10 @@ export async function InitSettings() {
   });
   document.querySelector('#server-remove').addEventListener('click', async() => {
     const conf = getAPI().config;
-    if(await asyncConfirm('Remove Server', `Remove ${conf.name || `Untitled Server (type=${conf.type})`}? This will remove all downloaded server data, and your local save files.`)) {
+    if(await ConfirmDialog({
+      title: 'Remove Server',
+      text: `Remove **${escapeMarkdown(conf.name || `Untitled Server (type=${conf.type})`)}**? This will remove all downloaded server data, and your local save files.`
+    })) {
       await uninstallServer(getAPI().baseUrl);
     }
   });
@@ -236,7 +251,7 @@ export async function InitSettings() {
       try {
         await connectApi(server.baseUrl, null, ui);
       } catch (error) {
-        await SimpleDialog({
+        await CustomDialog({
           title: 'Server Connection Error',
           parts: [
             `Could not connect to \`${escapeHTML(server.baseUrl)}\``,
@@ -261,19 +276,34 @@ export async function InitSettings() {
     const value = saveModifySelect.value;
     const api = getAPI();
     if(value === 'create') {
-      const name = await asyncPrompt('Create Save File', 'Enter the savefile name', `Save #${saveSelect.options.length + 1}`, 'Create');
+      const name = await PromptDialog({
+        title: 'Create Save File',
+        text: 'Enter the savefile name',
+        defaultInput: `Save #${saveSelect.options.length + 1}`,
+        confirmButton: 'Create'
+      });
       if(name) {
         await createNewSaveFile(api, name);
         recalculateSavefileDropdown();
       }
     } else if(value === 'rename') {
-      const name = await asyncPrompt('Rename Save File', 'Enter the savefile name', `${saveSelect.options[saveSelect.selectedIndex].text}`, 'Rename');
+      const name = await PromptDialog({
+        title: 'Rename Save File',
+        text: 'Enter the savefile name',
+        defaultInput:`${saveSelect.options[saveSelect.selectedIndex].text}`,
+        confirmButton: 'Rename'
+      });
       if(name) {
         await renameSaveFile(api, await getActiveSaveFile(api), name);
         recalculateSavefileDropdown();
       }
     } else if(value === 'delete') {
-      const confirm = await asyncConfirm('Delete Save File', 'Are you sure you want to delete this save file?', 'Delete', 'Keep');
+      const confirm = await ConfirmDialog({
+        title: 'Delete Save File',
+        text: 'Are you sure you want to delete this save file?',
+        trueButton: 'Delete',
+        falseButton: 'Keep'
+      });
       if(confirm) {
         await deleteSaveFile(api, await getActiveSaveFile(api));
         setActiveSaveFile(api, (await getAPISaveFiles(api))[0].id);

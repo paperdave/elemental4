@@ -5,7 +5,7 @@ import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs
 import { escapeHTML } from "../../shared/shared";
 import { OFFLINE } from "./index";
 import { SingleplayerAPI } from "./api-singleplayer";
-import { asyncAlert, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
+import { AlertDialog, ConfirmDialog, PromptDialog, CustomDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi, InitElementNews } from "./element-game";
 import { createLoadingUi } from "./loading";
 import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
@@ -91,11 +91,11 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       config: json,
       saveFile: await getAPISaveFile(baseUrl),
       ui: {
-        alert: (o) => asyncAlert(o.title, o.text),
-        confirm: (o) => asyncConfirm(o.title, o.text, o.trueButton, o.falseButton),
-        prompt: (o) => asyncPrompt(o.title, o.text, o.defaultText, o.confirmButton, o.cancelButton),
+        alert: (o) => AlertDialog(o),
+        confirm: (o) => ConfirmDialog(o),
+        prompt: (o) => PromptDialog(o),
+        dialog: (o) => CustomDialog(o),
         popup: (o) => Promise.resolve(null),
-        dialog: (o) => SimpleDialog(o)
       },
       store: new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
     });

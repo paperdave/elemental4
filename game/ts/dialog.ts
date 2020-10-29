@@ -3,6 +3,7 @@ import { Emitter } from '@reverse/emitter';
 import { playSound } from "./audio";
 import { Converter } from 'showdown';
 import escape from 'markdown-escape';
+import { AlertDialogOptions, ConfirmDialogOptions, PromptDialogOptions, CustomDialogOptions, DialogButton } from "../../shared/elem";
 
 export async function animateDialogOpen(root: HTMLElement) {
   if (document.hasFocus()) {
@@ -42,29 +43,7 @@ export interface DialogInstanceOptions {
   className?: string;
 }
 
-export interface DialogButton {
-  label: string;
-  id: any;
-}
-
-export interface DialogInput {
-  id: string;
-  placeholder?: string;
-  default?: string;
-  required?: boolean;
-  type?: "text" | "password" | "email";
-  disabled?: boolean;
-}
-
-export interface SimpleDialogOptions {
-  title: string,
-  parts: DialogPart[],
-  buttons?: DialogButton[],
-}
-
-type DialogPart = DialogInput | string;
-
-export function SimpleDialog(opt: SimpleDialogOptions): Promise<Record<string, string>> {
+export function CustomDialog(opt: CustomDialogOptions): Promise<Record<string, string>> {
   const { title, parts, buttons } = opt;
   let dialog: DialogInstance;
 
@@ -92,12 +71,11 @@ export function SimpleDialog(opt: SimpleDialogOptions): Promise<Record<string, s
 
       const input = document.createElement("input");
       input.type = part.type;
-      input.required = part.required;
       input.value = part.default || "";
       input.placeholder = part.placeholder || "";
       input.disabled = part.disabled;
       inputs[part.id] = input;
-      div.appendChild(inputs[part.id]);
+      div.appendChild(input);
       formElement.appendChild(div);
       if (!firstInput) {
         firstInput = part.id;
@@ -112,7 +90,7 @@ export function SimpleDialog(opt: SimpleDialogOptions): Promise<Record<string, s
   });
 
   dialog.on('ready', () => {
-    inputs[firstInput].focus();
+    inputs[firstInput] && inputs[firstInput].focus();
   });
 
   return new Promise((done) => {
@@ -201,20 +179,27 @@ export function createDialogInstance(opt: DialogInstanceOptions) {
   return emitter;
 }
 
-export async function asyncAlert(title: string, text: string): Promise<void> {
-  await SimpleDialog({
+export async function AlertDialog(opt: AlertDialogOptions): Promise<void> {
+  const { title, text } = opt;
+  await CustomDialog({
     title,
     parts: [
-      escape(text)
+      text
     ]
   });
 }
 
-export async function asyncConfirm(title: string, text: string, trueButton = 'OK', falseButton = 'Cancel'): Promise<boolean> {
-  return (await SimpleDialog({
+export async function ConfirmDialog(opt: ConfirmDialogOptions): Promise<boolean> {
+  const {
+    title,
+    text,
+    trueButton = 'OK',
+    falseButton = 'Cancel',
+  } = opt;
+  return (await CustomDialog({
     title,
     parts: [
-      escape(text)
+      text
     ],
     buttons: [
       trueButton && {
@@ -229,11 +214,18 @@ export async function asyncConfirm(title: string, text: string, trueButton = 'OK
   })).button === 'true';
 }
 
-export async function asyncPrompt(title: string, text: string, defaultInput?: string, confirmButton = 'OK', cancelButton = 'Cancel'): Promise<undefined|string> {
-  const output = await SimpleDialog({
+export async function PromptDialog(opt: PromptDialogOptions): Promise<undefined|string> {
+  const {
+    title,
+    text,
+    defaultInput,
+    confirmButton = 'OK',
+    cancelButton = 'Cancel',
+  } = opt;
+  const output = await CustomDialog({
     title,
     parts: [
-      escape(text),
+      text,
       {
         id: 'input',
         default: defaultInput,
@@ -250,5 +242,6 @@ export async function asyncPrompt(title: string, text: string, defaultInput?: st
       },
     ].filter(Boolean)
   });
+  console.log(output)
   return output.button === 'confirm' && output.input;
 }
