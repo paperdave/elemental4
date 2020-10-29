@@ -1,6 +1,7 @@
 import { delay, escapeHTML } from "../../shared/shared";
 import { Emitter } from '@reverse/emitter';
 import { playSound } from "./audio";
+import { Converter } from 'showdown';
 
 export async function animateDialogOpen(root: HTMLElement) {
   if (document.hasFocus()) {
@@ -213,8 +214,7 @@ export function asyncDialog(title: string, parts: DialogPart[], buttons?: Dialog
   }
 
   var inputs: Record<string, HTMLInputElement> = {} as Record<string, HTMLInputElement>;
-  var showdown = require("showdown");
-  var conv = new showdown.Converter();
+  var conv = new Converter();
   var firstInput: string = null;
   for (var i = 0; i < parts.length; i++) {
     if (typeof parts[i] == "string") {
