@@ -376,7 +376,7 @@ export class Elemental4API
           text: 'Since you cast the deciding vote, you get to add one of the two Creator Marks on this Element (The other is for the initial suggester). Leave it blank to not have one.',
           cancelButton: null,
           confirmButton: 'Confirm Creator Mark',
-          defaultText: '',
+          defaultInput: '',
         });
         fetch(this.baseUrl + '/api/v1/comment/' + r.newElement, {
           method: 'POST',

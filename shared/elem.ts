@@ -1,7 +1,6 @@
 import Color from "color";
 import { DynamicColor } from "./elemental4-types";
-import { IStore, Store } from "./store";
-import { ChunkedStore } from "./store-chunk";
+import { IStore } from "./store";
 
 export type ElementalColorPalette
   = 'white'
@@ -178,16 +177,64 @@ export interface ElementalRules {
   maxElementsToCombine: number;
 }
 
+export interface DialogButton {
+  label: string;
+  id: any;
+}
+
+export interface DialogInput {
+  id: string;
+  placeholder?: string;
+  default?: string;
+  type?: "text" | "password" | "email";
+  disabled?: boolean;
+}
+
+export interface CustomDialogOptions {
+  title: string,
+  parts: DialogPart[],
+  buttons?: DialogButton[],
+}
+
+export type DialogPart = DialogInput | string;
+
+export interface AlertDialogOptions {
+  title: string;
+  text: string;
+}
+export interface ConfirmDialogOptions {
+  title: string;
+  text: string;
+  trueButton?: string;
+  falseButton?: string;
+}
+export interface PromptDialogOptions {
+  title: string,
+  text: string,
+  defaultInput?: string,
+  confirmButton?: string,
+  cancelButton?: string,
+}
+export interface PromptDialogOptions {
+  title: string,
+  text: string,
+  defaultInput?: string,
+  confirmButton?: string,
+  cancelButton?: string,
+}
+
 export interface ElementalRuntimeUI {
   /** Wrapper around alert(), but async. Client will provide a user interface. */
-  alert(opt: {title?: string, text: string, button?: string}): Promise<void>;
+  alert(opt: AlertDialogOptions ): Promise<void>;
   /** Wrapper around confirm(), but async. Client will provide a user interface. */
-  confirm(opt: {title?: string, text: string, trueButton?: string, falseButton?: string}): Promise<boolean>;
+  confirm(opt: ConfirmDialogOptions): Promise<boolean>;
   /** Wrapper around prompt(), but async. Client will provide a user interface. */
-  prompt(opt: {title?: string, text: string, defaultText?: string, confirmButton?: string, cancelButton?: string}): Promise<string|undefined>;
+  prompt(opt: PromptDialogOptions): Promise<string|undefined>;
   /** Opens an iframe to the specified url or a blank page if none.
-   * The client will display this in a styled dialog. Null if client refuses */
+   * The client will display this in a styled dialog. Null if client refuses. */
   popup: (frameUrl?: string) => Promise<ElementalPopupBackend | null>
+  /** Creates a highly customizable dialog with markdown, inputs, and buttons. Client will provide a user interface. */
+  dialog(opt: CustomDialogOptions): Promise<Record<string, string>>
 }
 
 /** Base API */
