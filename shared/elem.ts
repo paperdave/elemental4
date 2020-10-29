@@ -188,7 +188,25 @@ export interface ElementalRuntimeUI {
   /** Opens an iframe to the specified url or a blank page if none.
    * The client will display this in a styled dialog. Null if client refuses */
   popup: (frameUrl?: string) => Promise<ElementalPopupBackend | null>
+  /** Creats an advanced dialog with multiple inputs and buttons */
+  advancedDialog(opt: {title: string, parts: DialogPart[], buttons?: DialogButton[]}): Promise<Record<string, string>>
 }
+
+export interface DialogButton {
+  label: string;
+  id: any;
+}
+
+export interface DialogInput {
+  id: string;
+  placeholder?: string;
+  default?:string;
+  required:boolean;
+  type?: "text"|"password"|"email";
+  disabled?: boolean;
+}
+
+type DialogPart = DialogInput | string;
 
 /** Base API */
 export abstract class ElementalBaseAPI<Config extends ElementalConfig = ElementalConfig> {

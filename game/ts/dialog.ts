@@ -45,6 +45,17 @@ export interface DialogButton {
   id: any;
 }
 
+export interface DialogInput {
+  id: string;
+  placeholder?: string;
+  default?:string;
+  required:boolean;
+  type?: "text"|"password"|"email";
+  disabled?: boolean;
+}
+
+type DialogPart = DialogInput | string;
+
 export interface DialogInstance extends Emitter {
   close: (arg: any) => Promise<void>;
 }
@@ -187,6 +198,61 @@ export function asyncPrompt(title: string, text: string, defaultInput?: string, 
     input.focus();
     dialog.on('close', (x) => {
       done(x ? input.value : undefined);
+    })
+  })
+}
+
+export function asyncDialog(title: string, parts: DialogPart[], buttons?: DialogButton[]): Promise<Record<string, string>> {
+  let dialog: DialogInstance;
+
+  const formElement = document.createElement('form');
+  formElement.classList.add('dialog-form');
+  formElement.onsubmit = (ev) => {
+    ev.preventDefault();
+    dialog.close(true);
+  }
+
+  let inputs: Promise<Record<string, HTMLInputElement>>
+  var conv = require("showdown").Converter();
+  var firstInput: string = null;
+  for (var part in parts) {
+    if (typeof part == "string") {
+      var div = document.createElement("div");
+      div.innerHTML = conv.makeHTML(part as string);
+      formElement.appendChild(div);
+    } else {
+      var inputPart = part as DialogInput;
+      inputs[inputPart.id] = document.createElement("input");
+      inputs[inputPart.id].type = inputPart.type;
+      inputs[inputPart.id].required = inputPart.required;
+      inputs[inputPart.id].value = inputPart.default || "";
+      inputs[inputPart.id].placeholder = inputPart.placeholder;
+      inputs[inputPart.id].disabled = inputPart.disabled;
+      formElement.appendChild(inputs[inputPart.id]);
+      if (!firstInput) {
+        firstInput = inputPart.id;
+      }
+    }
+  }
+
+  dialog = createDialogInstance({
+    title,
+    content: [formElement],
+    buttons: buttons,
+  });
+
+  dialog.on('ready', () => {
+    inputs[firstInput].focus();
+  });
+
+  return new Promise((done) => {
+    inputs[firstInput].focus();
+    dialog.on('close', (x) => {
+      let out: Record<string, string>;
+      for (var key in inputs) {
+        out[key] = inputs[key].value;
+      }
+      done(out);
     })
   })
 }
