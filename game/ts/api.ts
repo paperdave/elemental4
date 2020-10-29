@@ -1,12 +1,11 @@
 import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
 import { DebugAllColorsAPI } from "../../shared/api/debug-allcolors";
-import { LedomElementalAPI } from "../../shared/api/ledom";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
 import { escapeHTML } from "../../shared/shared";
 import { OFFLINE } from "./index";
 import { SingleplayerAPI } from "./api-singleplayer";
-import { asyncAlert, asyncConfirm, asyncPrompt, SimpleDialog, asyncDialog } from "./dialog";
+import { asyncAlert, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi, InitElementNews } from "./element-game";
 import { createLoadingUi } from "./loading";
 import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
@@ -96,7 +95,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
         confirm: (o) => asyncConfirm(o.title, o.text, o.trueButton, o.falseButton),
         prompt: (o) => asyncPrompt(o.title, o.text, o.defaultText, o.confirmButton, o.cancelButton),
         popup: (o) => Promise.resolve(null),
-        advancedDialog: (o) => asyncDialog(o.title, o.parts, o.buttons)
+        dialog: (o) => SimpleDialog(o)
       },
       store: new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
     });

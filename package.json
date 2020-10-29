@@ -30,6 +30,7 @@
     "jsonpath": "^1.0.2",
     "jszip": "^3.5.0",
     "localforage": "^1.9.0",
+    "markdown-escape": "^1.1.0",
     "moment": "^2.29.0",
     "monaco-editor": "^0.21.2",
     "node-fetch": "^2.3.0",

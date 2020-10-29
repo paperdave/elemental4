@@ -1,9 +1,8 @@
 import { escapeHTML } from "../../shared/shared";
 import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from "./api";
-import { animateDialogClose, animateDialogOpen, asyncConfirm, asyncPrompt, SimpleDialog } from "./dialog";
-import { addElementToGame, ClearElementGameUi } from "./element-game";
+import { animateDialogClose, animateDialogOpen, asyncConfirm, SimpleDialog, asyncPrompt } from "./dialog";
 import { createLoadingUi } from "./loading";
-import { resetAllThemes, resetAllElements, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber } from "./savefile";
+import { resetAllThemes, getConfigBoolean, setConfigBoolean, getOwnedElements, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber } from "./savefile";
 import { getServerList, setActiveServer } from "./server-manager";
 import { getDisplayStatistics } from "./statistics";
 import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, getThemeList, increaseThemePriority, ThemeEntry, uninstallTheme, updateMountedCss } from "./theme";
@@ -237,16 +236,11 @@ export async function InitSettings() {
       try {
         await connectApi(server.baseUrl, null, ui);
       } catch (error) {
-        const line1 = document.createElement('p');
-        line1.innerHTML = `Could not connect to <code>${escapeHTML(server.baseUrl)}</code>.`
-        const line2 = document.createElement('pre');
-        line2.innerHTML = `<code>${error.stack}</code>`
-
-        SimpleDialog({
+        await SimpleDialog({
           title: 'Server Connection Error',
-          content: [
-            line1,
-            line2
+          parts: [
+            `Could not connect to \`${escapeHTML(server.baseUrl)}\``,
+            `\`${error.stack}\``
           ]
         })
       }

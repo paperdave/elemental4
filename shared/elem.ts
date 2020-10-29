@@ -1,7 +1,6 @@
 import Color from "color";
 import { DynamicColor } from "./elemental4-types";
 import { IStore, Store } from "./store";
-import { ChunkedStore } from "./store-chunk";
 
 export type ElementalColorPalette
   = 'white'
@@ -188,8 +187,8 @@ export interface ElementalRuntimeUI {
   /** Opens an iframe to the specified url or a blank page if none.
    * The client will display this in a styled dialog. Null if client refuses */
   popup: (frameUrl?: string) => Promise<ElementalPopupBackend | null>
-  /** Creats an advanced dialog with multiple inputs and buttons */
-  advancedDialog(opt: {title: string, parts: DialogPart[], buttons?: DialogButton[]}): Promise<Record<string, string>>
+  /** Creates a highly customizable dialog with markdown, inputs, and buttons */
+  dialog(opt: {title: string, parts: DialogPart[], buttons?: DialogButton[]}): Promise<Record<string, string>>
 }
 
 export interface DialogButton {

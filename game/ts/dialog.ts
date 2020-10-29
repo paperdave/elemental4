@@ -2,6 +2,7 @@ import { delay, escapeHTML } from "../../shared/shared";
 import { Emitter } from '@reverse/emitter';
 import { playSound } from "./audio";
 import { Converter } from 'showdown';
+import escape from 'markdown-escape';
 
 export async function animateDialogOpen(root: HTMLElement) {
   if (document.hasFocus()) {
@@ -55,7 +56,76 @@ export interface DialogInput {
   disabled?: boolean;
 }
 
+export interface SimpleDialogOptions {
+  title: string,
+  parts: DialogPart[],
+  buttons?: DialogButton[],
+}
+
 type DialogPart = DialogInput | string;
+
+export function SimpleDialog(opt: SimpleDialogOptions): Promise<Record<string, string>> {
+  const { title, parts, buttons } = opt;
+  let dialog: DialogInstance;
+
+  const formElement = document.createElement('form');
+  formElement.classList.add('dialog-form');
+  formElement.onsubmit = (ev) => {
+    ev.preventDefault();
+    dialog.close(true);
+  }
+
+  const inputs: Record<string, HTMLInputElement> = {};
+  const conv = new Converter();
+  let firstInput: string = null;
+  for (var i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (typeof part == "string") {
+      const div = document.createElement("div");
+      div.classList.add('form-dialog-group');
+      div.innerHTML = conv.makeHtml(parts[i]);
+      formElement.appendChild(div);
+    } else {
+      const div = document.createElement("div");
+      div.classList.add('form-dialog-input');
+      div.classList.add('form-dialog-group');
+
+      const input = document.createElement("input");
+      input.type = part.type;
+      input.required = part.required;
+      input.value = part.default || "";
+      input.placeholder = part.placeholder || "";
+      input.disabled = part.disabled;
+      inputs[part.id] = input;
+      div.appendChild(inputs[part.id]);
+      formElement.appendChild(div);
+      if (!firstInput) {
+        firstInput = part.id;
+      }
+    }
+  }
+
+  dialog = createDialogInstance({
+    title,
+    content: [formElement],
+    buttons: buttons,
+  });
+
+  dialog.on('ready', () => {
+    inputs[firstInput].focus();
+  });
+
+  return new Promise((done) => {
+    dialog.on('close', (x) => {
+      const out: Record<string, string> = {};
+      for (var key in inputs) {
+        out[key] = inputs[key].value;
+      }
+      out.button = x;
+      done(out);
+    })
+  })
+}
 
 export interface DialogInstance extends Emitter {
   close: (arg: any) => Promise<void>;
@@ -130,137 +200,55 @@ export function createDialogInstance(opt: DialogInstanceOptions) {
   
   return emitter;
 }
-export function SimpleDialog(opt: DialogInstanceOptions): Promise<any> {
-  const instance = createDialogInstance(opt);
-  return new Promise((done) => instance.addListener('close', done));
+
+export async function asyncAlert(title: string, text: string): Promise<void> {
+  await SimpleDialog({
+    title,
+    parts: [
+      escape(text)
+    ]
+  });
 }
 
-export function asyncAlert(title: string, text: string): Promise<void> {
-  return SimpleDialog({
+export async function asyncConfirm(title: string, text: string, trueButton = 'OK', falseButton = 'Cancel'): Promise<boolean> {
+  return (await SimpleDialog({
     title,
-    content: text,
-  })
-}
-
-export function asyncConfirm(title: string, text: string, trueButton = 'OK', falseButton = 'Cancel'): Promise<boolean> {
-  return SimpleDialog({
-    title,
-    content: text,
+    parts: [
+      escape(text)
+    ],
     buttons: [
       trueButton && {
-        id: true,
+        id: 'true',
         label: trueButton
       },
-      trueButton && {
-        id: false,
+      falseButton && {
+        id: 'false',
         label: falseButton
       },
     ].filter(Boolean)
-  })
+  })).button === 'true';
 }
 
-export function asyncPrompt(title: string, text: string, defaultInput?: string, confirmButton = 'OK', cancelButton = 'Cancel', big?: boolean): Promise<undefined|string> {
-  let dialog: DialogInstance;
-  const formElement = document.createElement('form');
-  formElement.classList.add('dialog-form')
-  const input = document.createElement('input');
-  formElement.onsubmit = (ev) => {
-    ev.preventDefault();
-    dialog.close(true);
-  }
-  big && input.classList.add('big')
-  formElement.appendChild(input);
-  input.type = 'text';
-  // input.autofocus = true;
-  input.value = defaultInput || '';
-  dialog = createDialogInstance({
+export async function asyncPrompt(title: string, text: string, defaultInput?: string, confirmButton = 'OK', cancelButton = 'Cancel'): Promise<undefined|string> {
+  const output = await SimpleDialog({
     title,
-    content: [
-      text,
-      formElement
+    parts: [
+      escape(text),
+      {
+        id: 'input',
+        default: defaultInput,
+      }
     ],
     buttons: [
       confirmButton && {
-        id: true,
+        id: 'confirm',
         label: confirmButton
       },
       cancelButton && {
-        id: false,
+        id: 'cancel',
         label: cancelButton
       },
     ].filter(Boolean)
   });
-
-  dialog.on('ready', () => {
-    input.focus();
-  });
-
-  return new Promise((done) => {
-    input.focus();
-    dialog.on('close', (x) => {
-      done(x ? input.value : undefined);
-    })
-  })
-}
-
-export function asyncDialog(title: string, parts: DialogPart[], buttons?: DialogButton[]): Promise<Record<string, string>> {
-  let dialog: DialogInstance;
-
-  const formElement = document.createElement('form');
-  formElement.classList.add('dialog-form');
-  formElement.onsubmit = (ev) => {
-    ev.preventDefault();
-    dialog.close(true);
-  }
-
-  const inputs: Record<string, HTMLInputElement> = {};
-  const conv = new Converter();
-  let firstInput: string = null;
-  for (var i = 0; i < parts.length; i++) {
-    const part = parts[i];
-    if (typeof part == "string") {
-      const div = document.createElement("div");
-      div.classList.add('form-dialog-group');
-      div.innerHTML = conv.makeHtml(parts[i]);
-      formElement.appendChild(div);
-    } else {
-      const div = document.createElement("div");
-      div.classList.add('form-dialog-input');
-      div.classList.add('form-dialog-group');
-
-      const input = document.createElement("input");
-      input.type = part.type;
-      input.required = part.required;
-      input.value = part.default || "";
-      input.placeholder = part.placeholder || "";
-      input.disabled = part.disabled;
-      inputs[part.id] = input;
-      div.appendChild(inputs[part.id]);
-      formElement.appendChild(div);
-      if (!firstInput) {
-        firstInput = part.id;
-      }
-    }
-  }
-
-  dialog = createDialogInstance({
-    title,
-    content: [formElement],
-    buttons: buttons,
-  });
-
-  dialog.on('ready', () => {
-    inputs[firstInput].focus();
-  });
-
-  return new Promise((done) => {
-    dialog.on('close', (x) => {
-      const out: Record<string, string> = {};
-      for (var key in inputs) {
-        out[key] = inputs[key].value;
-      }
-      out.button = x;
-      done(out);
-    })
-  })
+  return output.button === 'confirm' && output.input;
 }
