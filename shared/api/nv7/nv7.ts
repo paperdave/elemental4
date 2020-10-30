@@ -2,31 +2,35 @@ import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats
 import firebase from "firebase";
 import {login} from "./login";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>,*/ RecentCombinationsAPI {  
+export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI*/ {  
 	private db
 	public uid: string
 	public saveFile
 	public ui
 
   	async open(ui?: ElementalLoadingUi): Promise<boolean> {
-		var firebaseConfig = {
-			apiKey: "AIzaSyCsqvV3clnwDTTgPHDVO2Yatv5JImSUJvU",
-			authDomain: "elementalserver-8c6d0.firebaseapp.com",
-			databaseURL: "https://elementalserver-8c6d0.firebaseio.com",
-			projectId: "elementalserver-8c6d0",
-			storageBucket: "elementalserver-8c6d0.appspot.com",
-			messagingSenderId: "603503529201",
-			appId: "1:603503529201:web:5cd30f72bb4971bdc0ed50",
-			measurementId: "G-K8QX9GEW6V"
-		};
-		// Initialize Firebase
-		firebase.initializeApp(firebaseConfig);
-		firebase.analytics();
-		this.db = firebase.database();
+		if (!this.saveFile.get("open", false)) {
+			var firebaseConfig = {
+				apiKey: "AIzaSyCsqvV3clnwDTTgPHDVO2Yatv5JImSUJvU",
+				authDomain: "elementalserver-8c6d0.firebaseapp.com",
+				databaseURL: "https://elementalserver-8c6d0.firebaseio.com",
+				projectId: "elementalserver-8c6d0",
+				storageBucket: "elementalserver-8c6d0.appspot.com",
+				messagingSenderId: "603503529201",
+				appId: "1:603503529201:web:5cd30f72bb4971bdc0ed50",
+				measurementId: "G-K8QX9GEW6V"
+			};
+			// Initialize Firebase
+			firebase.initializeApp(firebaseConfig);
+			firebase.analytics();
+			this.db = firebase.database();
+			this.saveFile.set("open", true);
+		}
+
 		return await login(this, ui);
   }
   async close(): Promise<void> {
-
+	this.saveFile.set("open", false);
   }
   async getStats(): Promise<ServerStats> {
     return {
@@ -43,20 +47,20 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
     return ['1','2','3','4'];
   }
 
-  async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<void> {
+  /*async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<void> {
 
 	}
-  // async createSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<SuggestionResponse> {
-	// 	return;
-	// }
+  async createSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<SuggestionResponse> {
+	 	return;
+	}
 	
-	// async getSuggestions(ids: string[]): Promise<Suggestion<'dynamic-elemental4'>[]> {
-	// 	return;
-	// }
+	 async getSuggestions(ids: string[]): Promise<Suggestion<'dynamic-elemental4'>[]> {
+	 	return;
+	}
 
-	// getSuggestionType() {
-	// 	return 'dynamic-elemental4' as const;
-  // }
+	getSuggestionType() {
+	  return 'dynamic-elemental4' as const;
+	}
   
   async waitForNewRecent(): Promise<void> {
     return;
@@ -64,5 +68,5 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
 
   async getRecentCombinations(): Promise<RecentCombination[]> {
     return;
-  }
+  }*/
 }

@@ -1,12 +1,12 @@
 import { ElementalLoadingUi} from "../../elem";
 import {NV7ElementalAPI} from "./nv7";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Promise<boolean> {
   var uid = api.saveFile.get("user", "default")
   if (uid == "default") {
+    var registering = false;
     while (true) {
-      var registering = true;
       ui.status("Requesting Login Info", 0);
       
       let creds = await api.ui.dialog({
@@ -47,10 +47,17 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
         var result = await new Promise((resolve, reject) => {
           ui.status("Authenticating", 0);
           var count = 0;
-          firebase.auth().createUserWithEmailAndPassword(creds, "Reee12345_12365").catch(function(error) {
-            ui.status("Authenticating", 1);
-            resolve(error.message);
-          });
+          if (registering) {
+            firebase.auth().createUserWithEmailAndPassword(creds["email"], creds["password"]).catch(function(error) {
+              ui.status("Authenticating", 1);
+              resolve(error.message);
+            });
+          } else {
+            firebase.auth().signInWithEmailAndPassword(creds["email"], creds["password"]).catch(function(error) {
+              ui.status("Authenticating", 1);
+              resolve(error.message);
+            });
+          }
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
               api.uid = user.uid;
@@ -77,7 +84,8 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           });
         }
       } else if (creds["button"] == 0) {
-        registering = !registering
+        console.log(registering);
+        registering = !registering;
       }
     }
   } else {
