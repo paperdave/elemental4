@@ -1,6 +1,7 @@
 import { ElementalLoadingUi} from "../../elem";
 import {NV7ElementalAPI} from "./nv7";
 import firebase from "firebase/app";
+import {Element, ElementMap} from "./types";
 
 export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Promise<boolean> {
   var uid = api.saveFile.get("user", "default")
