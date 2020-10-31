@@ -42,7 +42,7 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
             id: -1,
             label: "Cancel",
           }
-        ]
+        ].filter(Boolean)
       });
 
       ui.status("Processing Login Info", 0);
