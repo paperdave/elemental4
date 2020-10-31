@@ -1,5 +1,6 @@
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI, RecentCombinationsAPI, RecentCombination} from "../../elem";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/analytics";
 import {login} from "./login";
 
 export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI*/ {  

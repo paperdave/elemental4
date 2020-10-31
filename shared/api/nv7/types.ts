@@ -8,4 +8,4 @@ export interface Element {
     parents: string[],
 }
 
-export type ElementMap = Record<string, Record<string, Element>>
+export type ElementMap = Record<string, Record<string, Element>>;
