@@ -34,6 +34,10 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
             id: 0,
             label: (!registering && "Register") || (registering && "Log In"),
           },
+          !registering && {
+            id: -2,
+            label: "Forgot?"
+          },
           {
             id: -1,
             label: "Cancel",
@@ -87,6 +91,18 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
       } else if (creds["button"] == 0) {
         console.log(registering);
         registering = !registering;
+      } else if (creds["button"] == -2) {
+        ui.status("Sending Password Reset Email", 0.5)
+        firebase.auth().sendPasswordResetEmail(creds["email"]).then(function(){
+          ui.status("Sending Password Reset Email", 1)
+        }).catch(function(error){
+          ui.status("Showing Error", 0);
+          api.ui.alert({
+            "text": result as string,
+            "title": "Error",
+            "button": "Ok",
+          });
+        })
       }
     }
   } else {

@@ -9,7 +9,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
 	public ui
 
   	async open(ui?: ElementalLoadingUi): Promise<boolean> {
-		if (!this.saveFile.get("open", false)) {
+		if (firebase.apps.length != 1) {
 			var firebaseConfig = {
 				apiKey: "AIzaSyCsqvV3clnwDTTgPHDVO2Yatv5JImSUJvU",
 				authDomain: "elementalserver-8c6d0.firebaseapp.com",
@@ -24,7 +24,6 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
 			firebase.initializeApp(firebaseConfig);
 			firebase.analytics();
 			this.db = firebase.database();
-			this.saveFile.set("open", true);
 		}
 
 		return await login(this, ui);
