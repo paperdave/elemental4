@@ -104,6 +104,8 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
             "button": "Ok",
           });
         })
+      } else if (creds["button"] == -1) {
+        return false;
       }
     }
   } else {
