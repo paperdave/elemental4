@@ -4,4 +4,6 @@ keys
 data
 .gcloud.json
 dist_*
+
+# Nv7
 Nv7Hosting/*

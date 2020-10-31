@@ -50,7 +50,7 @@ export function CustomDialog(opt: CustomDialogOptions): Promise<Record<string, s
   formElement.classList.add('dialog-form');
   formElement.onsubmit = (ev) => {
     ev.preventDefault();
-    dialog.close(true);
+    dialog.close(buttons[0]?.id ?? true);
   }
 
   const inputs: Record<string, HTMLInputElement> = {};
