@@ -53,7 +53,6 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
         ui.status("Processing Login Info", 1);
         var result = await new Promise((resolve, reject) => {
           ui.status("Authenticating", 0);
-          var count = 0;
           if (registering) {
             firebase.auth().createUserWithEmailAndPassword(creds["email"], creds["password"]).catch(function(error) {
               ui.status("Authenticating", 1);
@@ -70,12 +69,9 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
               api.uid = user.uid;
               api.saveFile.set("email", creds["email"]);
               api.saveFile.set("password", creds["password"]);
-              count++;
               ui.status("Authenticating", 0.5);
-              if (count == 1) {
-                ui.status("Authenticating", 1);
-                resolve(true);
-              }
+              ui.status("Authenticating", 1);
+              resolve(true);
             }
           });
         });
@@ -112,9 +108,8 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
     }
   } else {
     ui.status("Authenticated", 0);
-    var result = await new Promise((resolve, reject) => {
+    result = await new Promise((resolve, reject) => {
       ui.status("Authenticating", 0);
-      var count = 0;
       firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
         ui.status("Authenticating", 1);
         resolve(error.message);
@@ -124,12 +119,9 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           api.uid = user.uid;
           api.saveFile.set("email", email);
           api.saveFile.set("password", password);
-          count++;
           ui.status("Authenticating", 0.5);
-          if (count == 1) {
-            ui.status("Authenticating", 1);
-            resolve(true);
-          }
+          ui.status("Authenticating", 1);
+          resolve(true);
         }
       });
     });
