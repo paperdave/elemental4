@@ -1,16 +1,14 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI, RecentCombinationsAPI, RecentCombination} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI, RecentCombinationsAPI, RecentCombination, ServerSavefileAPI, ServerSavefileEntry} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
-import "firebase/database";
 import {login} from "./login";
 
-export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI*/ {  
-	private db
+export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI*/ {
 	public uid: string
 	public saveFile
 	public ui
 
-  	async open(ui?: ElementalLoadingUi): Promise<boolean> {
+  async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
 			var firebaseConfig = {
 				apiKey: "AIzaSyCsqvV3clnwDTTgPHDVO2Yatv5JImSUJvU",
@@ -25,7 +23,6 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
 			// Initialize Firebase
 			firebase.initializeApp(firebaseConfig);
 			firebase.analytics();
-			this.db = firebase.database();
 		}
 
 		return await login(this, ui);
@@ -48,26 +45,36 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
     return ['1','2','3','4'];
   }
 
-  /*async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<void> {
-
+  /*getSaveFiles(): ServerSavefileEntry[] {
+    return [
+      {
+        id: "main",
+        name: "Main Save",
+      }
+    ]
 	}
-  async createSuggestion(ids: string[], suggestion: SuggestionRequest<'dynamic-elemental4'>): Promise<SuggestionResponse> {
-	 	return;
+	readSaveFileElements(id: string): Promise<string[]> {
+		throw new Error("Method not implemented.");
 	}
-	
-	 async getSuggestions(ids: string[]): Promise<Suggestion<'dynamic-elemental4'>[]> {
-	 	return;
+	writeNewElementToSaveFile(id: string, elementId: string): Promise<void> {
+		throw new Error("Method not implemented.");
 	}
-
-	getSuggestionType() {
-	  return 'dynamic-elemental4' as const;
+	canCreateSaveFile(name: string): boolean {
+		return false;
 	}
-  
-  async waitForNewRecent(): Promise<void> {
-    return;
-  }
-
-  async getRecentCombinations(): Promise<RecentCombination[]> {
-    return;
-  }*/
+	createNewSaveFile(name: string): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
+	canDeleteSaveFile(id: string): boolean {
+		return false;
+	}
+	deleteSaveFile(id: string): Promise<boolean> {
+		throw new Error("Method not implemented.");
+	}
+	canRenameSaveFile(id: string, name: string): boolean {
+		return false;
+	}
+	renameSaveFile(id: string, name: string): Promise<boolean> {
+		throw new Error("Method not implemented.");
+	}*/
 }

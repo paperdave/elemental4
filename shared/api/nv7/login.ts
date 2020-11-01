@@ -2,7 +2,7 @@ import { ElementalLoadingUi} from "../../elem";
 import {NV7ElementalAPI} from "./nv7";
 import firebase from "firebase/app";
 import 'firebase/auth';
-import {Element, ElementMap} from "./types";
+import 'firebase/database';
 
 export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Promise<boolean> {
   var email = api.saveFile.get("email", "default")
@@ -64,12 +64,35 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
               resolve(error.message);
             });
           }
-          firebase.auth().onAuthStateChanged((user) => {
+          firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
               api.uid = user.uid;
               api.saveFile.set("email", creds["email"]);
               api.saveFile.set("password", creds["password"]);
               ui.status("Authenticating", 0.5);
+
+              var exists = await new Promise((ret, _) => {
+                firebase.database().ref("users/" + api.uid).once('value').then(function(snapshot) {
+                  ret(snapshot.val() !== null);
+                });
+              })
+              
+              if (!exists) {
+                await firebase.database().ref("users" + api.uid).set({
+                  found: api.getStartingInventory()
+                }, async function(error) {
+                  if (error) {
+                    ui.status("Showing Error", 0);
+                    await api.ui.alert({
+                      "text": error.message,
+                      "title": "Error",
+                      "button": "Ok",
+                    });
+                    ui.status("Authenticating", 0.5);
+                  }
+                });
+              }
+
               ui.status("Authenticating", 1);
               resolve(true);
             }
@@ -114,12 +137,37 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
         ui.status("Authenticating", 1);
         resolve(error.message);
       });
-      firebase.auth().onAuthStateChanged((user) => {
+      firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
           api.uid = user.uid;
           api.saveFile.set("email", email);
           api.saveFile.set("password", password);
           ui.status("Authenticating", 0.5);
+
+          var exists = await new Promise((ret, _) => {
+            firebase.database().ref("users/" + api.uid).once('value').then(function(snapshot) {
+              ret(snapshot.val() !== null);
+            });
+          })
+
+          if (!exists) {
+            console.log("users/" + api.uid);
+            console.log(api.uid);
+            await firebase.database().ref("users/" + api.uid).set({
+              found: await api.getStartingInventory()
+            }, async function(error) {
+              if (error) {
+                ui.status("Showing Error", 0);
+                await api.ui.alert({
+                  "text": error.message,
+                  "title": "Error",
+                  "button": "Ok",
+                });
+                ui.status("Authenticating", 0.5);
+              }
+            });
+          }
+
           ui.status("Authenticating", 1);
           resolve(true);
         }
