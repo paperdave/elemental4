@@ -2,7 +2,7 @@ import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats
 import firebase from "firebase/app";
 import "firebase/analytics";
 import {login} from "./login";
-import {foundElement} from "./savefile";
+import {foundElement, getFound} from "./savefile";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,*/  ServerSavefileAPI {
 	public uid: string
@@ -55,7 +55,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
     ]
 	}
 	readSaveFileElements(id: string): Promise<string[]> {
-		throw new Error("Method not implemented.");
+		return getFound(this);
 	}
 	writeNewElementToSaveFile(id: string, elementId: string): Promise<void> {
 		return foundElement(this, elementId);

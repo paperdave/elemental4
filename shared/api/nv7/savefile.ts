@@ -23,3 +23,12 @@ export async function foundElement(api: NV7ElementalAPI, newElement: string): Pr
       }
     });
 }
+
+export async function getFound(api: NV7ElementalAPI): Promise<string[]> {
+  var found = await new Promise((ret, _) => {
+    firebase.database().ref("users/" + api.uid + "/found").once('value').then(function(snapshot) {
+      ret(snapshot.val());
+    });
+  });
+  return found as string[];
+}
