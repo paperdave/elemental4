@@ -5,8 +5,9 @@ import 'firebase/auth';
 import {Element, ElementMap} from "./types";
 
 export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Promise<boolean> {
-  var uid = api.saveFile.get("user", "default")
-  if (uid == "default") {
+  var email = api.saveFile.get("email", "default")
+  var password = api.saveFile.get("password", "default")
+  if (email == "default" || password == "default") {
     var registering = false;
     while (true) {
       ui.status("Requesting Login Info", 0);
@@ -67,10 +68,11 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
               api.uid = user.uid;
-              api.saveFile.set("user", api.uid);
+              api.saveFile.set("email", creds["email"]);
+              api.saveFile.set("password", creds["password"]);
               count++;
               ui.status("Authenticating", 0.5);
-              if (count == 2) {
+              if (count == 1) {
                 ui.status("Authenticating", 1);
                 resolve(true);
               }
@@ -110,8 +112,37 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
     }
   } else {
     ui.status("Authenticated", 0);
-    api.uid = uid;
-    ui.status("Loading Game", 0);
-    return true;
+    var result = await new Promise((resolve, reject) => {
+      ui.status("Authenticating", 0);
+      var count = 0;
+      firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        ui.status("Authenticating", 1);
+        resolve(error.message);
+      });
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          api.uid = user.uid;
+          api.saveFile.set("email", email);
+          api.saveFile.set("password", password);
+          count++;
+          ui.status("Authenticating", 0.5);
+          if (count == 1) {
+            ui.status("Authenticating", 1);
+            resolve(true);
+          }
+        }
+      });
+    });
+    if (result == true) {
+      ui.status("Loading Game", 0);
+      return true;
+    } else {
+      ui.status("Showing Error", 0);
+      await api.ui.alert({
+        "text": result as string,
+        "title": "Error",
+        "button": "Ok",
+      });
+    }
   }
 }
