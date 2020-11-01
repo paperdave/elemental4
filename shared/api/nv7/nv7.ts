@@ -1,8 +1,10 @@
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI, RecentCombinationsAPI, RecentCombination, ServerSavefileAPI, ServerSavefileEntry} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
+import "firebase/firestore";
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
+import {getElem} from "./elements";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,*/  ServerSavefileAPI {
 	public uid: string
@@ -24,6 +26,14 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
 			// Initialize Firebase
 			firebase.initializeApp(firebaseConfig);
 			firebase.analytics();
+			firebase.firestore().enablePersistence().catch(async function(error) {
+				ui.status("Showing Error", 0);
+				await this.ui.alert({
+					"text": error.message,
+					"title": "Error",
+					"button": "Ok",
+				});
+			});
 		}
 
 		return await login(this, ui);
@@ -37,13 +47,13 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
     }
   }
   async getElement(id: string): Promise<Elem> {
-    return null;
+    return getElem(this, id);
   }
   async getCombo(ids: string[]): Promise<string[]> {
     return [];
   }
   async getStartingInventory(): Promise<string[]> {
-    return ['1','2','3','4'];
+    return ['Air','Earth','Fire','Water'];
   }
 
   getSaveFiles(): ServerSavefileEntry[] {
