@@ -4,8 +4,8 @@ import {NV7ElementalAPI} from "./nv7";
 import {Element} from "./types";
 import {Elem} from "../../elem";
 
-export async function getElem(api: NV7ElementalAPI, id: string): Promise<Elem> {
-  var elemData = await new Promise<Element>((resolve, reject) => {
+export async function getElem(id: string): Promise<Elem> {
+  var elemData = await new Promise<Element>((resolve, _) => {
     firebase.firestore().collection("elements").doc(id).get().then((snapshot) => {
       resolve(snapshot.data() as Element);
     })
@@ -28,4 +28,21 @@ export async function getElem(api: NV7ElementalAPI, id: string): Promise<Elem> {
       simplestRecipe: elemData.parents
     }
   };
+}
+
+export async function getCombination(elem1: string, elem2: string): Promise<string[]> {
+   return new Promise<string[]>((resolve, _) => {
+    firebase.firestore().collection("combos").doc(elem1).get().then((snapshot) => {
+      var data = snapshot.data();
+      if (data != null) {
+        if (elem2 in data) {
+          resolve([data[elem2]]);
+        } else {
+          resolve([]);
+        }
+      } else {
+        resolve([]);
+      }
+    })
+  })
 }

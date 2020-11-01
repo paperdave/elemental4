@@ -9,19 +9,22 @@ export async function foundElement(api: NV7ElementalAPI, newElement: string): Pr
       });
     });
     var foundElems = found as string[];
-    foundElems.push(newElement);
-    return firebase.database().ref("users/" + api.uid + "/found").set({
-      found: foundElems,
-    }, async function(error) {
-      if (error) {
-        api.ui.status("Showing Error", 0);
-        await api.ui.alert({
-        "text": error.message,
-        "title": "Error",
-        "button": "Ok",
-        });
-      }
-    });
+    if (!foundElems.includes(newElement)) {
+      foundElems.push(newElement);
+      return firebase.database().ref("users/" + api.uid).set({
+        found: foundElems,
+      }, async function(error) {
+        if (error) {
+          api.ui.status("Showing Error", 0);
+          await api.ui.alert({
+          "text": error.message,
+          "title": "Error",
+          "button": "Ok",
+          });
+        }
+      });
+    }
+    return null;
 }
 
 export async function getFound(api: NV7ElementalAPI): Promise<string[]> {

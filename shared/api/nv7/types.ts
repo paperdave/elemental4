@@ -7,5 +7,3 @@ export interface Element {
     comment: string,
     parents: string[],
 }
-
-export type ElementMap = Record<string, Record<string, Element>>;

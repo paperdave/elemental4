@@ -4,7 +4,7 @@ import "firebase/analytics";
 import "firebase/firestore";
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
-import {getElem} from "./elements";
+import {getElem, getCombination} from "./elements";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,*/  ServerSavefileAPI {
 	public uid: string
@@ -47,10 +47,10 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
     }
   }
   async getElement(id: string): Promise<Elem> {
-    return getElem(this, id);
+    return getElem(id);
   }
   async getCombo(ids: string[]): Promise<string[]> {
-    return [];
+    return getCombination(ids[0], ids[1]);
   }
   async getStartingInventory(): Promise<string[]> {
     return ['Air','Earth','Fire','Water'];

@@ -111,7 +111,6 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           });
         }
       } else if (creds["button"] == 0) {
-        console.log(registering);
         registering = !registering;
       } else if (creds["button"] == -2) {
         ui.status("Sending Password Reset Email", 0.5)
@@ -151,8 +150,6 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           })
 
           if (!exists) {
-            console.log("users/" + api.uid);
-            console.log(api.uid);
             await firebase.database().ref("users/" + api.uid).set({
               found: await api.getStartingInventory()
             }, async function(error) {
