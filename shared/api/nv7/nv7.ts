@@ -2,8 +2,9 @@ import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats
 import firebase from "firebase/app";
 import "firebase/analytics";
 import {login} from "./login";
+import {foundElement} from "./savefile";
 
-export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI*/ {
+export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,*/  ServerSavefileAPI {
 	public uid: string
 	public saveFile
 	public ui
@@ -45,7 +46,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
     return ['1','2','3','4'];
   }
 
-  /*getSaveFiles(): ServerSavefileEntry[] {
+  getSaveFiles(): ServerSavefileEntry[] {
     return [
       {
         id: "main",
@@ -57,7 +58,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
 		throw new Error("Method not implemented.");
 	}
 	writeNewElementToSaveFile(id: string, elementId: string): Promise<void> {
-		throw new Error("Method not implemented.");
+		return foundElement(this, elementId);
 	}
 	canCreateSaveFile(name: string): boolean {
 		return false;
@@ -76,5 +77,5 @@ export class NV7ElementalAPI extends ElementalBaseAPI /*implements SuggestionAPI
 	}
 	renameSaveFile(id: string, name: string): Promise<boolean> {
 		throw new Error("Method not implemented.");
-	}*/
+	}
 }
