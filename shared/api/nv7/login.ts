@@ -71,27 +71,7 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
               api.saveFile.set("password", creds["password"]);
               ui.status("Authenticating", 0.5);
 
-              var exists = await new Promise((ret, _) => {
-                firebase.database().ref("users/" + api.uid).once('value').then(function(snapshot) {
-                  ret(snapshot.val() !== null);
-                });
-              })
-              
-              if (!exists) {
-                await firebase.database().ref("users" + api.uid).set({
-                  found: api.getStartingInventory()
-                }, async function(error) {
-                  if (error) {
-                    ui.status("Showing Error", 0);
-                    await api.ui.alert({
-                      "text": error.message,
-                      "title": "Error",
-                      "button": "Ok",
-                    });
-                    ui.status("Authenticating", 0.5);
-                  }
-                });
-              }
+              await checkUser(api, ui);
 
               ui.status("Authenticating", 1);
               resolve(true);
@@ -143,27 +123,7 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           api.saveFile.set("password", password);
           ui.status("Authenticating", 0.5);
 
-          var exists = await new Promise((ret, _) => {
-            firebase.database().ref("users/" + api.uid).once('value').then(function(snapshot) {
-              ret(snapshot.val() !== null);
-            });
-          })
-
-          if (!exists) {
-            await firebase.database().ref("users/" + api.uid).set({
-              found: await api.getStartingInventory()
-            }, async function(error) {
-              if (error) {
-                ui.status("Showing Error", 0);
-                await api.ui.alert({
-                  "text": error.message,
-                  "title": "Error",
-                  "button": "Ok",
-                });
-                ui.status("Authenticating", 0.5);
-              }
-            });
-          }
+          await checkUser(api, ui);
 
           ui.status("Authenticating", 1);
           resolve(true);
@@ -181,5 +141,29 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
         "button": "Ok",
       });
     }
+  }
+}
+
+async function checkUser(api: NV7ElementalAPI, ui: ElementalLoadingUi) {
+  var exists = await new Promise((ret, _) => {
+    firebase.database().ref("users/" + api.uid).once('value').then(function(snapshot) {
+      ret(snapshot.val() !== null);
+    });
+  })
+
+  if (!exists) {
+    await firebase.database().ref("users/" + api.uid).set({
+      found: await api.getStartingInventory()
+    }, async function(error) {
+      if (error) {
+        ui.status("Showing Error", 0);
+        await api.ui.alert({
+          "text": error.message,
+          "title": "Error",
+          "button": "Ok",
+        });
+        ui.status("Authenticating", 0.5);
+      }
+    });
   }
 }
