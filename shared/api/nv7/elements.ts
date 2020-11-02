@@ -34,14 +34,18 @@ export async function getCombination(elem1: string, elem2: string): Promise<stri
    return new Promise<string[]>((resolve, _) => {
     firebase.firestore().collection("combos").doc(elem1).get().then((snapshot) => {
       var data = snapshot.data();
-      if (data != null) {
-        if (elem2 in data) {
-          resolve([data[elem2]]);
-        } else {
-          resolve([]);
-        }
+      if (data != null && elem2 in data) {
+        resolve([data[elem2]]);
       } else {
-        resolve([]);
+        resolve(new Promise<string[]>((ret, _) => {
+          firebase.firestore().collection("combos").doc(elem2).get().then((snap) => {
+            if (data != null && elem1 in data) {
+              ret([data[elem1]]);
+            } else {
+              ret([]);
+            }
+          });
+        }))
       }
     })
   })
