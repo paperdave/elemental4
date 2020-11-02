@@ -38,23 +38,17 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
 
 		return await login(this, ui);
   }
-  async close(): Promise<void> {
-	this.saveFile.set("open", false);
-  }
+  async close(): Promise<void> {return;}
   async getStats(): Promise<ServerStats> {
     return {
       totalElements: 0
     }
   }
-  async getElement(id: string): Promise<Elem> {
-    return getElem(id);
-  }
-  async getCombo(ids: string[]): Promise<string[]> {
-    return getCombination(ids[0], ids[1]);
-  }
+  async getElement(id: string): Promise<Elem> {return getElem(id);}
+  async getCombo(ids: string[]): Promise<string[]> {return getCombination(ids[0], ids[1]);}
   async getStartingInventory(): Promise<string[]> {
-    return ['Air','Earth','Fire','Water'];
-  }
+		return ['Air','Earth','Fire','Water'];
+	}
 
   getSaveFiles(): ServerSavefileEntry[] {
     return [
@@ -64,28 +58,12 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
       }
     ]
 	}
-	readSaveFileElements(id: string): Promise<string[]> {
-		return getFound(this);
-	}
-	writeNewElementToSaveFile(id: string, elementId: string): Promise<void> {
-		return foundElement(this, elementId);
-	}
-	canCreateSaveFile(name: string): boolean {
-		return false;
-	}
-	createNewSaveFile(name: string): Promise<string> {
-		throw new Error("Method not implemented.");
-	}
-	canDeleteSaveFile(id: string): boolean {
-		return false;
-	}
-	deleteSaveFile(id: string): Promise<boolean> {
-		throw new Error("Method not implemented.");
-	}
-	canRenameSaveFile(id: string, name: string): boolean {
-		return false;
-	}
-	renameSaveFile(id: string, name: string): Promise<boolean> {
-		throw new Error("Method not implemented.");
-	}
+	readSaveFileElements(id: string): Promise<string[]> {return getFound(this);}
+	writeNewElementToSaveFile(id: string, elementId: string): Promise<void> {return foundElement(this, elementId);}
+	canCreateSaveFile(name: string): boolean {return false;}
+	createNewSaveFile(name: string): Promise<string> {throw new Error("Method not implemented.");}
+	canDeleteSaveFile(id: string): boolean {return false;}
+	deleteSaveFile(id: string): Promise<boolean> {throw new Error("Method not implemented.");}
+	canRenameSaveFile(id: string, name: string): boolean {return false;}
+	renameSaveFile(id: string, name: string): Promise<boolean> {throw new Error("Method not implemented.");}
 }
