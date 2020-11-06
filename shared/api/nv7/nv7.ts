@@ -48,7 +48,10 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
     }
   }
   async getElement(id: string): Promise<Elem> {return getElem(id);}
-  async getCombo(ids: string[]): Promise<string[]> {return getCombination(ids[0], ids[1]);}
+  async getCombo(ids: string[]): Promise<string[]> {
+		ids.sort();
+		return getCombination(ids[0], ids[1]);
+	}
   async getStartingInventory(): Promise<string[]> {
 		return ['Air','Earth','Fire','Water'];
 	}
@@ -77,13 +80,16 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
     };
   }
 	async getSuggestions(ids: string[]): Promise<Suggestion<"dynamic-elemental4">[]> {
+		ids.sort();
 		return getSuggests(ids[0], ids[1]);
 	}
 	createSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<SuggestionResponse> {
+		ids.sort();
 		return newSuggestion(ids[0], ids[1], suggestion, this);
 	}
 
 	downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> {
+		ids.sort();
 		return downSuggestion(ids[0], ids[1], suggestion, this);
 	}
 
