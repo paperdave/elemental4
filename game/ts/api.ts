@@ -43,12 +43,12 @@ export class NullAPI extends ElementalBaseAPI {
 }
 
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
-  'internal:all-colors': DebugAllColorsAPI,
-  'internal:singleplayer': SingleplayerAPI,
+  // 'internal:all-colors': DebugAllColorsAPI,
+  //'internal:singleplayer': SingleplayerAPI,
   'internal:null': NullAPI,
-  'reborn': RebornElementalAPI,
-  'elemental4': Elemental4API,
-  'elemental5': Elemental5API,
+  // 'reborn': RebornElementalAPI,
+  // 'elemental4': Elemental4API,
+  // 'elemental5': Elemental5API,
   // 'e4': LedomElementalAPI,
   // 'ledom': LedomElementalAPI,
   'nv7': NV7ElementalAPI,

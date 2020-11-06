@@ -9,14 +9,14 @@ interface ServerEntry {
 }
 
 export const builtInOfficialServers = [
-  'https://main.elemental4.net',
-  'https://anarchy.elemental4.net',
-  'internal:singleplayer',
+  //'https://main.elemental4.net',
+  //'https://anarchy.elemental4.net',
+  //'internal:singleplayer',
 ];
 export const builtInThirdPartyServers = [
-  'https://elemental.hparcells.tk',
-  'https://dev.elemental5.net/api',
-  'https://nv7-github.github.io/elemental.json',
+  //'https://elemental.hparcells.tk',
+  //'https://dev.elemental5.net/api',
+  'https://nv7-github.github.io/',
   // 'https://e4api.ledomsoft.com',
 ];
 export const allBuiltInServers = [
