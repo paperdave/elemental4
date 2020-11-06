@@ -15,15 +15,7 @@ async function getSuggestionCombo(elem1: string, elem2: string): Promise<string[
   if (suggestions == null) {
     suggestions = [];
   }
-  return suggestions.concat(await new Promise<string[]>((resolve, _) => {
-    firebase.database().ref("/suggestionMap/" + elem2 + "/" + elem1).once("value").then((snapshot) => {
-      if (snapshot.val()) {
-        resolve(snapshot.val());
-      } else {
-        resolve([]);
-      }
-    });
-  }));
+  return suggestions
 }
 
 export async function getSuggests(elem1: string, elem2: string): Promise<Suggestion<"dynamic-elemental4">[]>{
@@ -33,6 +25,7 @@ export async function getSuggests(elem1: string, elem2: string): Promise<Suggest
   for (var val in suggestions) {
     output.push(await getSuggestion(suggestions[val]));
   }
+
 
   return output;
 }
