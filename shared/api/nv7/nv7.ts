@@ -1,15 +1,18 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ElementalRuntimeUI, RecentCombinationsAPI, RecentCombination, ServerSavefileAPI, ServerSavefileEntry} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, ElementalRuntimeUI, SaveFileAPI} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/firestore";
+import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
 import {getElem, getCombination} from "./elements";
+import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,*/  ServerSavefileAPI {
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>,/* RecentCombinationsAPI,*/  ServerSavefileAPI {
 	public uid: string
-	public saveFile
-	public ui
+	public saveFile;
+	public ui;
+	public votesRequired: number = 2;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
@@ -66,4 +69,28 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements /*SuggestionAPI
 	deleteSaveFile(id: string): Promise<boolean> {throw new Error("Method not implemented.");}
 	canRenameSaveFile(id: string, name: string): boolean {return false;}
 	renameSaveFile(id: string, name: string): Promise<boolean> {throw new Error("Method not implemented.");}
+
+	getSuggestionColorInformation(): SuggestionColorInformation<'dynamic-elemental4'> {
+		console.log("ree");
+    return {
+      type: 'dynamic-elemental4'
+    };
+  }
+	async getSuggestions(ids: string[]): Promise<Suggestion<"dynamic-elemental4">[]> {
+		return getSuggests(ids[0], ids[1]);
+	}
+	createSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<SuggestionResponse> {
+		return newSuggestion(ids[0], ids[1], suggestion, this);
+	}
+
+	downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> {
+		return downSuggestion(ids[0], ids[1], suggestion, this);
+	}
+
+	lookupCustomPaletteColor(basePalette: Record<ElementalColorPalette, ThemedPaletteEntry>, string: string): Color {
+    const [base, ...x] = string.split('_') 
+		const [saturation, lightness] = x.map(y => parseFloat(y));
+
+    return applyColorTransform(basePalette[base], saturation, lightness);
+  };
 }

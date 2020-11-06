@@ -11,7 +11,7 @@ export async function foundElement(api: NV7ElementalAPI, newElement: string): Pr
     var foundElems = found as string[];
     if (!foundElems.includes(newElement)) {
       foundElems.push(newElement);
-      return firebase.database().ref("users/" + api.uid).set({
+      return firebase.database().ref("users/" + api.uid).update({
         found: foundElems,
       }, async function(error) {
         if (error) {

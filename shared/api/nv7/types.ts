@@ -1,3 +1,5 @@
+import {DynamicColor} from "../../elemental4-types";
+
 export interface Element {
     name: string,
     color: string,
@@ -6,4 +8,11 @@ export interface Element {
     pioneer: string,
     comment: string,
     parents: string[],
+}
+
+export interface SuggestionData {
+    name: string,
+    creator: string,
+    color: DynamicColor,
+    votes: number,
 }
