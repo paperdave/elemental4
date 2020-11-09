@@ -1,6 +1,5 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import {NV7ElementalAPI} from "./nv7";
 import {Element} from "./types";
 import {Elem} from "../../elem";
 
