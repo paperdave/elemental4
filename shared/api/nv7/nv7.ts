@@ -12,7 +12,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public uid: string
 	public saveFile;
 	public ui;
-	public votesRequired: number = 5;
+	public votesRequired: number = 3;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
