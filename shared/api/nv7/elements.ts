@@ -14,7 +14,8 @@ export async function getElem(id: string): Promise<Elem> {
     id: elemData.name,
     display: {
       text: elemData.name,
-      color: elemData.color
+      color: elemData.color,
+      categoryName: elemData.color.split("_")[0]
     },
     createdOn: elemData.createdOn,
     stats: {
