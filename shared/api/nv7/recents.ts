@@ -13,6 +13,7 @@ export async function getRecents(limit: number): Promise<RecentCombination[]> {
           data = data.slice(data.length-limit, data.length);
           await firebase.database().ref("/recent/").update(data);
         }
+        data.reverse();
         resolve(data);
       }
     })
