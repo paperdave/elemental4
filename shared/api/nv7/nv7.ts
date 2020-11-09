@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, ElementalRuntimeUI, SaveFileAPI} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/firestore";
@@ -98,5 +98,5 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		const [saturation, lightness] = x.map(y => parseFloat(y));
 
     return applyColorTransform(basePalette[base], saturation, lightness);
-  };
+  }
 }
