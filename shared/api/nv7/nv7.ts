@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/firestore";
@@ -7,8 +7,9 @@ import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
 import {getElem, getCombination} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
+import {getRecents} from "./recents";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>,/* RecentCombinationsAPI,*/  ServerSavefileAPI {
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
 	public uid: string
 	public saveFile;
 	public ui;
@@ -83,14 +84,22 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		ids.sort();
 		return getSuggests(ids[0], ids[1]);
 	}
-	createSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<SuggestionResponse> {
+	async createSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<SuggestionResponse> {
 		ids.sort();
 		return newSuggestion(ids[0], ids[1], suggestion, this);
 	}
 
-	downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> {
+	async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> {
 		ids.sort();
 		return downSuggestion(ids[0], ids[1], suggestion, this);
+	}
+
+	async getRecentCombinations(limit: number): Promise<RecentCombination[]> {
+		return getRecents(limit);
+	}
+
+	async waitForNewRecent(): Promise<void> {
+		throw new Error("Method not implemented");
 	}
 
 	lookupCustomPaletteColor(basePalette: Record<ElementalColorPalette, ThemedPaletteEntry>, string: string): Color {

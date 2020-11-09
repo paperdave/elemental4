@@ -1,4 +1,4 @@
-import {Suggestion, SuggestionRequest, SuggestionResponse} from "../../elem";
+import {Suggestion, SuggestionRequest, SuggestionResponse, RecentCombination} from "../../elem";
 import {SuggestionData} from "./types";
 import firebase from "firebase/app";
 import 'firebase/database';
@@ -153,7 +153,24 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
       comment: comment,
       createdOn: new Date().getTime()
     }
+    // New Recent Combination
+    var recCombo: RecentCombination = {
+      recipe: parents as [string, string],
+      result: request.text,
+    }
 
+    var existingCombos: RecentCombination[] = await new Promise<RecentCombination[]>((resolve, _) => {
+      firebase.database().ref("/recent/").once("value").then((snapshot) => {
+        resolve(snapshot.val() as RecentCombination[]); 
+      });
+    });
+    if (!existingCombos) {
+      existingCombos = [];
+    }
+    existingCombos.push(recCombo);
+    await firebase.database().ref("/recent/").update(existingCombos);
+
+    // Create Element
     await firebase.firestore().collection("elements").doc(element.name).set(element);
 
     return new Promise<SuggestionResponse>(async (resolve, reject) => {
