@@ -1,9 +1,8 @@
 import { getClassFromDisplay, getCSSFromDisplay } from "./element-color";
-import { query } from 'jsonpath';
 import { arrayGet3Random, delay, delayFrame, escapeHTML, sortCombo } from "../../shared/shared";
 import { capitalize } from "@reverse/string";
 import { getConfigBoolean, setConfigBoolean, setElementAsOwned } from "./savefile";
-import { Elem, Suggestion } from "../../shared/elem";
+import { Elem, ElementalBaseAPI, RecentCombination, Suggestion } from "../../shared/elem";
 import { getAPI } from "./api";
 import { E4Suggestion } from "../../shared/elemental4-types";
 import { randomOf } from "@reverse/random";
@@ -325,6 +324,7 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
   });
 
   dom.addEventListener('contextmenu', (ev) => {
+    return
     incrementStatistic('infoOpened');
     
     infoContainer.classList.remove('animate-in');
@@ -354,13 +354,13 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
 
     Array.from(document.querySelectorAll('[data-element-info]')).forEach(elem => {
       const q = elem.getAttribute('data-element-info');
-      const result = '' + query(element, q, 1)[0]
-      elem.innerHTML = escapeHTML(result);
+      // const result = '' + query(element, q, 1)[0]
+      // elem.innerHTML = escapeHTML(result);
     });
     Array.from(document.querySelectorAll('[data-element-plural]')).forEach(elem => {
       const q = elem.getAttribute('data-element-plural');
-      const result = '' + query(element, q, 1)[0]
-      elem.innerHTML = result === '1' ? '' : 's';
+      // const result = '' + query(element, q, 1)[0]
+      // elem.innerHTML = result === '1' ? '' : 's';
     });
     infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`
   });
@@ -679,38 +679,46 @@ export function InitElementGameUi() {
     updateSuggestion();
   });
 }
+async function getRecentCombinationDOM(rc: ElementalBaseAPI, x: RecentCombination) {
+  const root = document.createElement('div');
+  root.classList.add('news-combo');
+  const eq1 = document.createElement('div');
+  eq1.classList.add('equation-symbol');
+  const eq2 = document.createElement('div');
+  eq2.classList.add('equation-symbol');
+
+  eq1.innerHTML = '+';
+  eq2.innerHTML = '=';
+
+  const [elem1, elem2, elem3] = await Promise.all([
+    rc.getElement(x.recipe[0]).then(x => ElementDom(x)),
+    rc.getElement(x.recipe[1]).then(x => ElementDom(x)),
+    rc.getElement(x.result).then(x => ElementDom(x)),
+  ]);
+
+  root.appendChild(elem1);
+  root.appendChild(eq1);
+  root.appendChild(elem2);
+  root.appendChild(eq2);
+  root.appendChild(elem3);
+
+  return root;
+}
 export async function InitElementNews() {
   const rc = getAPI('recentCombinations');
   if(rc) {
     const combinations = await rc.getRecentCombinations(30);
-    const newsItems = await Promise.all(combinations.map(async(x) => {
-      const root = document.createElement('div');
-      root.classList.add('news-combo');
-      const eq1 = document.createElement('div');
-      eq1.classList.add('equation-symbol');
-      const eq2 = document.createElement('div');
-      eq2.classList.add('equation-symbol');
+    const newsItems = await Promise.all(combinations.map((x) => getRecentCombinationDOM(rc, x)));
 
-      eq1.innerHTML = '+';
-      eq2.innerHTML = '=';
-
-      const [elem1, elem2, elem3] = await Promise.all([
-        rc.getElement(x.recipe[0]).then(x => ElementDom(x)),
-        rc.getElement(x.recipe[1]).then(x => ElementDom(x)),
-        rc.getElement(x.result).then(x => ElementDom(x)),
-      ]);
-
-      root.appendChild(elem1);
-      root.appendChild(eq1);
-      root.appendChild(elem2);
-      root.appendChild(eq2);
-      root.appendChild(elem3);
-
-      return root;
-    }));
-
-    const sidebar = document.querySelector('#element-sidebar')
+    const sidebar = document.querySelector('#element-sidebar');
     newsItems.forEach(x => sidebar.appendChild(x));
+
+    async function onNewRecent() {
+      rc.waitForNewRecent().then(onNewRecent);
+      const combo = await rc.getRecentCombinations(1);
+      sidebar.prepend(await getRecentCombinationDOM(rc, combo[0]))
+    }
+    rc.waitForNewRecent().then(onNewRecent);
   }
 }
 export function ClearElementGameUi() {

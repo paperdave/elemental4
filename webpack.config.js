@@ -2,7 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const gamedir = path.resolve(__dirname, 'game');
 const {execSync} = require('child_process');
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+ 
 module.exports = (prod = false) => ({
     entry: [
         path.resolve(gamedir, 'ts/index.ts'),
@@ -22,7 +23,8 @@ module.exports = (prod = false) => ({
             $build_date: JSON.stringify(execSync('date +"%F %H:%M:%S"').toString()),
             $password: JSON.stringify(prod ? 'username' : false)
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new webpack.IgnorePlugin(/polling-xhr\.js/),
+        // new BundleAnalyzerPlugin()
     ],
     resolve: {
         extensions: ['.ts', '.js', '.json']

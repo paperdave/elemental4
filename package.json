@@ -1,6 +1,6 @@
 {
   "name": "elemental4",
-  "version": "4.0.0-beta25",
+  "version": "4.0.0-beta26",
   "description": "Modern reboot of the old item combination game.",
   "main": "dist_server/server/index.js",
   "private": true,
@@ -30,8 +30,10 @@
     "howler": "^2.1.1",
     "jsonpath": "^1.0.2",
     "jszip": "^3.5.0",
+    "juration": "^0.1.1",
     "localforage": "^1.9.0",
     "markdown-escape": "^1.1.0",
+    "marked": "^1.2.3",
     "moment": "^2.29.0",
     "monaco-editor": "^0.21.2",
     "node-fetch": "^2.3.0",
@@ -50,6 +52,7 @@
     "@types/google-spreadsheet": "^3.0.1",
     "@types/howler": "^2.0.5",
     "@types/jsonpath": "^0.2.0",
+    "@types/marked": "^1.1.0",
     "@types/node": "^14.10.0",
     "@types/node-fetch": "^2.1.4",
     "@types/sha256": "^0.2.0",
@@ -59,13 +62,14 @@
     "file-loader": "^2.0.0",
     "html-minifier": "^3.5.21",
     "serve": "^11.3.2",
+    "terser": "^5.3.4",
     "ts-loader": "^5.1.1",
     "typescript": "^4.0.2",
     "uglify-es": "^3.3.9",
     "webpack": "^4.28.4",
+    "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "^3.2.1",
-    "worker-loader": "^3.0.2",
-    "terser": "^5.3.4"
+    "worker-loader": "^3.0.2"
   },
   "scripts": {
     "start": "node .",

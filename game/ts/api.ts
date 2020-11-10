@@ -60,18 +60,19 @@ export const builtInApis = {
     type: "internal:all-colors",
     name: "Theme Debug: All Colors",
     description: "Contains all colors from the Elemental Palette.",
-    icon: '/all-colors-server.png',
+    icon: location.origin + '/all-colors-server.png',
   },
   'internal:singleplayer': {
     type: "internal:singleplayer",
     name: "Singleplayer with Element Packs",
-    description: "Create Element Packs to create your own Elemental Game, or play back shut down databases."
+    description: "Create Element Packs to create your own Elemental Game, or play back shut down databases.",
+    icon: location.origin + '/singleplayer.png',
   },
   'internal:null': {
     type: "internal:null",
     name: "No Server",
     description: "You are not connected to any server.",
-    icon: '/null-server.png',
+    icon: location.origin + '/null-server.png',
   }
 }
 

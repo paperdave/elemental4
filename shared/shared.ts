@@ -25,7 +25,7 @@ export function arrayGet3Random<T>(arr: T[]): T[] {
 }
 /** Converts element name to an ID */
 export function elementNameToStorageID(elemName: string): string {
-    return elemName.replace(/ +/g, " ").toLowerCase();
+    return elemName.replace(/\n/g,'').replace(/ +/g, " ").trim().toLowerCase();
 }
 /** Returns a promise that resolves after a timeout */
 export function delay(ms: number) {

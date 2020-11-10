@@ -18,6 +18,7 @@ interface DBMeta {
   lastUpdated: number;
   recentCombos: RecentCombination[];
   version: number;
+  dbId: string;
 }
 
 export class Elemental4API
@@ -27,7 +28,7 @@ export class Elemental4API
              OptionsMenuAPI,
              RecentCombinationsAPI  {
   static type = 'elemental4';
-  private static DB_VERSION = 3;
+  private static DB_VERSION = 1;
 
   private dbMeta: DBMeta;
 
@@ -183,7 +184,7 @@ export class Elemental4API
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
-      if(this.dbMeta.version !== Elemental4API.DB_VERSION) {
+      if(this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
         dbFetch = 'full';
       } else if (formatDate(new Date()) === formatDate(new Date(this.dbMeta.lastUpdated))) {
         dbFetch = 'today';
@@ -205,7 +206,8 @@ export class Elemental4API
           lastEntry: 0,
           lastUpdated: Date.now(),
           recentCombos: [],
-          version: Elemental4API.DB_VERSION
+          version: Elemental4API.DB_VERSION,
+          dbId: this.config.dbId,
         }
       }
 

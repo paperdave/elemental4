@@ -6,6 +6,8 @@ import sha256 from 'sha256';
 import { lookupIpCheck } from './ip-duplication';
 import { SimpleEmitter } from '@reverse/emitter';
 import { getCurrentTime, logCombo, logElement } from './data-logging';
+import { createJoinedQueue } from '../shared/async-queue-exec';
+import { debounce } from '@reverse/debounce';
 const ONE_DAY = 24*60*60*1000;
 
 let currentDay: string;
@@ -15,6 +17,7 @@ let allElementIds: Map<string, string>;
 let db: Database;
 let nameLastModified: number;
 let todayEntries: Entry[] = [];
+let dbId: string = '';
 
 export const newEntryEmitter = new SimpleEmitter();
 
@@ -25,7 +28,6 @@ export interface StorageElementRequest {
   creator2: string;
   createdOn: number;
 }
-
 export interface DbSuggestion {
   finished: false;
   recipe: string;
@@ -98,6 +100,7 @@ export async function storageLoad() {
       allElementIds: allElementIdsValue,
       currentDay: currentDayValue,
       nameLastModified: nameLastModifiedValue,
+      dbId: dbIdValue
     } = await fs.readJSON('data/meta.json');
 
     elementCount = elementCountValue;
@@ -105,6 +108,7 @@ export async function storageLoad() {
     allElementIds = new Map(Object.entries(allElementIdsValue));
     currentDay = currentDayValue;
     nameLastModified = nameLastModifiedValue;
+    dbId = dbIdValue;
 
     await processDayPassing();
 
@@ -120,6 +124,7 @@ export async function storageLoad() {
     currentDay = getToday();
     todayEntries = [];
     nameLastModified = Date.now();
+    dbId = 'initial';
 
     await dbRun(`CREATE TABLE ip_trust (ip_hash text PRIMARY KEY, trust integer, expire integer) WITHOUT ROWID;`)
     await dbRun(`CREATE TABLE users (private_id text PRIMARY KEY, public_id text, display text, elementCount integer, suggestCount integer) WITHOUT ROWID;`)
@@ -132,8 +137,14 @@ export async function storageLoad() {
   }
 }
 
+export function getDbId() {
+  return dbId;
+}
+
+const queue = createJoinedQueue();
+
 setInterval(() => {
-  processDayPassing();
+  queue(processDayPassing)();
 }, 12 * 60 * 60 * 1000);
 
 export async function storageSave() {
@@ -142,7 +153,8 @@ export async function storageSave() {
     entryCount,
     allElementIds: Object.fromEntries(allElementIds),
     currentDay,
-    nameLastModified
+    nameLastModified,
+    dbId,
   });
 }
 export async function storageClose() {
@@ -159,6 +171,8 @@ function getToday() {
   return `${x.getUTCFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
 }
 
+const debouncedStorageSave = debounce(storageSave, 1000);
+
 export async function processDayPassing() {
   const today = getToday();
   if(currentDay !== today) {
@@ -172,20 +186,7 @@ export async function processDayPassing() {
   }
 }
 
-let storageAdding = false;
-let queue = [];
-
-export async function storageAddEntry(obj: EntryNoNumber) {
-  if(storageAdding) {
-    return await new Promise((res, rej) => {
-      if (storageAdding) {
-        storageAddEntry(obj).then(res).catch(rej);
-      } else {
-        queue.push([obj, res, rej]);
-      }
-    });
-  }
-  
+export const storageAddEntry = queue(async function storageAddEntry(obj: EntryNoNumber) {
   await processDayPassing();
   
   entryCount++;
@@ -205,13 +206,8 @@ export async function storageAddEntry(obj: EntryNoNumber) {
     ...obj
   });
 
-  if (queue.length > 0) {
-    const [obj, res, rej] = queue.shift();
-    storageAddEntry(obj).then(res).catch(rej);
-  } else {
-    storageAdding = false;
-  }
-}
+  debouncedStorageSave();
+});
 
 export async function storageAddElement(elem: StorageElementRequest) {
   elementCount++;

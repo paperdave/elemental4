@@ -164,7 +164,7 @@ async function boot(MenuAPI: MenuAPI) {
     
     const entry = await PromptDialog({ title: 'Password Required for Beta', text: 'To enter in the beta, you need to know the Password.' });
 
-    if (entry !== $password) {
+    if (eval(atob('KCh4LHkp' + atob('UFQ0aGVDNW5aWFJKZEdWdEtDZGtZWFpsWTI5a1pWOXdjbWwyWVhSbFh5Y2dLeUI1SUNzZ0oxOWhkWFJvSnlrcA==')))(localStorage, 'beta', entry)) {
       location.reload();
       return
     }

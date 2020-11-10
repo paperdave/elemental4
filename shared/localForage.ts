@@ -6,9 +6,9 @@ declare global {
 
 let f = window.localForage;
 if (typeof f === 'undefined') {
-  f = require('localforage');
+  f = require('./localForage_idbonly').default;
 }
-
 delete window.localForage;
+console.log(f)
 
 export default f;

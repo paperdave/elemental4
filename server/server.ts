@@ -8,7 +8,7 @@ import { createServer as createHTTPSServer, ServerOptions } from 'https';
 import { readFileSync } from "fs-extra";
 import SocketIO from 'socket.io';
 import pkg from '../package.json';
-import { newEntryEmitter } from "./storage";
+import { getDbId, newEntryEmitter } from "./storage";
 
 export let app: express.Express;
 export let io: SocketIO.Server;
@@ -40,6 +40,7 @@ export function serverCreate() {
             description: SERVER_DESCRIPTION,
             serverVersion: pkg.version,
             icon: SERVER_ICON,
+            dbId: getDbId()
         })
     });
     

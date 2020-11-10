@@ -14,7 +14,7 @@ export abstract class IStore {
 }
 
 export class Store extends IStore {
-  private localForage: LocalForage;
+  private localForage: any;
 
   constructor(storeName: string) {
     super();

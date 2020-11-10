@@ -1,7 +1,7 @@
 import { delay, escapeHTML } from "../../shared/shared";
 import { Emitter } from '@reverse/emitter';
 import { playSound } from "./audio";
-import { Converter } from 'showdown';
+import marked from 'marked';
 import { AlertDialogOptions, ConfirmDialogOptions, PromptDialogOptions, CustomDialogOptions, DialogButton } from "../../shared/elem";
 
 export async function animateDialogOpen(root: HTMLElement) {
@@ -54,14 +54,13 @@ export function CustomDialog(opt: CustomDialogOptions): Promise<Record<string, s
   }
 
   const inputs: Record<string, HTMLInputElement> = {};
-  const conv = new Converter();
   let firstInput: string = null;
   for (var i = 0; i < parts.length; i++) {
     const part = parts[i];
     if (typeof part == "string") {
       const div = document.createElement("div");
       div.classList.add('form-dialog-group');
-      div.innerHTML = conv.makeHtml(parts[i]);
+      div.innerHTML = marked(part);
       formElement.appendChild(div);
     } else {
       const div = document.createElement("div");
