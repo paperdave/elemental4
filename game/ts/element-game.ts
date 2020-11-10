@@ -1,5 +1,5 @@
 import { getClassFromDisplay, getCSSFromDisplay } from "./element-color";
-import { query } from 'jsonpath';
+import jsonpath from 'jsonpath';
 import { arrayGet3Random, delay, delayFrame, escapeHTML, sortCombo } from "../../shared/shared";
 import { capitalize } from "@reverse/string";
 import { getConfigBoolean, setConfigBoolean, setElementAsOwned } from "./savefile";
@@ -354,15 +354,19 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
 
     Array.from(document.querySelectorAll('[data-element-info]')).forEach(elem => {
       const q = elem.getAttribute('data-element-info');
-      const result = '' + query(element, q, 1)[0]
+      const result = '' + jsonpath.query(element, q, 1)[0]
       elem.innerHTML = escapeHTML(result);
     });
     Array.from(document.querySelectorAll('[data-element-plural]')).forEach(elem => {
       const q = elem.getAttribute('data-element-plural');
-      const result = '' + query(element, q, 1)[0]
+      const result = '' + jsonpath.query(element, q, 1)[0]
       elem.innerHTML = result === '1' ? '' : 's';
     });
-    infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`
+
+    // Element
+    infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`;
+    infoContainer.querySelector('.elem').innerHTML = "";
+    infoContainer.querySelector('.elem').appendChild(document.createTextNode(element.display.text));
   });
 
   dom.setAttribute('data-element', element.id);
