@@ -1,5 +1,5 @@
 import { debounce } from "@reverse/debounce";
-import moment from "moment";
+import { humanize } from "juration";
 import { ElementalBaseAPI } from "../../shared/elem";
 import { getAPI } from "./api";
 import { getOwnedElements, getStatistics, setStatistics } from "./savefile";
@@ -88,7 +88,7 @@ export async function getDisplayStatistics(): Promise<[string, any][]> {
   const owned = await getOwnedElements(currentAPI)
   return [
     ['Savefile Started', new Date(currentStats.startTime).toLocaleDateString() + ' ' + new Date(currentStats.startTime).toLocaleTimeString()],
-    ['Time Played', moment.duration(currentStats.playTime * 1000).humanize()],
+    ['Time Played', humanize(currentStats.playTime * 1000)],
     ['Sessions', currentStats.sessionCount],
 
     ['Elements Discovered', owned.length],
