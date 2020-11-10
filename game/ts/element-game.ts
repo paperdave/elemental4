@@ -362,6 +362,12 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
       const result = '' + jsonpath.query(element, q, 1)[0]
       elem.innerHTML = result === '1' ? '' : 's';
     });
+    Array.from(document.querySelectorAll('[data-element-date]')).forEach(elem => {
+      const q = elem.getAttribute('data-element-date');
+      const result = '' + jsonpath.query(element, q, 1)[0]
+      const date = new Date(parseInt(result));
+      elem.innerHTML = escapeHTML(date.toString());
+    });
 
     // Element
     infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`;
