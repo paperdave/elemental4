@@ -173,18 +173,19 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Loading API', 0);
 
   try {
-    await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
+    location.reload();
+    // await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
   } catch (error) {
-    await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
-    setActiveServer('internal:null');
-    await connectApi('internal:null', null, ui as ElementalLoadingUi)
+    // await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
+    // setActiveServer('internal:null');
+    // await connectApi('internal:null', null, ui as ElementalLoadingUi)
   }
   
   'dispose' in ui && ui.dispose();
 
   localStorage.cache = MenuAPI.cache;
 
-  MenuAPI.showGame && MenuAPI.showGame();
+  // MenuAPI.showGame && MenuAPI.showGame();
 
   localStorage.setItem('auto_start', 'true');
   
