@@ -61,7 +61,7 @@ export function CustomDialog(opt: CustomDialogOptions): Promise<Record<string, s
     if (typeof part == "string") {
       const div = document.createElement("div");
       div.classList.add('form-dialog-group');
-      div.innerHTML = conv.makeHtml(parts[i]);
+      div.innerHTML = conv.makeHtml(part);
       formElement.appendChild(div);
     } else {
       const div = document.createElement("div");
