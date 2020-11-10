@@ -62,9 +62,11 @@
       <div class="info-content">
         <h3>Element #<span data-element-info='$.id'></span></h3>
         <p>
-          Created on <span data-element-date='$.createdOn'></span>
+          Suggested by <span data-element-info='$.stats.creators[0]'></span> and created on <span data-element-date='$.createdOn'></span>
         </p>
-        <p data-element-info="$.stats.comments[0].author"></p>
+        <p>
+          Pioneered by <span data-element-info="$.stats.comments[0].author"></span>
+        </p>
         <p data-element-info="$.stats.comments[0].comment"></p>
         <ul>
           <li>There are <span data-element-info-hide="parent" data-element-info="$.recipeCount"></span> way<span data-element-plural="$.stats.combosCreatesThis"></span> to make this Element.</li>
