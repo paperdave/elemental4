@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	firebase "firebase.google.com/go"
 	"google.golang.org/api/option"
@@ -22,17 +23,18 @@ type Element struct {
 
 // Color has the data for a suggestion's color
 type Color struct {
-	Base       string `json:"base"`
-	Lightness  int    `json:"lightness"`
-	Saturation int    `json:"saturation"`
+	Base       string  `json:"base"`
+	Lightness  float32 `json:"lightness"`
+	Saturation float32 `json:"saturation"`
 }
 
 // Suggestion has the data for a suggestion
 type Suggestion struct {
-	Creator string `json:"creator"`
-	Name    string `json:"name"`
-	Votes   int    `json:"votes"`
-	Color   Color  `json:"color"`
+	Creator string   `json:"creator"`
+	Name    string   `json:"name"`
+	Votes   int      `json:"votes"`
+	Color   Color    `json:"color"`
+	Voted   []string `json:"voted"`
 }
 
 // ComboMap has the data that maps combos
@@ -64,5 +66,8 @@ func main() {
 	handle(err)
 	defer store.Close()
 
+	fmt.Println("Cleaning up combos")
 	fixCombos(db, store)
+	fmt.Println("Cleaning up suggestions")
+	fixElements(db, store)
 }

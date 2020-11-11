@@ -24,7 +24,7 @@ func fixCombos(db *database.Client, store *firestore.Client) {
 				_, exists := combos[elem2]
 				if exists {
 					delete(suggMap[elem1], elem2)
-					fmt.Println(elem1, elem2)
+					fmt.Printf("Combo %s + %s Deleted\n", elem1, elem2)
 				}
 			}
 		}
