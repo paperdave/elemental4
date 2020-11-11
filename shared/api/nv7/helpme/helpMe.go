@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"os"
 
+	firestore "cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+	database "firebase.google.com/go/db"
 	"google.golang.org/api/option"
 )
 
@@ -55,27 +57,30 @@ func handle(err error) {
 	}
 }
 
+var ctx context.Context
+
 func main() {
+	ctx = context.Background()
+
 	opt := option.WithCredentialsJSON([]byte(json))
 	config := &firebase.Config{
 		DatabaseURL:   "https://elementalserver-8c6d0.firebaseio.com",
 		ProjectID:     "elementalserver-8c6d0",
 		StorageBucket: "elementalserver-8c6d0.appspot.com",
 	}
-	app, err := firebase.NewApp(context.Background(), config, opt)
+	app, err := firebase.NewApp(ctx, config, opt)
 	handle(err)
 
-	db, err := app.Database(context.Background())
+	db, err := app.Database(ctx)
 	handle(err)
 
-	store, err := app.Firestore(context.Background())
+	store, err := app.Firestore(ctx)
 	handle(err)
 	defer store.Close()
 
-	fmt.Println("Cleaning up combos")
-	fixCombos(db, store)
-	fmt.Println("Cleaning up suggestions")
-	fixElements(db, store)
-	fmt.Println("Processing recents")
-	recents(db)
+	help := map[string]func(*database.Client, *firestore.Client, []string){
+		"findelem":   findElem,
+		"listcombos": listCombos,
+	}
+	help[os.Args[1]](db, store, os.Args[2:])
 }
