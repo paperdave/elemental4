@@ -369,7 +369,6 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
       const dtf = Intl.DateTimeFormat(undefined, {weekday: "long", hour: "numeric", minute: "numeric", month: "long", year: "numeric"});
       const f_date = (m_ca, m_it) => Object({...m_ca, [m_it.type]: m_it.value});
       const dateString = dtf.formatToParts(date).reduce(f_date, {})
-      console.log(dateString);
       var hours = date.getHours();
       hours = (hours+24-2)%24;
       var mid = 'AM';
