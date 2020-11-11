@@ -38,6 +38,9 @@ type Suggestion struct {
 // ComboMap has the data that maps combos
 type ComboMap map[string]map[string]string
 
+// SuggMap has the data that maps suggestion combos
+type SuggMap map[string]map[string][]string
+
 func handle(err error) {
 	if err != nil {
 		panic(err)
