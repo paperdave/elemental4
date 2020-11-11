@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	firestore "cloud.google.com/go/firestore"
@@ -81,6 +82,13 @@ func main() {
 	help := map[string]func(*database.Client, *firestore.Client, []string){
 		"findelem":   findElem,
 		"listcombos": listCombos,
+	}
+	if os.Args[1] == "helpme" {
+		for key := range help {
+			fmt.Print(key + " ")
+		}
+		fmt.Print("\n")
+		return
 	}
 	help[os.Args[1]](db, store, os.Args[2:])
 }
