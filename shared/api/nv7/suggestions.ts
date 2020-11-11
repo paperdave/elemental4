@@ -73,7 +73,6 @@ export async function downSuggestion(elem1: string, elem2: string, request: Sugg
 
   if (existing.votes < -1) {
     await firebase.database().ref("/suggestions/" + id).remove();
-    await firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).remove();
     return new Promise<void>(async (resolve, reject) => {
       firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).once("value").then(async (snapshot) => {
         var data = snapshot.val();
