@@ -15,4 +15,5 @@ export interface SuggestionData {
     creator: string,
     color: DynamicColor,
     votes: number,
+    voted: string[]
 }

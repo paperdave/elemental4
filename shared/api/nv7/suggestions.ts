@@ -51,29 +51,23 @@ async function getSuggestion(id: string): Promise<Suggestion<"dynamic-elemental4
 export async function downSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<void> {
   var id = request.text;
 
-  var alreadyVoted = await new Promise<string[]>((res, rej) => {
-    firebase.database().ref("users/" + api.uid + "/voted").once("value").then((snapshot) => {
-      let data = snapshot.val();
-      if (!data) {
-        data = [];
-      }
-      res(data);
+  var existing: SuggestionData = await new Promise<SuggestionData>((resolve, _) => {
+    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
+      resolve(snapshot.val() as SuggestionData);
     });
   });
 
-  if (alreadyVoted.includes(id)) {
+  if (!existing.voted) {
+    existing.voted = []
+  }
+
+  if (existing.voted.includes(id)) {
     await api.ui.alert({
       title: "Already Downvoted",
       text: "You already voted!"
     })
     return;
   }
-
-  var existing: SuggestionData = await new Promise<SuggestionData>((resolve, _) => {
-    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
-      resolve(snapshot.val() as SuggestionData);
-    });
-  });
 
   existing.votes--;
 
@@ -94,26 +88,23 @@ export async function downSuggestion(elem1: string, elem2: string, request: Sugg
     })
   }
 
-  alreadyVoted.push(id);
-  await firebase.database().ref("users/" + api.uid).update({
-    voted: alreadyVoted,
-  });
+  existing.voted.push(api.uid);
 
   return firebase.database().ref("/suggestions/" + id).update(existing);
 }
 
 async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: SuggestionRequest<"dynamic-elemental4">, parents: string[]): Promise<SuggestionResponse> {
-  var alreadyVoted = await new Promise<string[]>((res, rej) => {
-    firebase.database().ref("users/" + api.uid + "/voted").once("value").then((snapshot) => {
-      let data = snapshot.val();
-      if (!data) {
-        data = [];
-      }
-      res(data);
+  var existing: SuggestionData = await new Promise<SuggestionData>((resolve, _) => {
+    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
+      resolve(snapshot.val() as SuggestionData); 
     });
   });
 
-  if (alreadyVoted.includes(id)) {
+  if (!existing.voted) {
+    existing.voted = []
+  }
+
+  if (existing.voted.includes(api.uid)) {
     await api.ui.alert({
       title: "Already Voted",
       text: "You already voted!"
@@ -122,12 +113,6 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
       suggestType: "already-added"
     }
   }
-
-  var existing: SuggestionData = await new Promise<SuggestionData>((resolve, _) => {
-    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
-      resolve(snapshot.val() as SuggestionData); 
-    });
-  });
 
   existing.votes++;
 
@@ -189,6 +174,8 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
     })
   }
 
+  existing.voted.push(api.uid);
+
   return new Promise<SuggestionResponse>(async (resolve, reject) => {
     await firebase.database().ref("/suggestions/" + id).update(existing).catch(async (error) => {
       api.ui.status("Showing Error", 0);
@@ -200,32 +187,11 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
       resolve({
         suggestType: 'failed'
       })
-    }).then(async (val) => {
-      let error = await new Promise<Error>((ret, _) => {
-        alreadyVoted.push(id);
-
-        firebase.database().ref("users/" + api.uid).update({
-          voted: alreadyVoted,
-        }, async function(err) {
-          ret(err);
-        });
+    }).then(() => {
+      resolve({
+        suggestType: 'vote'
       })
-      if (!error) {
-        resolve({
-          suggestType: 'vote'
-        })
-      } else {
-        api.ui.status("Showing Error", 0);
-        await api.ui.alert({
-          "text": error.message,
-          "title": "Error",
-          "button": "Ok",
-        });
-        resolve({
-          suggestType: 'failed'
-        })
-      }
-    });
+    })
   })
 }
 
@@ -243,6 +209,7 @@ export async function newSuggestion(elem1: string, elem2: string, request: Sugge
     creator: api.saveFile.get("email", "anonymous"),
     color: request.color,
     votes: 0,
+    voted: [api.uid]
   }
 
   await firebase.database().ref("/suggestions/" + newSuggest.name).set(newSuggest);
@@ -255,20 +222,6 @@ export async function newSuggestion(elem1: string, elem2: string, request: Sugge
       }
       data.push(newSuggest.name);
       await firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).set(data);
-
-      var alreadyVoted = await new Promise<string[]>((res, rej) => {
-        firebase.database().ref("users/" + api.uid + "/voted").once("value").then((snap) => {
-          let dat = snap.val();
-          if (!dat) {
-            dat = [];
-          }
-          res(dat);
-        });
-      });
-      alreadyVoted.push(newSuggest.name);
-      await firebase.database().ref("users/" + api.uid).update({
-        voted: alreadyVoted,
-      });
 
       resolve({
         suggestType: "suggest"
