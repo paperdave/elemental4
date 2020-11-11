@@ -73,6 +73,7 @@ export async function downSuggestion(elem1: string, elem2: string, request: Sugg
 
   if (existing.votes < -1) {
     await firebase.database().ref("/suggestions/" + id).remove();
+    await firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).remove();
     return new Promise<void>(async (resolve, reject) => {
       firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).once("value").then(async (snapshot) => {
         var data = snapshot.val();
@@ -118,6 +119,7 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
 
   if (existing.votes > api.votesRequired) {
     await firebase.database().ref("/suggestions/" + id).remove();
+    await firebase.database().ref("/suggestionMap/" + parents[0] + "/" + parents[1]).remove();
 
     let commentData = await api.ui.prompt({
       title: "Confirm Creator Mark",
