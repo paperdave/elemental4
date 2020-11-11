@@ -366,7 +366,17 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
       const q = elem.getAttribute('data-element-date');
       const result = '' + jsonpath.query(element, q, 1)[0]
       const date = new Date(parseInt(result));
-      elem.innerHTML = escapeHTML(date.toString());
+      const dtf = Intl.DateTimeFormat(undefined, {weekday: "long", hour: "numeric", minute: "numeric", month: "long", year: "numeric"});
+      const f_date = (m_ca, m_it) => Object({...m_ca, [m_it.type]: m_it.value});
+      const dateString = dtf.formatToParts(date).reduce(f_date, {})
+      console.log(dateString);
+      var hours = date.getHours();
+      hours = (hours+24-2)%24;
+      var mid = 'AM';
+      if (hours>12) {
+       mid = 'PM';
+      }
+      elem.innerHTML = escapeHTML(dateString.weekday + ", " + dateString.month + " " + dateString.year + " at " + dateString.hour + ":" + dateString.minute + " " + mid + ".");
     });
 
     // Element
