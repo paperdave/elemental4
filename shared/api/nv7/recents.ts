@@ -9,10 +9,6 @@ export async function getRecents(limit: number): Promise<RecentCombination[]> {
       if (!data) {
         resolve([]);
       } else {
-        if (data.length > limit) {
-          data = data.slice(data.length-limit, data.length);
-          await firebase.database().ref("/recent/").update(data);
-        }
         data.reverse();
         resolve(data);
       }
