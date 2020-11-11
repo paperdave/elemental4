@@ -6,7 +6,7 @@ import (
 	database "firebase.google.com/go/db"
 )
 
-const limit = 1
+const limit = 30
 
 func recents(db *database.Client) {
 	ctx := context.Background()
