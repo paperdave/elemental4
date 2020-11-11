@@ -43,6 +43,12 @@ type ComboMap map[string]map[string]string
 // SuggMap has the data that maps suggestion combos
 type SuggMap map[string]map[string][]string
 
+// Recent has the data of a recent element
+type Recent struct {
+	Parents [2]string `json:"recipe"`
+	Result  string    `json:"result"`
+}
+
 func handle(err error) {
 	if err != nil {
 		panic(err)
@@ -70,4 +76,6 @@ func main() {
 	fixCombos(db, store)
 	fmt.Println("Cleaning up suggestions")
 	fixElements(db, store)
+	fmt.Println("Processing recents")
+	recents(db)
 }
