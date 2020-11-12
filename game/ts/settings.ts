@@ -10,6 +10,7 @@ import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
 import { updateMusicVolume } from "./audio";
+import localStorage from '../../shared/localStorage';
 import escapeMarkdown from 'markdown-escape';
 
 let themeUpdated = false;
