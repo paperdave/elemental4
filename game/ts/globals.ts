@@ -14,6 +14,8 @@ export function exposeGlobals() {
         'dialog': require('./dialog'),
         'audio': require('./audio'),
         'devTheme': require('./theme-editor'),
+        'ssg': require('./settings-server-config'),
+        'tree': require('./tree'),
         'shared': {
             util: require('../../shared/shared'),
             cache: require('../../shared/cache'),

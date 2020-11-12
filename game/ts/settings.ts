@@ -247,21 +247,20 @@ export async function InitSettings() {
   const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
   serverSelect.value = 'internal:change-btn';
   serverSelect.addEventListener('change', async() => {
-    const value = serverSelect.value;
-    const server = (await getInstalledServers()).find(x => x.baseUrl === value);
-    if (server) {
+    const baseUrl = serverSelect.value;
+    if (baseUrl && baseUrl !== 'internal:change-btn') {
       const ui = createLoadingUi();
-      ui.status('Connecting to ' + processBaseUrl(server.baseUrl), 0)
+      ui.status('Connecting to ' + processBaseUrl(baseUrl), 0)
       ui.show();
-      setActiveServer(server.baseUrl);
+      setActiveServer(baseUrl);
       document.querySelector('.suggest-close').dispatchEvent(new MouseEvent('click'));
       try {
-        await connectApi(server.baseUrl, null, ui);
+        await connectApi(baseUrl, null, ui);
       } catch (error) {
         await CustomDialog({
           title: 'Server Connection Error',
           parts: [
-            `Could not connect to \`${escapeHTML(server.baseUrl)}\``,
+            `Could not connect to \`${escapeHTML(baseUrl)}\``,
             `\`${error.stack}\``
           ]
         })

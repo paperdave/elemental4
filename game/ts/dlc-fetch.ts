@@ -28,9 +28,8 @@ export async function addDLCByUrl(url: string, intendedType: DLCType, isBuiltIn 
   }
   let x;
   try {
-    const x = await addDLCByUrl2(url, intendedType, isBuiltIn);
+    x = await addDLCByUrl2(url, intendedType, isBuiltIn);
   } catch (error) {
-    console.error(error);
     if (!isBuiltIn) {
       await AlertDialog({
         title: 'Error Adding DLC',

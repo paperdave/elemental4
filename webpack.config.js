@@ -24,6 +24,7 @@ module.exports = (prod = false) => ({
             $password: JSON.stringify(prod ? 'username' : false)
         }),
         new webpack.IgnorePlugin(/polling-xhr\.js/),
+        new webpack.IgnorePlugin(/react/),
         // new BundleAnalyzerPlugin()
     ],
     resolve: {

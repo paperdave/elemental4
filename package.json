@@ -1,12 +1,13 @@
 {
   "name": "elemental4",
-  "version": "4.0.0-beta27",
+  "version": "4.0.0",
   "description": "Modern reboot of the old item combination game.",
   "main": "dist_server/server/index.js",
   "private": true,
   "author": "Dave Caruso",
   "dependencies": {
     "@reverse/array": "^1.7.3",
+    "@reverse/compact": "^1.1.4",
     "@reverse/debounce": "^1.0.5",
     "@reverse/emitter": "^2.0.6",
     "@reverse/encoder": "^1.2.10",

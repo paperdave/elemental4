@@ -26,6 +26,8 @@ export interface StorageElementRequest {
   color: DynamicColor;
   creator1: string;
   creator2: string;
+  creator1p: string;
+  creator2p: string;
   createdOn: number;
 }
 export interface DbSuggestion {
@@ -219,13 +221,13 @@ export async function storageAddElement(elem: StorageElementRequest) {
     createdOn: Date.now(),
     color: elem.color,
     text: elem.text,
-    creators: await Promise.all([elem.creator1, elem.creator2].filter(Boolean).map((x) => getPublicId(x))),
+    creators: await Promise.all([elem.creator1, elem.creator2].filter(Boolean)),
   } as ElementEntry);
 
   await dbRun(`INSERT INTO element_comments (id, user1, comment1, user2, comment2) VALUES ($id, $user1, 0, $user2, 0)`, {
     $id: id.toString(),
-    $user1: elem.creator1,
-    $user2: elem.creator2,
+    $user1: elem.creator1p,
+    $user2: elem.creator2p,
   });
 
   await logElement(
@@ -290,9 +292,26 @@ export function storageGetEntriesAfter(lastEntry: number) {
   return todayEntries.filter(x => x.entry > lastEntry);
 }
 
-async function getPublicId(privateId: string) {
+export async function getPublicId(privateId: string) {
   try {
     return (await dbGet("SELECT public_id FROM users WHERE private_id=$id", { $id: privateId })).public_id;
+  } catch (error) {
+    return 'null-user'
+  }
+}
+export async function storageVerifyProfile(privateId: string) {
+  try {
+    return {
+      exists: true,
+      ...(await dbGet("SELECT public_id,display FROM users WHERE private_id=$id", { $id: privateId }))
+    }
+  } catch (error) {
+    return { exists: false }
+  }
+}
+export async function getPrivateId(publicId: string) {
+  try {
+    return (await dbGet("SELECT private_id FROM users WHERE public_id=$id", { $id: publicId })).private_id;
   } catch (error) {
     return 'null-user'
   }
@@ -302,6 +321,7 @@ export async function storageSetUserName(privateId: string, name: string) {
   const x = await dbRun("UPDATE users SET display = $text WHERE private_id = $id", { $id: privateId, $text: name });
   if(x.changes > 0) {
     nameLastModified = Date.now();
+    return await getPublicId(privateId);
   }
 }
 export async function storageAddElementComment(elementId: string, privateId: string, comment: string) {
@@ -324,7 +344,7 @@ export async function storageAddElementComment(elementId: string, privateId: str
         comment,
         id: elementId,
         user: await getPublicId(privateId)
-      })
+      });
     }
   } else {
     return false;
@@ -390,6 +410,8 @@ export async function initialDatabase() {
     text: "Air",
     creator1: 'God',
     creator2: null,
+    creator1p: 'null-user',
+    creator2p: 'null-user',
     createdOn: creationDate,
   });
   await storageAddElement({
@@ -401,6 +423,8 @@ export async function initialDatabase() {
     text: "Earth",
     creator1: 'God',
     creator2: null,
+    creator1p: 'null-user',
+    creator2p: 'null-user',
     createdOn: creationDate,
   });
   await storageAddElement({
@@ -412,6 +436,8 @@ export async function initialDatabase() {
     text: "Fire",
     creator1: 'God',
     creator2: null,
+    creator1p: 'null-user',
+    creator2p: 'null-user',
     createdOn: creationDate,
   });
   await storageAddElement({
@@ -423,6 +449,8 @@ export async function initialDatabase() {
     text: "Water",
     creator1: 'God',
     creator2: null,
+    creator1p: 'null-user',
+    creator2p: 'null-user',
     createdOn: creationDate,
   });
 }

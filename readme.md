@@ -11,7 +11,8 @@ almost two separate projects, but the server is required to be running for the g
 
 The build system was changed last minute, separating the client and server, so it's a crazy mess. I
 also didn't keep an old copy of this repository, so the first commit is a lot. I also didn't commit
-useful names. I just want this project out.
+useful names. I just want this project out. As of the release, Everything is sloppy. Good luck
+figuring out anything.
 
 Run the your own server
 - Get node.js & npm

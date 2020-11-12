@@ -87,7 +87,12 @@ export class ChunkedStore extends IStore {
     await this.store.clear();
   })
   keys = this.createQueue(async() => {
-    throw new Error('Not Implemented')
+    return (await Promise.all(
+      (await this.store.keys())
+        .map(async(key) => {
+          return Object.keys(await this.store.get(key));
+        })
+    )).flat();
   })
   del = this.createQueue(async(id: string) => {
     const gid = getGroupId(id)

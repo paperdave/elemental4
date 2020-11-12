@@ -143,7 +143,6 @@ export async function loadSounds() {
   const tracks = getMusicTracks();
   tracks.forEach((track) => {
     if (!urlToHowl.has(track.url)) {
-      console.log('music load', track.url)
       urlToHowl.set(track.url,
         new Howl({
           src: track.url,

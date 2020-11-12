@@ -4,7 +4,7 @@ import { elementNameToStorageID, sortCombo } from '../shared/shared';
 import { VOTE_SCORES_EQUATION, VOTE_THRESHOLD_EQUATION } from './constants';
 import { createQueueExec } from '../shared/async-queue-exec';
 import { Parser } from 'expr-eval';
-import { storageAddCombo, storageAddElement, storageIncElementCount, storageSetSuggestion, storageGetSuggestion, DbVariant, DbSuggestionEntry, storageCheckIP, storageGetElementNumberFromName, storageIncSuggestCount, storageDecSuggestCount } from './storage';
+import { storageAddCombo, storageAddElement, getPublicId, storageIncElementCount, storageSetSuggestion, storageGetSuggestion, DbVariant, DbSuggestionEntry, storageCheckIP, storageGetElementNumberFromName, storageIncSuggestCount, storageDecSuggestCount } from './storage';
 import { E4SuggestionRequest, E4SuggestionResponse } from '../shared/elemental4-types';
 import sha256 from 'sha256';
 import { getCurrentTime, logCombo, logSuggestion } from './data-logging';
@@ -64,8 +64,10 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
             color: suggest.color,
             text: suggest.text,
             createdOn: Date.now(),
-            creator1: userId,
+            creator1: await getPublicId(userId),
             creator2: null,
+            creator1p: userId,
+            creator2p: null,
           });
         }
         
@@ -263,8 +265,10 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
                 color: mostVotedVariant.color,
                 text: mostVotedVariant.text,
                 createdOn: Date.now(),
-                creator1: mostVotedVariant.creator,
-                creator2: userId,
+                creator1: await getPublicId(mostVotedVariant.creator),
+                creator2: await getPublicId(userId),
+                creator1p: mostVotedVariant.creator,
+                creator2p: userId,
               });
             }
             

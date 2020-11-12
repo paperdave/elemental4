@@ -158,34 +158,21 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Loading Element UI', 0);
   await InitElementGameUi();
 
-  // i don't want people just getting in super ez, so this should do the trick.
-  if ($password) {
-    ui.status('Requesting Password', 0);
-    
-    const entry = await PromptDialog({ title: 'Password Required for Beta', text: 'To enter in the beta, you need to know the Password.' });
-
-    if (eval(atob('KCh4LHkp' + atob('UFQ0aGVDNW5aWFJKZEdWdEtDZGtZWFpsWTI5a1pWOXdjbWwyWVhSbFh5Y2dLeUI1SUNzZ0oxOWhkWFJvSnlrcA==')))(localStorage, 'beta', entry)) {
-      location.reload();
-      return
-    }
-  }
-
   ui.status('Loading API', 0);
 
   try {
-    location.reload();
-    // await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
+    await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
   } catch (error) {
-    // await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
-    // setActiveServer('internal:null');
-    // await connectApi('internal:null', null, ui as ElementalLoadingUi)
+    await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
+    setActiveServer('internal:null');
+    await connectApi('internal:null', null, ui as ElementalLoadingUi)
   }
   
   'dispose' in ui && ui.dispose();
 
   localStorage.cache = MenuAPI.cache;
 
-  // MenuAPI.showGame && MenuAPI.showGame();
+  MenuAPI.showGame && MenuAPI.showGame();
 
   localStorage.setItem('auto_start', 'true');
   

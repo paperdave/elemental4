@@ -271,7 +271,7 @@ export function liteParser(data: string, data_uid: string, isLightParse?: boolea
 }
 
 export class ElementalLiteParser extends ElementalPackParser {
-  parse(contents: string[]): Promise<void> {
+  parse(contents: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
 }

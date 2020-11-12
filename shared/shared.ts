@@ -25,7 +25,7 @@ export function arrayGet3Random<T>(arr: T[]): T[] {
 }
 /** Converts element name to an ID */
 export function elementNameToStorageID(elemName: string): string {
-    return elemName.replace(/\n/g,'').replace(/ +/g, " ").trim().toLowerCase();
+    return elemName.trim().replace(/\n/g, ' ').replace(/ +/g, " ").trim().toLowerCase();
 }
 /** Returns a promise that resolves after a timeout */
 export function delay(ms: number) {
@@ -35,10 +35,10 @@ export function delayFrame() {
     return new Promise(r => requestAnimationFrame(r));
 }
 export function formatDate(date: Date) {
-    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday","Saturday"][date.getUTCDay()];
-    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"][date.getUTCMonth()];
+    const month = date.getUTCMonth().toString().padStart(2, '0');
     const day = date.getUTCDate();
     const daysuffix = day === 1 ? "st" : (day === 2 ? "nd" : "th");
+    let year = date.getUTCFullYear();
     let hour = date.getUTCHours();
     let ampm = "AM";
     if(hour > 12) {
@@ -50,7 +50,7 @@ export function formatDate(date: Date) {
         minute = "0" + minute;
     }
 
-    return `${weekday}, ${month} ${day}${daysuffix} at ${hour}:${minute}${ampm} UTC`;
+    return `${year}-${month}-${day} ${hour}:${minute}${ampm} UTC`;
 }
 export function escapeHTML(html: string): string {
     return html.replace(/&/g, '&amp;')

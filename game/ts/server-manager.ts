@@ -9,15 +9,17 @@ interface ServerEntry {
 }
 
 export const builtInOfficialServers = [
-  // 'http://localhost:8001',
+  'http://localhost:8001',
   // 'https://main.elemental4.net',
   // 'https://anarchy.elemental4.net',
-  'internal:singleplayer',
 ];
 export const builtInThirdPartyServers = [
   // 'https://elemental.hparcells.tk',
   // 'https://dev.elemental5.net/api',
   // 'https://e4api.ledomsoft.com',
+];
+export const builtInInternalServers = [
+  'internal:singleplayer',
 ];
 export const allBuiltInServers = [
   ...builtInOfficialServers,

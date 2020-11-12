@@ -1,36 +1,73 @@
+// todo: wrap head around inter-pack dependencies
+
 import { Elem, ElementalBaseAPI } from "./elem";
 import { elementNameToStorageID } from "./shared";
-import { Store } from "./store";
+import { IStore } from "./store";
 
 export interface ElementalPackParserOptions {
-  store: Store;
-  packId: string;
+  store: IStore;
+  id: string;
 }
-export type ImportedPack = Pick<ElementalBaseAPI, "getCombo" | "getElement" | "getStartingInventory">;
+export interface PackMetadata {
+  id: string;
+  name?: string;
+  icon?: string;
+  description?: string;
+  version?: string;
+  author?: string;
+}
+export type ImportedPack = Pick<ElementalBaseAPI, "getCombo" | "getElement" | "getStartingInventory"> & {
+  stats: {
+
+  }
+};
 export type ElemIdOptional = Omit<Elem, "id"> & Partial<Pick<Elem, "id">>;
+
+function addNamespace(x, namespace) {
+  if (!x.includes(':')) return x;
+  return namespace + ':' + x
+}
+function removeNamespace(x, namespace) {
+  if (!x.includes(':')) return x.split(':')[1];
+  return namespace + ':' + x
+}
 
 export abstract class ElementalPackParser {
   protected packId: string;
-  private store: Store;
+  private store: IStore;
+  private meta: PackMetadata;
   
-  constructor({ store, packId }: ElementalPackParserOptions) {
+  constructor({ store, id }: ElementalPackParserOptions) {
     this.store = store;
-    this.packId = packId;
+    this.packId = id;
+    this.meta = { id };
   }
 
   /** Converts element name to an ID */
   protected elementNameToStorageID = elementNameToStorageID;
 
   /** Adds an element to your pack. ID is optional. */
-  protected insertElement(elem: ElemIdOptional) {
-    
+  protected async insertElement(elem: Elem) {
+    const nsId = this.packId + ':' + elem.id;
+    const computedId = elementNameToStorageID(elem.display.text);
+    elem.stats = elem.stats || {};
+    elem.stats.alternateIds = (elem.stats.alternateIds || []).concat(nsId);
+    this.store.set('e.' + computedId, elem);
+    this.store.set('n.' + nsId, computedId);
   }
 
   /** Adds a combination to your pack. Use namespaces to refer to other packs. */
-  protected insertCombination(ids: string[], output: string) {
+  protected async insertCombination(ids: string[], output: string) {
+    const newIds = ids.map(x => addNamespace(x, this.packId));
+    const isInternal = newIds.every(x => x.startsWith)
 
+    if(isInternal) {
+      this.store.set('c.' + newIds.join('+'), addNamespace(output, this.packId));
+    } else {
+      // this.store.set('c.' + , addNamespace(output, this.packId));
+    }
   }
-
+  
   /** Imports a pack */
   protected importPack(id: string): Promise<ImportedPack> {
     return null;
@@ -44,5 +81,5 @@ export abstract class ElementalPackParser {
     * When storing elements, you should use the elementNameToStorageId(), as that is how elements will
     * be looked up.
     */
-  abstract async parse(contents: string[]): Promise<void>;
+  abstract async parse(contents: string): Promise<void>;
 }

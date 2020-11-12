@@ -31,7 +31,39 @@ export type ElementalColorPalette
   | 'dark-magenta'
   | 'pink'
   | 'hot-pink'
-  | 'dark-hot-pink'
+  | 'dark-hot-pink';
+ 
+export const ElemColor = {
+  White: 'white',
+  Black: 'black',
+  LightGrey: 'light-grey',
+  Grey: 'grey',
+  DarkGrey: 'dark-grey',
+  Brown: 'brown',
+  DarkBrown: 'dark-brown',
+  Red: 'red',
+  DarkRed: 'dark-red',
+  Orange: 'orange',
+  DarkOrange: 'dark-orange',
+  Yellow: 'yellow',
+  DarkYellow: 'dark-yellow',
+  YellowGreen: 'yellow-green',
+  DarkYellowGreen: 'dark-yellow-green',
+  Green: 'green',
+  DarkGreen: 'dark-green',
+  Aqua: 'aqua',
+  DarkAqua: 'dark-aqua',
+  Blue: 'blue',
+  DarkBlue: 'dark-blue',
+  NavyBlue: 'navy-blue',
+  Purple: 'purple',
+  DarkPurple: 'dark-purple',
+  Magenta: 'magenta',
+  DarkMagenta: 'dark-magenta',
+  Pink: 'pink',
+  HotPink: 'hot-pink',
+  DarkHotPink: 'dark-hot-pink',
+};
 
 /** Manifest required for Elemental server hosts. Can contain anything you want, and
  * that will be passed to the API handler. */
@@ -364,6 +396,7 @@ export interface OptionsItem<Type extends keyof OptionTypes = keyof OptionTypes>
 }
 export interface OptionsSection {
   title: string;
+  desc?: string;
   items: OptionsItem[];
 }
 

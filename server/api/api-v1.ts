@@ -2,7 +2,7 @@
 import e, { Router } from 'express';
 import { logicSuggestElement } from '../logic';
 import { DEV_VOTE_NO_CHECK, GAME_DATA_FOLDER, IP_FORWARDING } from '../constants';
-import { storageAddElementComment, storageDumpNames, storageGetEntriesAfter, storageGetEntryCount, storageGetSuggestion, storageSetUserName } from '../storage';
+import { getPublicId, storageAddElementComment, storageDumpNames, storageGetEntriesAfter, storageGetEntryCount, storageGetSuggestion, storageSetUserName, storageVerifyProfile } from '../storage';
 import path from 'path'
 import { pathExists, readFile } from 'fs-extra';
 
@@ -15,7 +15,7 @@ export default function() {
     const router = Router();
 
     router.post("/api/v1/update-profile", async (req, res, next) => {
-        const authorization = req.headers.authorization;
+        const authorization = decodeURIComponent(req.headers.authorization);
         const userMatch = authorization.match(/^Elemental4User "([a-zA-Z0-9]{32})" (?:"(.{1,32})")?$/);
         if(!userMatch) {
             res.setHeader('WWW-Authenticate', 'Elemental4User realm="Elemental 4 User"')
@@ -31,7 +31,28 @@ export default function() {
             res.send({ error: "unauthorized" });
             return;
         }
-        storageSetUserName(userId, userName);
+        const publicId = await storageSetUserName(userId, userName);
+        res.send({ updated: true, publicId });
+    });
+    router.post("/api/v1/verify-profile", async (req, res, next) => {
+        const authorization = decodeURIComponent(req.headers.authorization);
+        const userMatch = authorization.match(/^Elemental4User "([a-zA-Z0-9]{32})" (?:"(.{1,32})")?$/);
+        if(!userMatch) {
+            res.setHeader('WWW-Authenticate', 'Elemental4User realm="Elemental 4 User"')
+            res.status(401);
+            res.send({ error: "unauthorized" });
+            return;
+        }
+        const userId = userMatch[1];
+        const userName = userMatch[2];
+        if (userId.length !== 32) {
+            res.setHeader('WWW-Authenticate', 'Elemental4User realm="Elemental 4 User"')
+            res.status(401);
+            res.send({ error: "unauthorized" });
+            return;
+        }
+        const data = await storageVerifyProfile(userId);
+        res.send(data);
     });
     router.get("/api/v1/profiles", async (req, res, next) => {
         const x = await storageDumpNames()
@@ -42,7 +63,7 @@ export default function() {
         res.send(voterId)
     })
     router.post("/api/v1/suggestion/:query", async (req, res, next) => {
-        const authorization = req.headers.authorization;
+        const authorization = decodeURIComponent(req.headers.authorization);
         const userMatch = authorization.match(/^Elemental4User "([a-zA-Z0-9]{32})" (?:"(.{1,32})")?$/);
         if(!userMatch) {
             res.setHeader('WWW-Authenticate', 'Elemental4User realm="Elemental 4 User"')
@@ -121,7 +142,8 @@ export default function() {
                         userName: userName,
                         isUpvote: parse.vote,
                     });
-                    res.send(result);
+                    const publicId = await storageSetUserName(creator, userName);
+                    res.send({ ...result, publicId });
                 } catch (error) {
                     console.log(error);
                     res.statusCode = 500;
@@ -134,7 +156,7 @@ export default function() {
         });
     });
     router.post("/api/v1/comment/:query", async (req, res, next) => {
-        const authorization = req.headers.authorization;
+        const authorization = decodeURIComponent(req.headers.authorization);
         const userMatch = authorization.match(/^Elemental4User "([a-zA-Z0-9]{32})" (?:"(.{1,32})")?$/);
         if(!userMatch) {
             res.setHeader('WWW-Authenticate', 'Elemental4User realm="Elemental 4 User"')
@@ -246,7 +268,7 @@ export default function() {
                 const files = [];
                 while (date !== today) {
                     files.push(date);
-                    date = formatDate(new Date(new Date(date).getTime() + 2*24*60*60*1000));
+                    date = formatDate(new Date(new Date(date).getTime() + 1*24*60*60*1000 + 500));
                 }
                 const newEntries = storageGetEntriesAfter(0);
                 let data = ((await Promise.all(files.map(x => readFile(path.join(GAME_DATA_FOLDER, 'db', x + '.e4db'))))).join('') + newEntries.map(x => JSON.stringify(x)).join('\n') + '\n').replace(/\n\n+/g, '\n');

@@ -673,64 +673,105 @@ textarea.elem {
 .button-container {
   margin-bottom: 8px;
 }
-.info {
+#info {
   position: fixed;
-  width: 600px;
-  height: 400px;
-  display: none;
-  overflow: hidden;
-  position: absolute;
-}
-.info-bg {
-  width: 600px;
-  height: 400px;
-  position: absolute;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  background-color: var(--background-info);
-  color: var(--text-info);
-  border: 2px solid black;
-  border-radius: 14px;
-  z-index: 1;
-  top: 0;
-  left: 0;
-}
-.info-container-wrapper {
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 600px;
-  height: 400px;
-  z-index: 50;
-  overflow: hidden;
+  background: white;
+  border: 1px solid black;
+  top: 50px;
+  left: 50px;
   display: flex;
-  padding: 2px;
+}
+#info .left {
+  padding: 10px;
+  flex: 0 0 72px;
   display: block;
 }
-.info-container {
-  width: 600px;
+#info .right {
+  flex: 1;
+  display: flex;
+  width: 350px;
   height: 400px;
+  margin-left: 6px;
+  overflow-y: auto;
+}
+#info-tier {
+  display: block;
+  text-align: center;
+  margin: 4px 7.5px;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+.tab-list {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.info-tab {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+.info-tab::after {
+  content: ' ';
+  display: block;
+  background-color: rgba(0,0,0,0);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.data-row {
+  height: 24px;
+  line-height: 24px;
   display: flex;
 }
-.info.animate-in .info-container-wrapper {
-  animation: info-animate 0.35s cubic-bezier(.65,0,0,1);
+.data-row img, .data-row svg {
+  height: 24px;
+  margin-right: 10px;
 }
-.info.animate-in .info-bg {
-  animation: info-bg-container 0.35s cubic-bezier(.65,0,0,1);
+.two-column {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 50%);
 }
-.info-content {
+.four-column {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 25%);
+}
+.info-tab.selected::after {
+  background-color: var(--background-selected);
+}
+.info-tab:hover::after {
+  background-color: var(--background-hover);
+}
+.info-tab:active::after {
+  background-color: var(--background-active);
+}
+.info-section {
+  display: none;
+}
+.info-section > * {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.info-section.selected {
+  display: block;
   flex: 1;
-  padding-top: 8px;
-  overflow-y: auto;
-  height: 100%;
-  padding-right: 8px;
-  padding-left: 8px;
 }
-.info-content > :first-child {
-  margin-top: 0;
-}
-.info-content > :last-child {
-  margin-bottom: 0;
-}
+[data-tier-level="0"] { background: #ffffff; }
+[data-tier-level="1"] { background: #cbffc9; }
+[data-tier-level="2"] { background: #ffbdff; }
+[data-tier-level="3"] { background: #f5ffbd; }
+[data-tier-level="5"] { background: #93a3ff; }
+[data-tier-level="6"] { background: #b574ff; color: white; }
+[data-tier-level="7"] { background: #ffc23f; color: white; }
+[data-tier-level="8"] { background: #00c2c2; color: white; }
+[data-tier-level="8"] { background: #e00038; color: white; }
+[data-tier-level="10"] { background: #333333; color: white; font-weight: bold; }
 body:not(.config-show-category-names) .category-header {
   display: none;
 }
@@ -773,6 +814,10 @@ body:not(.config-show-category-names) .element-game-root {
 .equation-container {
   display: flex;
   padding: 16px;
+}
+.info-equation-container {
+  display: flex;
+  --element-scale: 0.68;
 }
 .equation-symbol {
   display: flex;
@@ -1160,12 +1205,12 @@ input[type="range"]::-moz-range-thumb {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 37px;
-  
+  height: 34px;
   margin-bottom: 4px;
   overflow: hidden;
-  white-space:pre-wrap;
+  white-space: pre-wrap;
   text-overflow: ellipsis;
+  font-size: 13.5px;
 }
 .svg-btn {
   cursor: pointer;
@@ -1325,4 +1370,14 @@ button.secondary {
 #game.animate-in #p5_background {
   opacity: 1;
   transition: opacity 150ms
+}
+#server-config > * > * {
+  margin-top: 5px;
+  margin-right: 5px;
+}
+#server-config > * > p {
+  margin-right: 0;
+}
+.text-field-label {
+  margin-right: 5px;
 }

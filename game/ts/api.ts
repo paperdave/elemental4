@@ -91,7 +91,8 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
   await endStatistics()
   try {
     const json = config || builtInApis[baseUrl] || (await fetch(baseUrl + '/elemental.json').then(x => x.json()));
-    installServer(baseUrl, json)
+    installServer(baseUrl, json);
+
     const API = apiTypeMap[json.type];
 
     const api = new API({
@@ -99,10 +100,10 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       config: json,
       saveFile: await getAPISaveFile(baseUrl),
       ui: {
-        alert: (o) => AlertDialog(o),
-        confirm: (o) => ConfirmDialog(o),
-        prompt: (o) => PromptDialog(o),
-        dialog: (o) => CustomDialog(o),
+        alert: AlertDialog,
+        confirm: ConfirmDialog,
+        prompt: PromptDialog,
+        dialog: CustomDialog,
         popup: (o) => Promise.resolve(null),
       },
       store: new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
@@ -128,7 +129,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
 
     (document.querySelector('#element-sidebar') as HTMLElement).style.display = getSubAPI(api, 'suggestion') ? 'block' : 'none';
     (document.querySelector('#null_server') as HTMLElement).style.display = api[IsNullAPI] ? 'flex' : 'none';
-    document.querySelector('#server-name').innerHTML = api[IsNullAPI] ? '' : '<b>Server:</b> ' + escapeHTML(`${json.name || `Untitled Server (type=${json.type})`} — ${baseUrl}`);
+    document.querySelector('#server-name').innerHTML = api[IsNullAPI] ? '' : '<b>Server:</b> ' + escapeHTML(`${json.name || `Untitled Server (type=${json.type})`}${baseUrl.startsWith('internal:') ? '' : ` — ${baseUrl}`}`);
     document.querySelector('#server-title').innerHTML = escapeHTML(json.name || `Unnamed Server (type=${json.type})`);
     document.querySelector('#server-description').innerHTML = escapeHTML(json.description || `[No description provided]`);
     if (json.icon) {

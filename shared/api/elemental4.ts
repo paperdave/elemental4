@@ -28,7 +28,7 @@ export class Elemental4API
              OptionsMenuAPI,
              RecentCombinationsAPI  {
   static type = 'elemental4';
-  private static DB_VERSION = 1;
+  private static DB_VERSION = 5;
 
   private dbMeta: DBMeta;
 
@@ -43,7 +43,7 @@ export class Elemental4API
     const eResult = typeof eResultI === 'string' ? await this.getElement(eResultI) : eResultI;
     
     const complexity = Math.max(eLeft.stats.treeComplexity, eRight.stats.treeComplexity) + 1;
-    if (complexity < eResult.stats.treeComplexity || eResult.stats.treeComplexity === 1) {
+    if (complexity < eResult.stats.treeComplexity || eResult.stats.treeComplexity === 0) {
       eResult.stats.treeComplexity = complexity;
       eResult.stats.simplestRecipe = sortCombo(eLeft.id, eRight.id);
       eResult.stats.fundamentals = {
@@ -93,7 +93,7 @@ export class Elemental4API
           recipeList: [],
           usageCount: 0,
           usageList: [],
-          treeComplexity: 1,
+          treeComplexity: 0,
           simplestRecipe: null
         }
       } as Elem);
@@ -156,7 +156,7 @@ export class Elemental4API
       await this.calculateFundamentals(eLeft, eRight, eResult);
     } else if(entry.type === 'comment') {
       const x = await this.store.get(entry.id);
-      x.stats.comments.push(entry.comment);
+      x.stats.comments.push({ author: entry.user, comment: entry.comment });
       await this.store.set(entry.id, x);
     }
     this.dbMeta.lastEntry = entry.entry;
@@ -166,12 +166,15 @@ export class Elemental4API
     const id = this.saveFile.get('clientSecret');
     const name = this.saveFile.get('clientName', '[Ask on Element Suggestion]');
     if (name !== '[Ask on Element Suggestion]') {
-      fetch(this.baseUrl + '/api/v1/update-profile', {
+      const obj = await fetch(this.baseUrl + '/api/v1/update-profile', {
         method: 'POST',
         headers: {
           'Authorization': `Elemental4User "${id}" "${encodeURIComponent(name)}"`,
         }
-      });
+      }).then(x => x.json());
+      if(obj && obj.publicId && obj.publicId !== 'null-user') {
+        this.saveFile.set('clientPublic', obj.publicId);
+      }
     }
   }
 
@@ -265,7 +268,6 @@ export class Elemental4API
               try {
                 json = JSON.parse(x);
               } catch (error) {
-                console.log(error)
                 err(error);
               }
               queue(json).catch((e) => {
@@ -430,11 +432,11 @@ export class Elemental4API
     return [
       {
         title: 'Identity',
+        desc: 'Settings related to your suggestions and logged in user. Logins are based on secret tokens associated with usernames.',
         items: [
           {
             type: 'string',
             label: 'Screen Name',
-            description: 'This shows up on elements that you create.',
             saveFileProp: 'clientName',
             validator: (x) => {
               if(x.length < 3) return 'Too Short, Must be 3 characters or more.';
@@ -445,7 +447,61 @@ export class Elemental4API
             onChange: () => {
               this.notifyUsername();
             }
-          } as OptionsItem<'string'>
+          } as OptionsItem<'string'>,
+          {
+            type: 'button',
+            label: 'Export Login',
+            onChange: async() => {
+              if(
+                await this.ui.confirm({
+                  title: 'Export Login',
+                  text: 'The following information is very sensitive, and links your username to your created elements. It does not contain your owned elements. Do not share it with others.'
+                })
+              ) {
+                this.ui.alert({
+                  title: 'Export Login',
+                  text: `Your login does not work on a username and password, but a secret token, yours is:\n**\`\n${this.saveFile.get('clientSecret')}\n\`**`
+                })
+              }
+            },
+          },
+          {
+            type: 'button',
+            label: 'Import Login',
+            onChange: async() => {
+              const { secret } = await this.ui.dialog({
+                title: 'Import Login',
+                parts: [
+                  'By importing your login you will be logged out of your current profile.',
+                  {
+                    id: 'secret',
+                    type: 'password',
+                  }
+                ]
+              });
+              if (secret) {
+                const obj = await fetch(this.baseUrl + '/api/v1/update-profile', {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Elemental4User "${secret}" "${encodeURIComponent("Test")}"`,
+                  }
+                }).then(x => x.json());
+                if (obj.exists) {
+                  this.saveFile.set('clientName', obj.display);
+                  this.saveFile.set('clientSecret', secret);
+                  this.saveFile.set('clientPublic', obj.public_id);
+                } else {
+                  if(await this.ui.confirm({
+                    title: 'No Elements',
+                    text: 'This account does not have any suggestions or elements sent. Continue with login?'
+                  })) {
+                    this.saveFile.set('clientSecret', secret);
+                    this.saveFile.set('clientPublic', null);
+                  }
+                }
+              }
+            },
+          }
         ]
       }
     ]

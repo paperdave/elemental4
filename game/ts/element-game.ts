@@ -1,14 +1,17 @@
 import { getClassFromDisplay, getCSSFromDisplay } from "./element-color";
-import { arrayGet3Random, delay, delayFrame, escapeHTML, sortCombo } from "../../shared/shared";
-import { capitalize } from "@reverse/string";
+import { arrayGet3Random, delay, delayFrame, escapeHTML, formatDate, sortCombo } from "../../shared/shared";
+import { capitalize, plural } from "@reverse/string";
 import { getConfigBoolean, setConfigBoolean, setElementAsOwned } from "./savefile";
 import { Elem, ElementalBaseAPI, RecentCombination, Suggestion } from "../../shared/elem";
 import { getAPI } from "./api";
 import { E4Suggestion } from "../../shared/elemental4-types";
 import { randomOf } from "@reverse/random";
+import { compactMiniNumber } from "@reverse/compact";
 import DomToImage from 'dom-to-image';
 import { incrementStatistic } from "./statistics";
 import { playSound } from "./audio";
+import { endTreeCanvas, getElementTree, initTreeCanvas } from "./tree";
+import Color from "color";
 
 function formatCategory(x: string) {
   return x.split('-').map(capitalize).join(' ')
@@ -324,7 +327,6 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
   });
 
   dom.addEventListener('contextmenu', (ev) => {
-    return
     incrementStatistic('infoOpened');
     
     infoContainer.classList.remove('animate-in');
@@ -338,31 +340,90 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
     dom.style.height = '';
     dom.style.top = '';
 
-    const rect = dom.getBoundingClientRect();
-
-    const flipY = rect.top > innerHeight - 400 - 32;
-    const flipX = rect.left > innerWidth - 600 - 32;
-
-    infoContainer.style.left = rect.left - 9 - (flipX ? 600 - 80 - 20 : 0) + 'px';
-    infoContainer.style.top = rect.top - 10 - (flipY ? 400 - 80 - 20 : 0) + 'px';
-    infoContainerContainer.style.flexDirection = flipX ? 'row-reverse' : 'row';
-    (infoContainer.querySelector('.elem') as HTMLDivElement).style.alignSelf = flipY ? 'flex-end' : 'flex-start';
-
-    infoContainer.style.display = 'block';
+    infoContainer.style.display = 'flex';
     infoContainer.classList.add('animate-in');
     infoOpen = true;
 
-    Array.from(document.querySelectorAll('[data-element-info]')).forEach(elem => {
-      const q = elem.getAttribute('data-element-info');
-      // const result = '' + query(element, q, 1)[0]
-      // elem.innerHTML = escapeHTML(result);
+    infoContainer.querySelectorAll('.info-tab,.info-section')
+      .forEach(x => x.classList.remove('selected'));
+
+    infoContainer.querySelector('.info-section-info').classList.add('selected');
+    infoContainer.querySelector('[data-info-tab="info"]').classList.add('selected');
+
+    infoContainer.querySelector('.elem').innerHTML = escapeHTML(element.display.text);
+    infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`;
+    infoContainer.querySelector('#element-info-title').innerHTML = isNaN(Number(element.id)) ? 'Element Info' : `Element #${Number(element.id)}`;
+
+    (infoContainer.querySelector('#element-created-date-root') as HTMLElement).style.display = element.createdOn ? '' : 'none';
+    if (element.createdOn) {
+      infoContainer.querySelector('#element-created-date').innerHTML = `${formatDate(new Date(element.createdOn))}`;
+    }
+    (infoContainer.querySelector('#info-tier') as HTMLElement).style.display = element.stats.treeComplexity !== undefined ? '' : 'none';
+    if (element.stats.treeComplexity !== undefined) {
+      infoContainer.querySelector('#info-tier').innerHTML = element.stats.treeComplexity ? `Tier ${element.stats.treeComplexity}` : 'Starter';
+      infoContainer.querySelector('#info-tier').setAttribute('data-tier-level', Math.floor(element.stats.treeComplexity / 5).toString());
+    }
+    
+    infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
+    infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Usage');
+
+    
+
+    infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
+      console.log(x);
+      
+      if (x.author) {
+        return `<p>"${x.comment}" - ${x.author}</p>`;
+      }
+      return `<p>${x.comment}</p>`;
+    }).join('');
+    infoContainer.querySelector('#element-data-json').innerHTML = JSON.stringify(element, null, 2);
+    infoContainer.querySelector('#element-css-class').innerHTML = `.${getClassFromDisplay(element.display)}`;
+    infoContainer.querySelector('#element-css-color').innerHTML = Color(getComputedStyle(dom).backgroundColor).hex();
+
+    
+    const fundamentalsDiv = document.getElementById('element-fundamentals');
+    fundamentalsDiv.innerHTML = '';
+    const fundamentalsWithImages = ['fire', 'water', 'air', 'earth'];
+    if(element.stats.fundamentals) {
+      Object.keys(element.stats.fundamentals).forEach((key) => {
+        const root = document.createElement('div');
+        root.classList.add('data-row')
+  
+        if (fundamentalsWithImages.includes(key)) {
+          const img = document.createElement('img');
+          img.src = '/' + key + '.svg';
+          root.appendChild(img);
+        } else {
+          const text = document.createElement('strong');
+          text.innerHTML = escapeHTML(capitalize(key));
+          root.appendChild(text);
+        }
+  
+        const text = document.createElement('span');
+        text.innerHTML = compactMiniNumber(element.stats.fundamentals[key]);
+        root.appendChild(text);
+  
+        fundamentalsDiv.appendChild(root);
+      });
+    }
+
+    (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
+
+    getElementTree(element).then((tree) => {
+      if (tree.parent1) {
+        let left = tree.parent1;
+        let right = tree.parent2 || tree.parent1;
+        (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
+        infoContainer.querySelector('#info-left-element').innerHTML = escapeHTML(left.elem.display.text);
+        infoContainer.querySelector('#info-left-element').setAttribute('style', getCSSFromDisplay(left.elem.display));
+        infoContainer.querySelector('#info-right-element').innerHTML = escapeHTML(right.elem.display.text);
+        infoContainer.querySelector('#info-right-element').setAttribute('style', getCSSFromDisplay(right.elem.display));
+        initTreeCanvas(tree);
+      } else {
+        (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = 'none';
+      }
     });
-    Array.from(document.querySelectorAll('[data-element-plural]')).forEach(elem => {
-      const q = elem.getAttribute('data-element-plural');
-      // const result = '' + query(element, q, 1)[0]
-      // elem.innerHTML = result === '1' ? '' : 's';
-    });
-    infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`
   });
 
   dom.setAttribute('data-element', element.id);
@@ -429,12 +490,14 @@ export function InitElementGameUi() {
       if (infoOpen) {
         infoContainer.style.display = 'none';
         infoOpen = false;
+        endTreeCanvas();
       }
     }
   });
   document.addEventListener('contextmenu', (ev: any ) => {
     if (ev.path && ev.path.includes(infoContainer)) {
       infoOpen = false;
+      endTreeCanvas();
       infoContainer.style.display = 'none';
       ev.preventDefault();
     } else if (holdingElement) {
@@ -444,6 +507,7 @@ export function InitElementGameUi() {
   });
   document.getElementById('element-game-root').addEventListener('scroll', (ev) => {
     infoOpen = false;
+    endTreeCanvas();
     infoContainer.style.display = 'none';
   });
   document.querySelector('.suggest-close').addEventListener('click', (ev) => {
@@ -678,6 +742,18 @@ export function InitElementGameUi() {
     suggestResult.color.lightness = 0;
     updateSuggestion();
   });
+
+  document.querySelectorAll('[data-info-tab]').forEach((elem) => {
+    elem.addEventListener('click', () => {
+      const tab = elem.getAttribute('data-info-tab');
+
+      infoContainer.querySelectorAll('.info-tab,.info-section')
+        .forEach(x => x.classList.remove('selected'));
+
+      infoContainer.querySelector('.info-section-' + tab).classList.add('selected');
+      infoContainer.querySelector('[data-info-tab="'  + tab + '"]').classList.add('selected');
+    })
+  })
 }
 async function getRecentCombinationDOM(rc: ElementalBaseAPI, x: RecentCombination) {
   const root = document.createElement('div');

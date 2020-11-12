@@ -54,30 +54,86 @@
     </div>
   </div>
 </div>
-<div class="info" id='info'>
-  <div class="info-bg"></div>
-  <div class="info-container-wrapper">
-    <div class="info-container">
-      <div class="elem" data-element-info="$.display.text"></div>
-      <div class="info-content">
-        <h3>Element #<span data-element-info='$.id'></span></h3>
-        <p>
-          Created on <span data-element-date='$.createdOn'></span>
-        </p>
-        <p data-element-info="$.comments[0]"></p>
-        <p data-element-info="$.comments[1]"></p>
-        <ul>
-          <li>There are <span data-element-info-hide="parent" data-element-info="$.recipeCount"></span> way<span data-element-plural="$.stats.combosCreatesThis"></span> to make this Element.</li>
-          <li>This Element is used to create <span data-element-info-hide="parent" data-element-info="$.usageCount"></span> Element<span data-element-plural="$.stats.combosThisCreates"></span>.</li>
-          <li>Complexity Level: <span data-element-info-hide="parent" data-element-info="$.treeComplexity"></span></li>
-        </ul>
-        <ul>
-          <li><span data-element-info-hide="parent" data-element-info="$.fundamentals.fire"></span> Fire</li>
-          <li><span data-element-info-hide="parent" data-element-info="$.fundamentals.air"></span> Air</li>
-          <li><span data-element-info-hide="parent" data-element-info="$.fundamentals.earth"></span> Earth</li>
-          <li><span data-element-info-hide="parent" data-element-info="$.fundamentals.water"></span> Water</li>
-        </ul>
+<div id="info">
+  <div class="left">
+    <div class="elem">
+    </div>
+    <div id="info-tier" data-tier-level='0'>
+      Tier 0
+    </div>
+    <div class="tab-list">
+      <div class="info-tab" data-info-tab='info'>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 9H13V7H11V9ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 2C10.6868 2 9.38642 2.25866 8.17317 2.7612C6.95991 3.26375 5.85752 4.00035 4.92893 4.92893C3.05357 6.8043 2 9.34784 2 12C2 14.6522 3.05357 17.1957 4.92893 19.0711C5.85752 19.9997 6.95991 20.7362 8.17317 21.2388C9.38642 21.7413 10.6868 22 12 22C14.6522 22 17.1957 20.9464 19.0711 19.0711C20.9464 17.1957 22 14.6522 22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7362 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2V2ZM11 17H13V11H11V17Z" fill="black"/>
+        </svg>
       </div>
+      <div class="info-tab" data-info-tab='tree'>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="9.04413" y="2.75" width="5.91176" height="5.91176" stroke="black" stroke-width="1.5"/>
+          <rect x="2.86768" y="16.3382" width="5.91176" height="5.91176" stroke="black" stroke-width="1.5"/>
+          <rect x="15.2206" y="16.3382" width="5.91176" height="5.91176" stroke="black" stroke-width="1.5"/>
+          <path d="M12 8.79412V12.5M12 12.5H18.1765V15.5882M12 12.5H5.82355V15.5882" stroke="black" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="info-tab" data-info-tab='debug'>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 8H17.19C16.74 7.2 16.12 6.5 15.37 6L17 4.41L15.59 3L13.42 5.17C12.96 5.06 12.5 5 12 5C11.5 5 11.05 5.06 10.59 5.17L8.41 3L7 4.41L8.62 6C7.87 6.5 7.26 7.21 6.81 8H4V10H6.09C6.03 10.33 6 10.66 6 11V12H4V14H6V15C6 15.34 6.03 15.67 6.09 16H4V18H6.81C8.47 20.87 12.14 21.84 15 20.18C15.91 19.66 16.67 18.9 17.19 18H20V16H17.91C17.97 15.67 18 15.34 18 15V14H20V12H18V11C18 10.66 17.97 10.33 17.91 10H20V8ZM16 15C16 16.0609 15.5786 17.0783 14.8284 17.8284C14.0783 18.5786 13.0609 19 12 19C10.9391 19 9.92172 18.5786 9.17157 17.8284C8.42143 17.0783 8 16.0609 8 15V11C8 9.93913 8.42143 8.92172 9.17157 8.17157C9.92172 7.42143 10.9391 7 12 7C13.0609 7 14.0783 7.42143 14.8284 8.17157C15.5786 8.92172 16 9.93913 16 11V15ZM14 10V12H10V10H14ZM10 14H14V16H10V14Z" fill="black"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="info-section info-section-info">
+      <div style="display:flex;flex-wrap:wrap">
+        <h2 style='flex:1;margin:0;white-space:nowrap' id='element-info-title'></h2>
+        <div id='info-simplest-recipe' style='margin-right:10px;'>
+          <div class="info-equation-container">
+            <div class="elem" id='info-left-element'>
+              
+            </div>
+            <div class="equation-symbol">
+              +
+            </div>
+            <div class="elem p3" id='info-right-element'>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='element-created-date-root' class='data-row'>
+        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M9,10H7V12H9V10M13,10H11V12H13V10M17,10H15V12H17V10M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19Z" />
+        </svg>
+        <span id="element-created-date">
+
+        </span>
+      </div>
+      <div id="element-fundamentals" class='four-column'>
+        
+      </div>
+      <div id='element-recipe-div' class='two-column'>
+        <div id='element-recipe-count' class='data-row'>
+          
+        </div>
+        <div id='element-usage-count' class='data-row'>
+          
+        </div>
+      </div>
+      <div id='element-comments'>
+
+      </div>
+    </div>
+    <canvas class="info-section info-section-tree" id='element-info-tree'>
+
+    </canvas>
+    <div class="info-section info-section-debug" style='user-select:text'>
+      <h2>Element JSON</h2>
+      <pre><code id='element-data-json'></code></pre>
+      <h2>Element CSS</h2>
+      <ul>
+        <li>Class = <code id='element-css-class'></code></li>
+        <li>BGColor = <code id='element-css-color'></code></li>
+      </ul>
     </div>
   </div>
 </div>
@@ -96,9 +152,9 @@
       <div class="settings-category" data-action='server'>
         Server
       </div>
-      <!-- <div class="settings-category" data-action='singleplayer'>
+      <div class="settings-category" data-action='singleplayer'>
         Singleplayer Packs
-      </div> -->
+      </div>
       <div class="settings-category" data-action='stats'>
         Statistics
       </div>
