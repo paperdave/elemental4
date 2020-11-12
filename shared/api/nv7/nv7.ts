@@ -8,7 +8,6 @@ import {foundElement, getFound} from "./savefile";
 import {getElem, getCombination} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
 import {getRecents, waitForNew} from "./recents";
-import {firebaseConfig} from "./creds";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
 	public uid: string
@@ -20,7 +19,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
 			// Initialize Firebase
-			firebase.initializeApp(firebaseConfig);
+			firebase.initializeApp(this.config.firebaseConfig);
 			firebase.analytics();
 			firebase.firestore().enablePersistence().catch(async function(error) {
 				ui.status("Showing Error", 0);
@@ -31,6 +30,8 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 				});
 			});
 		}
+
+		console.log(this.config);
 
 		return await login(this, ui);
   }
