@@ -7,13 +7,14 @@ import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
 import {getElem, getCombination} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
-import {getRecents} from "./recents";
+import {getRecents, waitForNew} from "./recents";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
 	public uid: string
 	public saveFile;
 	public ui;
 	public votesRequired: number = 3;
+	public ref;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
@@ -42,7 +43,10 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 
 		return await login(this, ui);
   }
-  async close(): Promise<void> {return;}
+  async close(): Promise<void> {
+		this.ref.off("value");
+		return;
+	}
   async getStats(): Promise<ServerStats> {
     return {
       totalElements: 0
@@ -99,7 +103,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	}
 
 	async waitForNewRecent(): Promise<void> {
-		throw new Error("Method not implemented");
+		return waitForNew(this);
 	}
 
 	lookupCustomPaletteColor(basePalette: Record<ElementalColorPalette, ThemedPaletteEntry>, string: string): Color {
