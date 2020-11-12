@@ -21,13 +21,15 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 			// Initialize Firebase
 			firebase.initializeApp(this.config.firebaseConfig);
 			firebase.analytics();
-			firebase.firestore().enablePersistence().catch(async function(error) {
-				ui.status("Showing Error", 0);
-				await this.ui.alert({
-					"text": error.message,
-					"title": "Error",
-					"button": "Ok",
-				});
+			firebase.firestore().enablePersistence().catch(async (error) => {
+				if (error.code == 'unimplemented') {
+          ui.status("Showing Error", 0);
+					await this.ui.alert({
+						"text": error.message,
+						"title": "Error",
+						"button": "Ok",
+					});
+      	}
 			});
 		}
 

@@ -3,7 +3,6 @@ import { humanize } from "juration";
 import { ElementalBaseAPI } from "../../shared/elem";
 import { getAPI } from "./api";
 import { getOwnedElements, getStatistics, setStatistics } from "./savefile";
-import localStorage from '../../shared/localStorage';
 
 interface ClientStats {        // check = tracking setup in the game
   startTime: number;           // √

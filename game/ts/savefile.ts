@@ -2,7 +2,6 @@ import { ElementalBaseAPI, SaveFileAPI, getSubAPI, ServerSavefileEntry } from '.
 import { debounce } from '@reverse/debounce';
 import { Store } from '../../shared/store';
 import localForage from '../../shared/localForage';
-import localStorage from '../../shared/localStorage';
 import { escapeHTML } from '../../shared/shared';
 import { connectApi } from './api';
 import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers } from './server-manager';
