@@ -31,8 +31,6 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 			});
 		}
 
-		console.log(this.config);
-
 		return await login(this, ui);
   }
   async close(): Promise<void> {
