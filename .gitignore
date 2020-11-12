@@ -6,4 +6,4 @@ data
 dist_*
 
 # Nv7
-creds.*
+creds.go
