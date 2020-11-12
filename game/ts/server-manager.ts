@@ -16,7 +16,7 @@ export const builtInOfficialServers = [
 export const builtInThirdPartyServers = [
   //'https://elemental.hparcells.tk',
   //'https://dev.elemental5.net/api',
-  'https://nv7-github.github.io/',
+  'https://nv7haven.tk/',
   // 'https://e4api.ledomsoft.com',
 ];
 export const allBuiltInServers = [
