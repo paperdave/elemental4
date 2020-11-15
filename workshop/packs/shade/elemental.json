@@ -1,0 +1,13 @@
+{
+  "type": "pack",
+  "id": "shade",
+  "version": "1.1",
+  "name": "The Shade Pack",
+  "description": "Just a neat pack of elements made with love, care and the souls of the innocent.",
+  "author": "ShadeTheNarwhal",
+  "format": "lite",
+  "icon": "./icon.png",
+  "files": [
+    "./pack.txt"
+  ]
+}

@@ -21,6 +21,10 @@ export function clearSounds() {
   });
 
   urlToHowl = new Map();
+  soundEvents = new Map<string, SoundEntry[]>();
+  musicTracks = new Set<MusicEntry>();
+
+  playMusicTrack(getNextMusic());
 }
 
 let isUnlocked = false;
@@ -29,7 +33,7 @@ let first = true;
 export function playMusicTrack(track) {
   currentTrack = track;
   if(!currentTrack) return;
-  currentTrackHowl = urlToHowl.get(currentTrack.url);
+  currentTrackHowl = urlToHowl.get(currentTrack.url) as Howl;
   if(!currentTrackHowl) return;
   let error = false;
   let timer;
@@ -44,13 +48,13 @@ export function playMusicTrack(track) {
     });
   }
 
-  currentTrackHowlId = currentTrackHowl.play();
   if(first) {
-    currentTrackHowl.fade(0, getConfigNumber('volume-music', 0.5) * 0.5 * (currentTrack.volume ?? 1), 5000, currentTrackHowlId);
+    currentTrackHowl.fade(0, getConfigNumber('volume-music', 0.35) * 0.5 * (currentTrack.volume ?? 1), 5000);
     first = false;
   } else {
-    currentTrackHowl.volume(getConfigNumber('volume-music', 0.5) * 0.5 * (currentTrack.volume ?? 1), currentTrackHowlId);
+    currentTrackHowl.volume(getConfigNumber('volume-music', 0.35) * 0.5 * (currentTrack.volume ?? 1));
   }
+  currentTrackHowlId = currentTrackHowl.play();
   setTimeout(() => {
     let duration
     duration = currentTrackHowl.duration(currentTrackHowlId)
@@ -62,15 +66,17 @@ export function playMusicTrack(track) {
         const next = getNextMusic();
         timer = setTimeout(() => {
           playMusicTrack(next || track);
-        }, duration * 1000 + (next ? 0 : randomInt(5000, 30000)))
+        }, duration * 1000 + (next ? 0 : randomInt(5000, 10000)))
       } else {
         const next = getNextMusic();
-        const loops = randomInt(0, 4) === 0 ? randomInt(4, 12) : 0;
-        if (!next) {
+        if (next) {
+          const loops = randomInt(0, 4) === 0 ? randomInt(4, 12) : 0;
           if(loops === 0) {
             currentTrackHowl.loop(false, currentTrackHowlId);
             currentTrackHowl.once('end', () => {
-              playMusicTrack(next);
+              timer = setTimeout(() => {
+                playMusicTrack(next);
+              }, duration * 1000 + (next ? 0 : randomInt(5000, 10000)))
             })
           } else {
             let loopsSoFar = 0;
@@ -89,7 +95,7 @@ export function playMusicTrack(track) {
             currentTrackHowl.on('end', handler);
           }
         } else {
-
+          currentTrackHowl.loop(true, currentTrackHowlId);
         }
       }
     }
@@ -98,7 +104,7 @@ export function playMusicTrack(track) {
 
 export function updateMusicVolume() {
   if(currentTrackHowl && currentTrackHowlId && currentTrack) {
-    currentTrackHowl.volume(getConfigNumber('volume-music', 0.5) * 0.5 * (currentTrack.volume ?? 1), currentTrackHowlId);
+    currentTrackHowl.volume(getConfigNumber('volume-music', 0.35) * 0.5 * (currentTrack.volume ?? 1), currentTrackHowlId);
   }
 }
 
@@ -107,15 +113,16 @@ export function getNextMusic() {
 }
 
 export function playSound(x: SoundId) {
+  if(Howler.ctx.state !== 'running') return;
   const array = soundEvents.get(x);
   if(!array || array.length === 0) return;
   const sound = randomOf(array);
   if(!sound) return;
   const howl = urlToHowl.get(sound.url);
   if (howl) {
+    const v = getConfigNumber('volume-sounds', 1) * sound.volume;
+    howl.volume(v);
     const x = howl.play();
-    howl.volume(getConfigNumber('volume-sounds', 1) * sound.volume, x);
-    howl.rate(1 + sound.pitch, x)
   }
 }
 

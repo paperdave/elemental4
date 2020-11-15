@@ -1,5 +1,5 @@
 import localForage from '../../shared/localForage';
-import { MountThemeCSS, resetBuiltInThemes } from './theme';
+import { MountThemeCSS, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitSettings } from './settings';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
@@ -11,10 +11,11 @@ import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 import { AlertDialog, PromptDialog } from './dialog';
+import { getConfigBoolean } from './savefile';
+import { Howler } from 'howler';
 
 declare const $production: string;
 declare const $build_date: string;
-declare const $password: string;
 
 const cacheName = 'ELEMENTAL';
 
@@ -62,7 +63,6 @@ async function boot(MenuAPI: MenuAPI) {
         }
 
         window.localForage = localForage;
-        window.localStorage_ = localStorage;
         eval(text);
 
         // pass the current menu api / ui.
@@ -108,6 +108,7 @@ async function boot(MenuAPI: MenuAPI) {
         '/theme_editor',
         '/p5.min.js',
         '/manifest.json',
+        '/chrome-bypass.mp3',
       ].map(async (url, i, a) => {
         await cache.add(url);
         count++;
@@ -154,6 +155,8 @@ async function boot(MenuAPI: MenuAPI) {
   await InitSettings();
   ui.status('Loading Audio', 0);
   await loadSounds();
+  ui.status('Checking for new DLC', 0);
+  await showThemeAddDialog()
   ui.status('Loading Element UI', 0);
   await InitElementGameUi();
 
@@ -171,6 +174,14 @@ async function boot(MenuAPI: MenuAPI) {
 
   localStorage.cache = MenuAPI.cache;
 
+  while (Howler.ctx.state === 'suspended') {
+    await AlertDialog({
+      title: 'Autoplay Disabled',
+      text: 'Your browser does not allow autoplaying audio until the page has been clicked. Please click the button. [Learn More](/chrome_autoplay)',
+    })
+    await delay(350);
+  }
+
   MenuAPI.showGame && MenuAPI.showGame();
 
   localStorage.setItem('auto_start', 'true');
@@ -178,7 +189,10 @@ async function boot(MenuAPI: MenuAPI) {
   await delay(10);
 
   document.getElementById('game').classList.add('animate-in');
-  playSound('startup');
+  if(getConfigBoolean('config-play-startup-sound', true)) {
+    playSound('startup');
+    await delay(500);
+  }
   playMusicTrack(getNextMusic());
 }
 async function kill() {

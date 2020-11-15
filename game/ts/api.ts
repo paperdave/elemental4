@@ -43,14 +43,14 @@ export class NullAPI extends ElementalBaseAPI {
 }
 
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
-  // 'internal:all-colors': DebugAllColorsAPI,
-  //'internal:singleplayer': SingleplayerAPI,
+  'internal:all-colors': DebugAllColorsAPI,
+  'internal:singleplayer': SingleplayerAPI,
   'internal:null': NullAPI,
-  // 'reborn': RebornElementalAPI,
-  // 'elemental4': Elemental4API,
-  // 'elemental5': Elemental5API,
-  // 'e4': LedomElementalAPI,
-  // 'ledom': LedomElementalAPI,
+  'reborn': RebornElementalAPI,
+  'elemental4': Elemental4API,
+  'elemental5': Elemental5API,
+  'e4': LedomElementalAPI,
+  'ledom': LedomElementalAPI,
   'nv7': NV7ElementalAPI,
 };
 
@@ -109,7 +109,9 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
         dialog: CustomDialog,
         popup: (o) => Promise.resolve(null),
       },
-      store: new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
+      store: json.type.startsWith('internal:')
+        ? new ChunkedStore('data.' + json.type.slice(9))
+        : new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
     });
     let isOpen = await api.open(ui);
     if (!isOpen) {

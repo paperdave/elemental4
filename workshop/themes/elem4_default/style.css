@@ -53,6 +53,24 @@ body[data-element-scale="large"] { --element-scale: 1.35; }
     transform: translateY(0px) scale(1);
   }
 }
+@keyframes news-entry-appear {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes news-entry-slide-down {
+  0% {
+    margin-top: -84.4px
+  }
+  100% {
+    margin-top: 0px
+  }
+}
 @keyframes element-appear {
   0% {
     opacity: 0;
@@ -453,8 +471,8 @@ input[type='text'], input[type='password'], input[type='email'] {
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 0 0.5em;
-  padding-bottom: 10px;
   flex: 1;
+  padding-bottom: 50px;
 }
 #element-sidebar {
   background-color: var(--background-main);
@@ -677,8 +695,6 @@ textarea.elem {
   position: fixed;
   background: white;
   border: 1px solid black;
-  top: 50px;
-  left: 50px;
   display: flex;
 }
 #info .left {
@@ -776,7 +792,8 @@ body:not(.config-show-category-names) .category-header {
   display: none;
 }
 body:not(.config-show-category-names) .element-game-root {
-  padding: 0.5em
+  padding: 0.5em;
+  padding-bottom: 58px;
 }
 .category-header {
   margin-bottom: 0;
@@ -1380,4 +1397,20 @@ button.secondary {
 }
 .text-field-label {
   margin-right: 5px;
+}
+[data-volume-display] {
+  width: 30px;
+  display: inline-block;
+}
+#element-sidebar h3 {
+  font-weight: normal;
+  font-size: 1.5em;
+  text-align: center;
+  margin: 16px;
+}
+.news-combo.animate-in {
+  animation: news-entry-appear 0.5s cubic-bezier(0.38, 0, 0, 1) 0.1s both
+}
+.news-combo.animate-in + .news-combo {
+  animation: news-entry-slide-down 0.4s cubic-bezier(.38,0,0,1) 0s both;
 }

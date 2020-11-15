@@ -18,12 +18,12 @@
     "element.valid.rediscover": [{ "url": "sound/element-valid.mp3" }],
     "element.drop": [{ "url": "sound/element-drop.mp3" }],
     "news.new-element": [],
-    "dialog.open": [],
-    "dialog.close": [],
-    "dialog.attention": [],
+    "dialog.open": [{ "url": "sound/popup-open.mp3", "volume": 0.8 }],
+    "dialog.close": [{ "url": "sound/popup-close.mp3", "volume": 0.8 }],
+    "dialog.button": [{ "url": "sound/popup-click.mp3", "volume": 0.65 }],
     "suggest.created": [],
     "suggest.voted": [],
-    "startup": []
+    "startup": [{ "url": "sound/startup.mp3", "volume": 0.4 }]
   },
   "music_merge_mode": "combine",
   "music": [

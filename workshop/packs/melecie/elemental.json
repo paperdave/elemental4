@@ -1,0 +1,13 @@
+{
+  "type": "pack",
+  "id": "melecie",
+  "version": "Beta",
+  "name": "Melecie's Magic",
+  "description": "My take on the classic Elemental formula, with 600+ elements and more coming soon.",
+  "author": "MelecieDiancie",
+  "format": "lite",
+  "icon": "./icon.png",
+  "files": [
+    "./melecie.txt"
+  ]
+}

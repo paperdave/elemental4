@@ -1,7 +1,4 @@
 Element Game
-- Recent Additions
-- Info Panel
-- Other Suggestion Types
 
 Mobile Support
 

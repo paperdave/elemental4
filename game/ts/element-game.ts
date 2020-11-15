@@ -326,7 +326,7 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
     }
   });
 
-  dom.addEventListener('contextmenu', (ev) => {
+  dom.addEventListener('contextmenu', async(ev) => {
     incrementStatistic('infoOpened');
     
     infoContainer.classList.remove('animate-in');
@@ -336,13 +336,21 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
 
     if(!element.stats) element.stats = {};
 
-    dom.style.height = '100px';
+    dom.style.height = '150px';
     dom.style.top = '-10px';
     dom.scrollIntoView({ block: 'nearest' });
     dom.style.height = '';
     dom.style.top = '';
+    await delay(0);
 
     infoContainer.style.display = 'flex';
+    const box = dom.getBoundingClientRect();
+    const x = Math.max(8, Math.min(window.innerWidth - 462 - 8, box.left - 17));
+    const y = Math.max(38, Math.min(window.innerHeight - 402 - 8, box.top - 17));
+    const elemOffsetX = x - (box.top - 17);
+    const elemOffsetY = y - (box.left - 17);
+    infoContainer.style.left = x + 'px';
+    infoContainer.style.top = y + 'px';
     infoContainer.classList.add('animate-in');
     infoOpen = true;
 
@@ -366,10 +374,10 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
       infoContainer.querySelector('#info-tier').setAttribute('data-tier-level', Math.floor(element.stats.treeComplexity / 5).toString());
     }
     
-    if (element.stats.recipeCount) {
+    if (typeof element.stats.recipeCount === 'number') {
       infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
     }
-    if (element.stats.usageCount) {
+    if (typeof element.stats.usageCount === 'number') {
       infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Usage');
     }
 
@@ -789,13 +797,16 @@ export async function InitElementNews() {
     const combinations = await rc.getRecentCombinations(30);
     const newsItems = await Promise.all(combinations.map((x) => getRecentCombinationDOM(rc, x)));
 
-    const sidebar = document.querySelector('#element-sidebar');
-    newsItems.forEach(x => sidebar.appendChild(x));
+    const container = document.querySelector('.news-container');
+    newsItems.forEach(x => container.appendChild(x));
 
     async function onNewRecent() {
       rc.waitForNewRecent().then(onNewRecent);
+      playSound('news.new-element');
       const combo = await rc.getRecentCombinations(1);
-      sidebar.prepend(await getRecentCombinationDOM(rc, combo[0]))
+      const elem = await getRecentCombinationDOM(rc, combo[0]);
+      elem.classList.add('animate-in')
+      container.prepend(elem);
     }
     rc.waitForNewRecent().then(onNewRecent);
   }

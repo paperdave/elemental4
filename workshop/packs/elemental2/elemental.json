@@ -1,7 +1,7 @@
 {
   "type": "pack",
   "id": "elemental2",
-  "version": 1,
+  "version": "2",
   "name": "Elemental 2",
   "description": "Cary's Elemental 2, modified to be completable.",
   "author": "Cary Huang",

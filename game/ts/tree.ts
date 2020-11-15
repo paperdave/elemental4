@@ -11,7 +11,7 @@ interface Tree {
 }
 
 export async function getElementTree(elem: Elem): Promise<Tree|null> {
-  if (elem.stats.simplestRecipe) {
+  if (elem.stats.simplestRecipe && elem.stats.simplestRecipe.length > 0) {
     return {
       elem: elem,
       parent1: await getElementTree(await getAPI().getElement(elem.stats.simplestRecipe[0])),

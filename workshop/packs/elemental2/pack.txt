@@ -18,10 +18,11 @@ description=Cary's Elemental 2, modified to be completable.
 author=Cary Huang
 icon=./icon.png
 
-# The base pack includes the four classical elements.
-import base
-
-# Colors
+# Categories
+Air:                       #B4D8FC
+Earth:                     #B79370
+Fire:                      #FF934C
+Water:                     #4C93FF
 Space:                     #4C4C4C
 Beverages:                 #B77093
 Materials:                 #EAD4B2
@@ -43,6 +44,12 @@ Existential Crisis Causes: #400080
 People:                    #C6995B
 Events:                    #E0E0E0
 Civilization:              #907070
+
+# Starter Elements
+Air (Air)
+Earth (Earth)
+Fire (Fire)
+Water (Water)
 
 # Elements
 Air + Earth = Dust (Air)

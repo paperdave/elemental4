@@ -265,7 +265,9 @@ export async function MountThemeCSS() {
   await delay(100)
   init = true;
   await updateMountedCss();
+}
 
+export async function showThemeAddDialog() {
   try {
     const obj = JSON.parse(localStorage.getItem('workshop_add'))
     localStorage.removeItem('workshop_add');
@@ -278,6 +280,7 @@ export async function MountThemeCSS() {
         await addDLCByUrl(obj.url, obj.type);
       }
     }
+    localStorage.setItem('close_workshop_dialog', obj.date)
   } catch (error) {
     
   }
@@ -299,8 +302,8 @@ export async function MountThemeCSS() {
         localStorage.removeItem('workshop_add');
         if (obj.url && obj.type) {
           await addDLCPopup(obj.url, obj.type);
-          localStorage.setItem('close_workshop_dialog', obj.date)
         }
+        localStorage.setItem('close_workshop_dialog', obj.date)
       } catch (error) {
 
       }

@@ -112,14 +112,14 @@
     .theme-description {
       position: absolute;
       left: 0;
-      width: 207.71px;
       bottom: 0;
       height: 37px;
-      
       margin-bottom: 4px;
       overflow: hidden;
-      white-space:pre-wrap;
+      white-space: pre-wrap;
       text-overflow: ellipsis;
+      font-size: 15px;
+      width: 350px;
     }
     @keyframes dialog-open {
       0% {
@@ -151,7 +151,7 @@
       }
     }
     .dialog {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       right: 0;
@@ -202,6 +202,24 @@
   </style>
 </head>
 <body>
+  <audio
+    style='display:none'
+    src="/chrome-bypass.mp3"
+    autoplay
+    id='video-bypass'
+    controls
+  ></audio>
+  <script>
+    setTimeout(() => {
+      const v = document.getElementById('video-bypass');
+      try {
+        v.onended = () => v.remove();
+        if(!v.currentTime)v.play().catch(x => ['click', 'touchend'].map((e) => document.addEventListener(e, () => {
+          if(v && !v.currentTime) v.play();
+        })));
+      } catch (error) {}
+    });
+  </script>
   <section id='content'>
     <h1>
       <svg width="490" viewBox="0 0 379 66" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Elemental 4: DLC Workshop">
@@ -345,5 +363,14 @@
     })
 
   </script>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
 </body>
 </html>

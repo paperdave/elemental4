@@ -11,34 +11,38 @@
   "sounds": {
     "element.combine": [
       {
-        "url": "./present.wav"
+        "url": "./present.wav",
+        "volume": 0.9
       }
     ],
     "element.invalid": [
       {
-        "url": "./error.wav"
+        "url": "./error.wav",
+        "volume": 0.9
       }
     ],
     "element.pickup": [
       {
         "url": "./cursverti.wav",
-        "volume": 0.9
+        "volume": 0.8
       }
     ],
     "element.valid": [
       {
-        "url": "./itemget2.wav"
+        "url": "./itemget2.wav",
+        "volume": 0.75
       }
     ],
     "element.valid.rediscover": [
       {
-        "url": "./itemget1.wav"
+        "url": "./itemget1.wav",
+        "volume": 0.75
       }
     ],
     "element.drop": [
       {
         "url": "./statsdown.wav",
-        "volume": 0.85
+        "volume": 0.3
       }
     ],
     "news.new-element": [
@@ -51,14 +55,15 @@
         "url": "./click.wav"
       }
     ],
-    "dialog.close": [
+    "dialog.button": [
       {
-        "url": "./dooropen1.wav"
+        "url": "./click.wav"
       }
     ],
-    "dialog.attention": [
+    "dialog.close": [
       {
-        "url": "./miss.wav"
+        "url": "./dooropen1.wav",
+        "volume": 0.7
       }
     ],
     "suggest.created": [
@@ -73,7 +78,8 @@
     ],
     "startup": [
       {
-        "url": "./boss.wav"
+        "url": "./boss.wav",
+        "volume": 0.8
       }
     ]
   }

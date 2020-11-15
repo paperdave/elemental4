@@ -22,11 +22,11 @@
       text-align: left;
     }
     a {
-      color: cornflowerblue;
+      color: #F8571C;
       text-decoration: none;
     }
     a:hover {
-      color: blue;
+      color: coral;
       text-decoration: underline;
     }
     a:active {
@@ -36,6 +36,24 @@
   </style>
 </head>
 <body>
+  <audio
+    style='display:none'
+    src="/chrome-bypass.mp3"
+    autoplay
+    id='video-bypass'
+    controls
+  ></audio>
+  <script>
+    setTimeout(() => {
+      const v = document.getElementById('video-bypass');
+      try {
+        v.onended = () => v.remove();
+        if(!v.currentTime)v.play().catch(x => ['click', 'touchend'].map((e) => document.addEventListener(e, () => {
+          if(v && !v.currentTime) v.play();
+        })));
+      } catch (error) {}
+    });
+  </script>
   <section id='content'>
     <h1>
       <svg width="380" viewBox="0 0 320 66" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Elemental 4">
@@ -46,12 +64,12 @@
     </h1>
     <h2>Privacy Policy</h2>
     <p>
-      This is an informal piece of writing, since I'm not a fancy legal person.
+      This is an informal piece of writing, since I'm not a fancy legal person. These terms apply to the Elemental4.net client app, and also the "official servers" that it connects to. You can change servers in the Menu->Server->Change Server.
     </p>
     <h3>Third Party Servers</h3>
     <p>
       By using a third party server, you agree to their rules. I don't know them. There are some third party servers added
-      in the main game, but they are not enabled by default.
+      in the main game, but they are not used by default, but your browser will send a request to get it's metadata.
     </p>
     <h3>Voting and IP Addresses</h3>
     <p>

@@ -1,0 +1,1081 @@
+# Colors
+Air: #B4D8FC
+Earth: #B79370
+Fire: #FF934C
+Water: #0088FF
+Science: #9A79C9
+Machines: #6090A0
+Life: #D9C470
+Plantlife: #4CDB4C
+Cosmic: #0C1436
+Mind: #854E65
+Locations: #415761
+Tools: #B0B0B0
+Myth: #CD48DB
+Food: #294729
+Events: #E0E0E0
+Society: #907070
+People and Companies: #263329
+DC Comics: #1D69CC
+Marvel Comics: #FF0000
+Nintendo: #FF5252
+Video Games: #ABA78D
+Miscellaneous Franchises: #CCA324
+
+# Base Elements
+Air (Air)
+Earth (Earth)
+Fire (Fire)
+Water (Water)
+Space (Science)
+Time (Science)
+
+# Elements
+Fire + Air = Energy (Science)
+Earth + Time = Dust (Air)
+Air + Earth = Dust (Air)
+Air + Water = Cloud (Air)
+Earth + Fire = Magma (Fire)
+Energy + Fire = Heat (Fire)
+Earth + Water = Mud (Earth)
+Mud + Fire = Clay (Earth)
+Fire + Water = Steam (Air)
+Space + Space = Outer Space (Cosmic)
+Outer Space + Outer Space = Universe (Cosmic)
+Universe + Universe = Multiverse (Cosmic)
+Outer Space + Air = Vacuum (Science)
+Outer Space + Earth = Planet (Cosmic)
+Outer Space + Fire = Star (Cosmic)
+Earth + Earth = Ground (Earth)
+Ground + Ground = Mountain (Earth)
+Mountain + Mountain = Mountain Range (Locations)
+Air + Air = Wind (Air)
+Water + Water = Lake (Water)
+Lake + Lake = Ocean (Water)
+Outer Space + Heat = Cold (Air)
+Space + Energy = Motion (Science)
+Motion + Space = Time (Science)
+Water + Space = Liquid (Science)
+Earth + Space = Solid (Science)
+Fire + Space = Plasma (Fire)
+Air + Space = Gas (Science)
+Gas + Planet = Gas Giant (Cosmic)
+Energy + Clay = Life (Life)
+Life + Clay = Human (Life)
+Life + Water = Plankton (Life)
+Plankton + Plankton = Bug (Life)
+Plankton + Time = Fish (Life)
+Plankton + Energy = Human (Life)
+Plankton + Grass = Bug (Life)
+Grass + Life = Bug (Life)
+Bug + Darkness = Spider (Life)
+Bug + Evil = Spider (Life)
+Spider + Human = Spider Man (Marvel Comics)
+Spider + Man = Spider Man (Marvel Comics)
+Spider + Woman = Spider Woman (Marvel Comics)
+Spider + Woman = Spider Gwen (Marvel Comics)
+Life + Lake = Fish (Life)
+Time + Plankton = Fish (Life)
+Life + Ocean = Fish (Life)
+Air + Life = Bird (Life)
+Bird + Fire = Pheonix (Myth)
+Bird + Lake = Duck (Life)
+Bird + Water = Pelican (Life)
+Bird + Earth = Ostrich (Life)
+Bird + Ice = Penguin (Life)
+Fish + Earth = Frog (Life)
+Frog + Love = Royalty (Society)
+Royalty + Metal = Gold (Tools)
+Gold + Diamond = Ring (Tools)
+Water + Ground = Swamp (Locations)
+Water + Frog = Swamp (Locations)
+Swamp + Life = Crocodile (Life)
+Swamp + Human = Ogre (Myth)
+Bird + Darkness = Bat (Life)
+Human + Motion = Running (Society)
+Human + Outer Space = Astronaut (Society)
+Human + Human = Sensation (Mind)
+Sensation + Fire = Anger (Mind)
+Wind + Water = Waves (Water)
+Waves + Waves = Audio (Science)
+Heat + Air = Light (Tools)
+Audio + Sensation = Music (Society)
+Audio + Human = Music (Society)
+Human + Music = Musician (Society)
+Light + Sensation = Happiness (Mind)
+Happiness + Anger = Revenge (Mind)
+Sensation + Water = Sadness (Mind)
+Anger + Sadness = Hatred (Mind)
+Sadness + Time = Depression (Mind)
+Happiness + Time = Mania (Mind)
+Mania + Depression = Bipolar Disorder (Mind)
+Heat + Cold = Electricity (Tools)
+Electricity + Cloud = Storm (Air)
+Weather + Electricity = Storm (Air)
+Water + Cloud = Rain (Water)
+Water + Cold = Ice (Water)
+Ice + Cloud = Snow (Water)
+Ice + Rain = Hail (Water)
+Human + Happiness = Love (Mind)
+Sensation + Solid = Concept (Mind)
+Concept + Concept = Duality (Mind)
+Duality + Human = Man (Life)
+Duality + Human = Woman (Life)
+Man + Woman = Sex (Life)
+Fire + Darkness = Light (Tools)
+Planet + Heat = Mercury (Cosmic)
+Planet + Fire = Venus (Cosmic)
+Planet + Red = Mars (Cosmic)
+Planet + Ice = Uranus (Cosmic)
+Uranus + Ice = Neptune (Cosmic)
+Uranus + Cold = Neptune (Cosmic)
+Planet + Ocean = Planet Earth (Cosmic)
+Planet + Water = Planet Earth (Cosmic)
+Planet Earth + Life = Human (Life)
+Planet + Wind = Jupiter (Cosmic)
+Gas Giant + Wind = Jupiter (Cosmic)
+Planet + Ring = Saturn (Cosmic)
+Gas Giant + Ring = Saturn (Cosmic)
+Space + Time = Reality (Cosmic)
+Outer Space + Stone = Moon (Cosmic)
+Moon + Ocean = Waves (Water)
+Moon + Man = Man on the Moon (Myth)
+Moon + Human = Astronaut (Society)
+Star + Planet = Sun (Fire)
+Star + Planet Earth = Sun (Fire)
+Reality + Concept = Opposite (Mind)
+Opposite + Reality = Fiction (Society)
+Opposite + Fire = Water (Water)
+Water + Opposite = Fire (Fire)
+Earth + Opposite = Air (Air)
+Air + Opposite = Earth (Earth)
+Sex + Opposite = Transgender (Life)
+Light + Electricity = Flashlight (Machines)
+Light + Light = Colour (Mind)
+Colour + Fire = Orange (Mind)
+Colour + Magma = Red (Mind)
+Colour + Water = Blue (Mind)
+Red + Blue = Purple (Mind)
+Colour + Electricity = Yellow (Mind)
+Ground + Life = Grass (Plantlife)
+Earth + Life = Grass (Plantlife)
+Grass + Colour = Green (Mind)
+Colour + Outer Space = Black (Mind)
+Colour + Light = White (Mind)
+White + Red = Pink (Mind)
+Black + White = Grey (Mind)
+Black + Opposite = White (Mind)
+White + Opposite = Black (Mind)
+Red + Yellow = Orange (Mind)
+Yellow + Blue = Green (Mind)
+Light + Opposite = Darkness (Science)
+Grass + Grass = Flower (Plantlife)
+Grass + Grass = Tree (Plantlife)
+Tree + Fire = Charcoal (Earth)
+Ground + Earth = Stone (Earth)
+Earth + Earth = Stone (Earth)
+Grass + Stone = Moss (Plantlife)
+Grass + Water = Algae (Plantlife)
+Grass + Ocean = Seaweed (Plantlife)
+Moss + Fire = Marijuana (Plantlife)
+Marijuana + Human = Drugs (Tools)
+Darkness + Human = Evil (Mind)
+Evil + Opposite = Good (Mind)
+Good + Opposite = Evil (Mind)
+Evil + Human = Criminal (Society)
+Air + Electricity = Storm (Air)
+Criminal + Love = Sexual Assault (Events)
+Criminal + Death = Murder (Events)
+Criminal + Opposite = Police (Society)
+Police + Police = Vigilante (Society)
+Vigilante + Vigilante = Superhero (Myth)
+Life + Opposite = Death (Life)
+Death + Life = Zombie (Myth)
+Death + Human = Death (Life)
+Death + Sadness = Grief (Mind)
+Death + Depression = Suicide (Events)
+Death + Liquid = Poison (Tools)
+Death + Gas = Toxic Gas (Tools)
+Death + Human = Corpse (Life)
+Corpse + Fire = Cremation (Events)
+Death + Fire = Incineration (Events)
+Death + Water = Drowning (Events)
+Human + Water = Sailor (Society)
+Human + Ocean = Mermaid (Myth)
+Human + Rain = Weatherman (Society)
+Human + Snow = Snowman (Water)
+Human + Metal = Knight (Society)
+Human + Sword = Knight (Society)
+Human + Fish = Mermaid (Myth)
+Human + Fish = Fisherman (Society)
+Metal + Murder = Blade (Tools)
+Metal + Steam = Engine (Machines)
+Metal + Motion = Engine (Machines)
+Engine + Human = Car (Machines)
+Engine + Metal = Train (Machines)
+Engine + Ocean = Submarine (Machines)
+Engine + Air = Plane (Machines)
+Metal + Metal = Iron (Tools)
+Iron + Man = Iron Man (Marvel Comics)
+Iron Man + Gun = War Machine (Marvel Comics)
+Iron Man + Woman = Ironheart (Marvel Comics)
+Blade + Blade = Sword (Tools)
+Blade + Blade = Scissors (Tools)
+Blade + Human = Blood (Life)
+Blood + Human = Doctor (Society)
+Blade + Doctor = Syringe (Tools)
+Blood + Human = Vampire (Myth)
+Vampire + Sun = Dust (Air)
+Blade + Vigilante = Eric Brooks (Marvel Comics)
+Vampire + Vigilante = Morbius (Marvel Comics)
+Blade + Tree = Axe (Tools)
+Blade + Tree = Wood (Tools)
+Man + Snow = Snowman (Water)
+Planet Earth + Wind = Weather (Air)
+Planet Earth + Air = Weather (Air)
+Weather + Wind = Hurricane (Air)
+Wind + Cloud = Hurricane (Air)
+Wind + Cloud = Weather (Air)
+Hurricane + Hurricane = Tornado (Air)
+Heat + Cloud = Storm (Air)
+Heat + Cloud = Tornado (Air)
+Tornado + Fire = Fire Tornado (Fire)
+Tornado + Dust = Dust Devil (Earth)
+Tornado + Water = Waterspout (Water)
+Electricity + Stone = Metal (Tools)
+Metal + Water = Bucket (Tools)
+Metal + Water = Pipes (Tools)
+Metal + Criminal = Handcuffs (Tools)
+Metal + Police = Gun (Tools)
+Metal + Fire = Oven (Tools)
+Metal + Crystal = Jewelry (Tools)
+Pipes + Fire = Tobacco (Plantlife)
+Fire + Grass = Tobacco (Plantlife)
+Metal + Human = Money (Tools)
+Money + Human = Millionaire (Society)
+Bat + Millionaire = Batman (DC Comics)
+Iron + Millionaire = Iron Man (Marvel Comics)
+Money + Concept = Trade (Society)
+Metal + Electricity = Circuit (Machines)
+Circuit + Circuit = Computer (Machines)
+Music + Computer = Dubstep (Society)
+Computer + Life = Artificial Intelligence (Machines)
+Computer + Human = Cyborg (Myth)
+Cyborg + Computer = Robot (Myth)
+Cyborg + Superhero = Vic Stone (DC Comics)
+Spider + Water = Octopus (Life)
+Octopus + Cyborg = Doctor Octopus (Marvel Comics)
+Metal + Alien = UFO (Machines)
+Dust + Fire = Gunpowder (Tools)
+Gunpowder + Fire = Explosion (Fire)
+Explosion + Explosion = Nuclear Explosion (Events)
+Human + Bat = Man Bat (DC Comics)
+Bat + Superhero = Batman (DC Comics)
+Bat + Vigilante = Batman (DC Comics)
+Life + Outer Space = Alien (Life)
+Alien + Superhero = Superman (DC Comics)
+Alien + Superhero = Supergirl (DC Comics)
+Superman + Planet = Krypton (DC Comics)
+Supergirl + Planet = Krypton (DC Comics)
+Fish + Superhero = Aquaman (DC Comics)
+Fish + Superhero = Namor (Marvel Comics)
+Fish + Royalty = Aquaman (DC Comics)
+Fish + Royalty = Namor (Marvel Comics)
+Ocean + Superhero = Aquaman (DC Comics)
+Ocean + Superhero = Namor (Marvel Comics)
+Ocean + Royalty = Aquaman (DC Comics)
+Ocean + Royalty = Namor (Marvel Comics)
+Aquaman + Evil = Ocean Master (DC Comics)
+Stone + Water = Sand (Earth)
+Sand + Sand = Desert (Earth)
+Desert + Life = Snake (Life)
+Desert + Life = Scorpion (Life)
+Scorpion + Water = Poison (Tools)
+Scorpion + Liquid = Poison (Tools)
+Snake + Water = Poison (Tools)
+Snake + Liquid = Poison (Tools)
+Snake + Snake = Cobra (Life)
+Sand + Water = Beach (Locations)
+Beach + Bird = Seagull (Life)
+Sand + Human = Sandman (Myth)
+Sandman + Evil = The Sandman (Marvel Comics)
+Sandman + Criminal = The Sandman (Marvel Comics)
+Pipes + Human = Plumber (Society)
+Plumber + Fire = Mario (Nintendo)
+Plumber + Fire = Luigi (Nintendo)
+Mario + Opposite = Wario (Nintendo)
+Luigi + Opposite = Waluigi (Nintendo)
+Flower + Bug = Bee (Life)
+Flower + Human = Nymph (Myth)
+Fruit + Woman = Princess Peach (Nintendo)
+Flower + Woman = Princess Daisy (Nintendo)
+Fruit + Royalty = Princess Peach (Nintendo)
+Flower + Royalty = Princess Daisy (Nintendo)
+Water + Solid = Ice (Water)
+Stone + Energy = Crystal (Earth)
+Crystal + Red = Ruby (Earth)
+Crystal + Blue = Sapphire (Earth)
+Crystal + Green = Emerald (Earth)
+Crystal + Stone = Diamond (Earth)
+Crystal + Energy = Diamond (Earth)
+Stone + Blue = Lapis Lazuli (Earth)
+Tree + Tree = Forest (Locations)
+Forest + Rain = Rainforest (Locations)
+Forest + Rain = Jungle (Locations)
+Forest + Water = Jungle (Locations)
+Mud + Mud = Mudslide (Events)
+Snow + Snow = Avalanche (Events)
+Water + Gun = Water Gun (Tools)
+Fire + Gun = Flamethrower (Tools)
+Gun + Metal = Cannon (Tools)
+Light + Gun = Laser (Tools)
+Forest + Fire = Forest Fire (Events)
+Grass + Earth = Wheat (Food)
+Grass + Ground = Wheat (Food)
+Water + Ground = Soil (Earth)
+Soil + Life = Seeds (Plantlife)
+Seeds + Time = Fruit (Food)
+Seeds + Soil = Fruit (Food)
+Fruit + Grass = Sugar (Food)
+Fruit + Earth = Vegetable (Food)
+Fruit + Opposite = Vegetable (Food)
+Fruit + Orange = Orange Fruit (Food)
+Fruit + Red = Apple (Food)
+Fruit + Yellow = Banana (Food)
+Fruit + Yellow = Lemon (Food)
+Fruit + Green = Lime (Food)
+Fruit + Blue = Blueberry (Food)
+Fruit + Purple = Grape (Food)
+Grape + Water = Wine (Food)
+Wheat + Water = Beer (Food)
+Sugar + Pink = Bubblegum (Food)
+Fruit + Ground = Vegetable (Food)
+Vegetable + Fire = Pepper (Food)
+Vegetable + Orange = Carrot (Food)
+Carrot + Life = Rabbit (Life)
+Carrot + Barn Animals = Rabbit (Life)
+Rabbit + Rabbit = Sex (Life)
+Sugar + Sugar = Candy (Food)
+Candy + Human = Diabetes (Life)
+Sugar + Stone = Salt (Earth)
+Stone + Ocean = Salt (Earth)
+Ocean + Water = Salt (Earth)
+Sugar + Water = Soda (Food)
+Sugar + Water = Syrup (Food)
+Soda + Red = Coca Cola (People and Companies)
+Soda + Blue = Pepsi (People and Companies)
+Soda + Mountain = Mountain Dew (People and Companies)
+Mountain Dew + Human = Gamer (Society)
+Soda + Green = 7Up (People and Companies)
+Soda + Orange = Fanta (People and Companies)
+Soda + Orange Fruit = Fanta (People and Companies)
+Stone + Tree = Building (Locations)
+Stone + Wood = Building (Locations)
+Clay + Tree = Building (Locations)
+Clay + Wood = Building (Locations)
+Human + Stone = Building (Locations)
+Building + Human = House (Locations)
+House + House = Mansion (Locations)
+House + Luigi = Mansion (Locations)
+House + Princess Peach = Castle (Locations)
+House + Stone = Castle (Locations)
+House + Royalty = Castle (Locations)
+Building + Building = Town (Locations)
+Town + Town = City (Locations)
+City + Outer Space = Intergalactic City (Locations)
+Concept + Space = Atom (Science)
+Atom + Concept = Quantum Physics (Science)
+Atom + Human = The Atom (DC Comics)
+Atom + Human = Atomica (DC Comics)
+Atom + Man = The Atom (DC Comics)
+Atom + Woman = Atomica (DC Comics)
+Woman + Superhero = Wonder Woman (DC Comics)
+Running + Electricity = The Flash (DC Comics)
+The Flash + Opposite = Reverse Flash (DC Comics)
+Metal + Diamond = Ring (Tools)
+Ring + Light = Power Ring (DC Comics)
+Ring + Energy = Power Ring (DC Comics)
+Power Ring + Green = Green Lantern (DC Comics)
+Power Ring + Red = Atrocitus (DC Comics)
+Power Ring + Orange = Larfleeze (DC Comics)
+Power Ring + Yellow = Sinestro (DC Comics)
+Green Lantern + Evil = Sinestro (DC Comics)
+Power Ring + Blue = Saint Walker (DC Comics)
+Power Ring + Purple = Indigo One (DC Comics)
+Power Ring + Pink = Star Sapphire (DC Comics)
+Power Ring + White = White Lantern (DC Comics)
+Power Ring + Black = Black Hand (DC Comics)
+Metal + Metal = Dumbbell (Tools)
+Dumbbell + Human = Fighter (Society)
+Fighter + Woman = Amazon (Myth)
+Amazon + Superhero = Wonder Woman (DC Comics)
+Metal + Knight = Sword (Tools)
+Metal + Knight = Shield (Tools)
+Shield + Fighter = Captain America (Marvel Comics)
+Shield + Superhero = Captain America (Marvel Comics)
+Superhero + Anger = The Hulk (Marvel Comics)
+Superhero + Storm = Thor Odinson (Marvel Comics)
+Magma + Water = Obsidian (Earth)
+Magma + Water = Stone (Earth)
+Atom + Superhero = The Atom (DC Comics)
+Revenge + Music = Minecraft (Video Games)
+Concept + Human = Philosopher (Society)
+Concept + Human = Scientist (Society)
+Light + Darkness = Opposite (Mind)
+Grey + Life = Alien (Life)
+Sand + Fire = Glass (Tools)
+Sand + Heat = Glass (Tools)
+Sand + Electricity = Glass (Tools)
+Glass + Glass = Glasses (Tools)
+Glass + House = Windows (Tools)
+Building + Water = Aquarium (Locations)
+Building + Fire = Fire Department (Locations)
+Fire Department + Human = Firefighter (Society)
+Building + Life = Zoo (Locations)
+Building + Electricity = Factory (Locations)
+Building + Computer = Factory (Locations)
+Building + Scissors = Barbershop (Locations)
+Building + Grass = Barn (Locations)
+Barn + Life = Barn Animals (Life)
+Life + Ground = Barn Animals (Life)
+Barn + Human = Farmer (Society)
+Windows + Computer = Microsoft (People and Companies)
+Steam + Computer = Valve (People and Companies)
+Microsoft + Windows = Computer (Machines)
+Planet Earth + Heat = Global Warming (Events)
+Planet Earth + Fire = Apocalypse (Events)
+Planet + Death = Apocalypse (Events)
+Planet Earth + Death = Apocalypse (Events)
+Human + Time = Age (Life)
+Life + Time = Evolution (Life)
+Evolution + Opposite = Monkey (Life)
+Life + Time = Immortality (Myth)
+Immortality + Death = Opposite (Mind)
+Royalty + Wood = Chess (Tools)
+Wood + Energy = Paper (Tools)
+Paper + Tobacco = Cigarette (Tools)
+Paper + Royalty = Cards (Tools)
+Cards + Human = Stage Magician (Society)
+Cards + Sex = Cards Against Humanity (People and Companies)
+Cards + Magic = Tarot Cards (Myth)
+Paper + Scissors = Confetti (Tools)
+Paper + Fire = Bonfire (Fire)
+Paper + Water = Toilet Paper (Tools)
+Life + Grass = Barn Animals (Life)
+Barn Animals + Mud = Pig (Life)
+Barn Animals + Grass = Cow (Life)
+Barn Animals + Water = Duck (Life)
+Barn Animals + Running = Horse (Life)
+Pig + Blade = Bacon (Food)
+Pig + Death = Pork (Food)
+Horse + Human = Centaur (Myth)
+Cow + Blade = Ribs (Food)
+Cow + Death = Steak (Food)
+Steak + Pork = Filet Mignon (Food)
+Cow + Liquid = Milk (Food)
+Cow + Water = Milk (Food)
+Milk + Sugar = Coffee (Food)
+Tree + Sugar = Chocolate (Food)
+Chocolate + Cold = Mint (Food)
+Milk + Chocolate = Milk Chocolate (Food)
+Electricity + Criminal = Electro (Marvel Comics)
+Electricity + Vigilante = Static Shock (DC Comics)
+Electricity + Superhero = Black Lightning (DC Comics)
+Salt + Human = Overwatch (Video Games)
+Salt + Human = Video Games (Video Games)
+Beer + Human = Happiness (Mind)
+Beer + Human = Alcoholic (Society)
+Wine + Human = Happiness (Mind)
+Wine + Human = Alcoholic (Society)
+Anger + Video Games = Rage Quit (Events)
+Rage Quit + Life = Suicide (Events)
+Alien + Planet Earth = Area 51 (Locations)
+Police + Criminal = Handcuffs (Tools)
+Vigilante + Criminal = Murder (Events)
+Criminal + Building = Prison (Locations)
+Obsidian + Fire = Hell (Locations)
+Hell + Life = Demon (Myth)
+Heaven + Life = Angel (Myth)
+Demon + Opposite = Angel (Myth)
+Angel + Opposite = Demon (Myth)
+Hell + Opposite = Heaven (Locations)
+Heaven + Hell = Purgatory (Locations)
+Zombie + Revenge = Ghost (Myth)
+Death + Revenge = Ghost (Myth)
+Ghost + Superhero = Deadman (DC Comics)
+Alcoholic + Depression = Suicide (Events)
+Spider + Sensation = Fear (Mind)
+Darkness + Sensation = Fear (Mind)
+Darkness + Music = Emo (Society)
+Metal + Music = Rock Music (Society)
+Spider Gwen + Music = Rock Music (Society)
+Wheat + Fire = Bread (Food)
+Bread + Bread = Sandwich (Food)
+Sandwich + Steak = Burger (Food)
+Burger + Burger = McDonalds (People and Companies)
+Burger + Vegetable = Subway (People and Companies)
+Burger + Royalty = Burger King (People and Companies)
+Burger + Sadness = Chuck E Cheese (People and Companies)
+Burger + Fear = Chuck E Cheese (People and Companies)
+Lake + Air = Bubbles (Water)
+Ocean + Air = Bubbles (Water)
+Bubbles + Water = Sparkling Water (Food)
+Bread + Syrup = Pancakes (Food)
+Syrup + Soda = Root Beer (Food)
+Burger + Root Beer = A&W (Food)
+Zombie + Life = Human (Life)
+Alien + Blood = Acid (Science)
+Acid + Opposite = Base (Science)
+Base + Opposite = Acid (Science)
+Plankton + Burger = Krabby Patty (Food)
+Lemon + Water = Lemonade (Food)
+Duck + Lemonade = Meme (Society)
+Meme + Ogre = Shrek (Miscellaneous Franchises)
+Planet Earth + Energy = Life (Life)
+Life + Vegetable = Mushroom (Food)
+Life + Fruit = Mushroom (Food)
+Earth + Energy = Life (Life)
+Earth + Energy = Earthquake (Events)
+Sand + Storm = Sandstorm (Earth)
+Sandstorm + Music = Meme (Society)
+Gun + Human = Death (Life)
+Gun + Criminal = Murder (Events)
+Happiness + Computer = Video Games (Video Games)
+Video Games + Gun = Call of Duty (Video Games)
+Video Games + Human = Gamer (Society)
+Video Games + Life = Artificial Intelligence (Machines)
+Video Games + Plumber = Mario (Nintendo)
+Video Games + Plumber = Luigi (Nintendo)
+Video Games + Running = QWOP (Video Games)
+Video Games + Running = Sonic The Hedgehog (Video Games)
+Video Games + Alien = Metroid (Nintendo)
+Video Games + Criminal = Grand Theft Auto (Video Games)
+Video Games + Vampire = Castlevania (Video Games)
+Video Games + Darkness = Dark Souls (Video Games)
+Video Games + Chuck E Cheese = Five Nights at Freddys (Video Games)
+Video Games + Astronaut = No Mans Sky (Video Games)
+Video Games + Music = Guitar Hero (Video Games)
+Music + Wood = Guitar (Tools)
+Guitar + Video Games = Guitar Hero (Video Games)
+Video Games + Ocean = Subnautica (Video Games)
+Video Games + Hell = Devil May Cry (Video Games)
+Video Games + Revenge = Minecraft (Video Games)
+Video Games + Love = Doki Doki Literature Club (Video Games)
+Video Games + Depression = Celeste (Video Games)
+Video Games + Mountain = Celeste (Video Games)
+Fiction + Music = Musical (Society)
+Musical + Artificial Intelligence = Be More Chill (Miscellaneous Franchises)
+Musical + Mountain Dew = Be More Chill (Miscellaneous Franchises)
+Musical + Computer = Be More Chill (Miscellaneous Franchises)
+Musical + Ogre = Shrek (Miscellaneous Franchises)
+Musical + Murder = Heathers (Miscellaneous Franchises)
+Fiction + Outer Space = Science Fiction (Society)
+Science Fiction + Time = Time Travel (Science)
+Time Travel + Space = Doctor Who (Miscellaneous Franchises)
+Time Travel + Outer Space = Doctor Who (Miscellaneous Franchises)
+Fiction + Time = Legend (Myth)
+Fiction + Energy = Magic (Myth)
+Magic + Human = Wizard (Myth)
+Wizard + Evil = Warlock (Myth)
+Wizard + Fiction = Harry Potter (Miscellaneous Franchises)
+Wizard + Fantasy = Harry Potter (Miscellaneous Franchises)
+Concept + Paper = Book (Tools)
+Human + Paper = Book (Tools)
+Paper + Paper = Book (Tools)
+Book + Magic = Religion (Society)
+Book + Warlock = Necronomicon (Myth)
+Book + Wizard = Spellbook (Myth)
+Religion + Life = Deity (Myth)
+Religion + Human = Believer (Society)
+Religion + Building = Church (Locations)
+Life + Death = Reincarnation (Myth)
+Reincarnation + Religion = Buddhism (Society)
+Religion + Book = Christianity (Society)
+Magic + Cards = Magic The Gathering (People and Companies)
+Magic + Fiction = Fantasy (Society)
+Fantasy + Science Fiction = Crossover (Society)
+Crossover + Mario = Super Smash Bros (Nintendo)
+Crossover + Link = Super Smash Bros (Nintendo)
+Super Smash Bros + Light = Galeem (Nintendo)
+Super Smash Bros + Darkness = Dharkon (Nintendo)
+Fiction + Darkness = Horror (Society)
+Horror + Video Game = Outlast (Video Games)
+Horror + Ocean = Leviathan (Myth)
+Legend + Energy = Magic (Myth)
+Legend + Human = Link (Nintendo)
+Legend + Royalty = Princess Zelda (Nintendo)
+Triforce + Criminal = Ganon (Nintendo)
+Ganon + Human = Ganondorf (Nintendo)
+Legend + Sword = Master Sword (Nintendo)
+Master Sword + Human = Link (Nintendo)
+Bird + Human = Rito (Nintendo)
+Lake + Human = Zora (Nintendo)
+Mushroom + Life = Super Mushroom (Nintendo)
+Gold + Link = Triforce (Nintendo)
+Gold + Zelda = Triforce (Nintendo)
+Triforce + Evil = Ganon (Nintendo)
+Gold + Ganon = Triforce (Nintendo)
+Cloud + Air = Sky (Air)
+Sky + Wind = Weather (Air)
+Sky + Air = Ozone Layer (Cosmic)
+Sky + Fire = Sun (Fire)
+Sun + Sky = Day (Events)
+Sky + Stone = Moon (Cosmic)
+Sun + Moon = Eclipse (Events)
+Crystal + Drugs = Meth (Tools)
+Drugs + Human = Addiction (Mind)
+Addiction + Alcohol = Alcoholic (Society)
+Orange Fruit + Apple = Annoying Orange (Miscellaneous Franchises)
+Anger + Royalty = War (Events)
+Royalty + Time = Government (Society)
+Government + Anger = War (Events)
+War + Black Hand = Blackest Night (DC Comics)
+Superman + Batman = Justice League (DC Comics)
+Iron Man + Captain America = The Avengers (Marvel Comics)
+Justice League + The Avengers = Amalgam Comics (Miscellaneous Franchises)
+Amazon + Rainforest = Amazon Rainforest (Locations)
+Rainforest + Life = Amazon Rainforest (Locations)
+Amazon Rainforest + Fire = Depression (Mind)
+Fire + Criminal = Arsonist (Society)
+Death + Electricity = Electrocution (Events)
+Dharkon + Galeem = War (Events)
+Doctor + Doctor Who = Time Travel (Science)
+Overwatch + Music = The Living Tombstone (People and Companies)
+Five Nights at Freddys + Music = The Living Tombstone (People and Companies)
+Minecraft + Music = Revenge (Mind)
+Love + Death = Divorce (Events)
+Clay + Fire = Brick (Tools)
+Brick + Brick = Wall (Tools)
+Wall + Wall = Building (Locations)
+Water + Heat = Bubbles (Water)
+Stone + Fire = Metal (Tools)
+Magma + Mountain = Volcano (Locations)
+Magma + Earth = Volcano (Locations)
+Stone + Stone = Mountain (Earth)
+Human + Barn Animals = Dog (Life)
+Human + Barn Animals = Cat (Life)
+Cat + Evil = Lion (Life)
+Cat + Murder = Lion (Life)
+Dog + Hell = Hellhound (Myth)
+Cat + Dog = CatDog (Miscellaneous Franchises)
+Fish + Blood = Shark (Life)
+Fish + Murder = Shark (Life)
+Shark + Tornado = Sharknado (Miscellaneous Franchises)
+War + War = World War (Events)
+World War + Life = Death (Life)
+Cloud + Cloud = Weather (Air)
+Sky + Sky = Ozone Layer (Cosmic)
+Time + Time = Infinity (Myth)
+Atom + Atom = Molecule (Science)
+Molecule + Molecule = Solid (Science)
+Molecule + Molecule = Liquid (Science)
+Molecule + Molecule = Gas (Science)
+Time Travel + Time Travel = Paradox (Science)
+Explosion + Star = Supernova (Cosmic)
+Star + Star = Supernova (Cosmic)
+Explosion + Sun = Supernova (Cosmic)
+Sun + Sun = Supernova (Cosmic)
+Dust + Outer Space = Nebula (Cosmic)
+Ocean + Ground = Planet Earth (Cosmic)
+Ocean + Ocean = Waterworld (Miscellaneous Franchises)
+Volcano + Cold = Cryovolcano (Locations)
+Clay + Clay = Sculpture (Society)
+Sculpture + Sculpture = Art (Society)
+Sensation + Concept = Art (Society)
+Dumbbell + Building = Gymnasium (Locations)
+Planet + Opposite = Pluto (Cosmic)
+Planet + Stone = Pluto (Cosmic)
+Soil + Soil = Grass (Plantlife)
+Storm + Storm = Hurricane (Air)
+Ice + Ice = Cold (Air)
+Ice + Building = Igloo (Locations)
+Hail + Hail = Ice (Water)
+Energy + Energy = Explosion (Science)
+Energy + Opposite = Entropy (Science)
+Planet + Planet = Solar System (Cosmic)
+Solar System + Solar System = Galaxy (Cosmic)
+Galaxy + Galaxy = Universe (Cosmic)
+Galaxy + Superhero = Guardians of the Galaxy (Marvel Comics)
+Ozone Layer + Ozone Layer = Sky (Air)
+Life + Life = Sensation (Mind)
+Bug + Bug = Hive (Locations)
+Bee + Bee = Hive (Locations)
+Fish + Death = Seafood (Food)
+Fish + Blade = Sushi (Food)
+Spider + Spider = Cobweb (Locations)
+Bird + Bird = Egg (Life)
+Egg + Desert = Lizard (Life)
+Egg + Sand = Lizard (Life)
+Lizard + Ground = Snake (Life)
+Snake + Snake = Cobra (Life)
+Poison + Human = Death (Life)
+Snake + Liquid = Poison (Tools)
+Poison + Life = Disease (Life)
+Disease + Disease = Plague (Events)
+Disease + Human = Doctor (Society)
+Doctor + Building = Hospital (Locations)
+Arsonist + Building = Fire (Fire)
+Duck + Duck = Egg (Life)
+Pelican + Pelican = Egg (Life)
+Bat + Stone = Cave (Earth)
+Bat + Earth = Cave (Earth)
+Darkness + Stone = Cave (Earth)
+Darkness + Earth = Cave (Earth)
+Transgender + Transgender = Pride Parade (Events)
+Rain + Sun = Rainbow (Events)
+Death + Death = Apocalypse (Events)
+Corpse + Building = Morgue (Locations)
+Corpse + Wood = Coffin (Tools)
+Corpse + Stone = Tombstone (Tools)
+Corpse + Corpse = Morgue (Locations)
+Alien + Alien = Invasion (Events)
+Alien + Human = Intergalactic City (Locations)
+Horse + Magic = Unicorn (Myth)
+Horse + Air = Pegasus (Myth)
+Horse + Bird = Pegasus (Myth)
+Pegasus + Unicorn = Alicorn (Myth)
+Horse + Fantasy = My Little Pony (Miscellaneous Franchises)
+Rain + Metal = Umbrella (Tools)
+Umbrella + Superhero = The Umbrella Academy (Miscellaneous Franchises)
+Evolution + Evolution = Life (Life)
+Zombie + Zombie = Apocalypse (Events)
+Robot + Robot = The Matrix (Miscellaneous Franchises)
+Book + Building = Library (Locations)
+Deity + Deity = Pantheon (Myth)
+Sex + Sex = Family (Life)
+Family + Tree = Family Tree (Society)
+Music + Music = Concert (Events)
+Police + Building = Police Department (Locations)
+Criminal + Family = Mafia (Society)
+Criminal + Criminal = Mafia (Society)
+Knight + Knight = Crusade (Events)
+Religion + Knight = Crusade (Events)
+Trade + Human = Slavery (Society)
+Fighter + Fighter = Boxing (Society)
+Crossover + Crossover = The Ultimate Showdown of Ultimate Destiny (Events)
+Government + Government = The League of Nations (People and Companies)
+Gold + Gold = Jewelry (Tools)
+Electricity + Electricity = Storm (Air)
+Poison + Water = Acid (Science)
+Acid + Opposite = Base (Science)
+Base + Opposite = Acid (Science)
+Wood + Building = Log Cabin (Locations)
+Wood + Wood = Forest (Locations)
+Pipes + Pipes = Sewers (Locations)
+Gun + Gun = Cannon (Tools)
+Money + Money = Millionaire (Society)
+Shield + Shield = Forcefield (Tools)
+Sensation + Sensation = Concept (Mind)
+Anger + Anger = Rage (Mind)
+Happiness + Happiness = Mania (Mind)
+Sadness + Sadness = Depression (Mind)
+Love + Love = Sex (Life)
+Opposite + Opposite = Paradox (Science)
+Art + Human = Fiction (Society)
+Planet + Life = Mogo (DC Comics)
+Planet + Life = Ego the Living Planet (Marvel Comics)
+Batman + Batman = Batman Inc (DC Comics)
+Batman + Time = Batman Beyond (DC Comics)
+Bug + Alien = Blue Beetle (DC Comics)
+Justice League + Time = Legion of Superheroes (DC Comics)
+Justice League + War = Justice Society (DC Comics)
+The Flash + Time = Kid Flash (DC Comics)
+Motion + Opposite = Inertia (Science)
+The Flash + Space = Speed Force (DC Comics)
+Kid Flash + Space = Speed Force (DC Comics)
+The Flash + Universe = Speed Force (DC Comics)
+Kid Flash + Universe = Speed Force (DC Comics)
+Motion + Universe = Speed Force (DC Comics)
+Speed Force + Human = The Flash (DC Comics)
+Speed Force + Human = Kid Flash (DC Comics)
+Seeds + Seeds = Wheat (Food)
+Murder + Murder = Genocide (Events)
+Genocide + Genocide = War (Events)
+Nuclear Explosion + Nuclear Explosion = Apocalypse (Events)
+Apocalypse + Apocalypse = Heat Death (Events)
+Universe + Apocalypse = Heat Death (Events)
+Multiverse + Apocalypse = Crisis on Infinite Earths (DC Comics)
+Solid + Fiction = Illusion (Tools)
+Illusion + Criminal = Mysterio (Marvel Comics)
+Illusion + Invasion = Secret Invasion (Marvel Comics)
+Minecraft + Minecraft = Terraria (Video Games)
+Minecraft + Minecraft = Roblox (Video Games)
+Five Nights at Freddys + Five Nights at Freddys = Sister Location (Video Games)
+Diabetes + Opposite = Starvation (Events)
+Heat + Opposite = Cold (Air)
+Cold + Opposite = Heat (Fire)
+Coca Cola + Pepsi = War (Events)
+Infinity + Train = Infinity Train (Miscellaneous Franchises)
+Crystal + Alien = Steven Universe (Miscellaneous Franchises)
+Crystal + Superman = Kryptonite (DC Comics)
+Crystal + Supergirl = Kryptonite (DC Comics)
+Superman + Evil = General Zod (DC Comics)
+Human + Happiness = Clown (Society)
+Clown + Evil = The Joker (DC Comics)
+Clown + Demon = It (Miscellaneous Franchises)
+Clown + Darkness = It (Miscellaneous Franchises)
+Clown + Computer = Twitter (People and Companies)
+Bird + Computer = Twitter (People and Companies)
+Book + Computer = Facebook (People and Companies)
+Wood + Motion = Wheel (Tools)
+Wheel + Wheel = Bicycle (Machines)
+Wheel + Motion = Unicycle (Machines)
+Wheel + Engine = Motorcycle (Machines)
+Concept + Sensation = Science (Science)
+Science + Sensation = Psychology (Science)
+Science + Life = Biology (Science)
+Biology + Ocean = Marine Biology (Science)
+Science + Art = Duality (Mind)
+Science + Human = Anthropology (Science)
+Science + Atom = Physics (Science)
+Science + Acid = Chemistry (Science)
+Science + Base = Chemistry (Science)
+Science + Outer Space = Astronomy (Science)
+Science + Space = Quantum Physics (Science)
+Science + Magic = Duality (Mind)
+Science + Magic = Alchemy (Science)
+Alchemy + Alchemy = Fullmetal Alchemist (Miscellaneous Franchises)
+Alchemy + Science Fiction = Fullmetal Alchemist (Miscellaneous Franchises)
+Alchemy + Stone = Philosopher’s Stone (Myth)
+Gold + Stone = Philosopher’s Stone (Myth)
+Motion + Atom = Radiation (Science)
+Motion + Molecule = Radiation (Science)
+Radiation + Human = Death (Life)
+Corpse + Life = Ghost (Myth)
+Infinity + Stone = Infinity Stones (Marvel Comics)
+Infinity Stones + Metal = Thanos (Marvel Comics)
+Infinity Stones + Gold = Thanos (Marvel Comics)
+Infinity Stones + Alien = Thanos (Marvel Comics)
+Thanos + Opposite = Darkseid (DC Comics)
+Darkseid + Opposite = Thanos (Marvel Comics)
+Darkness + Alien = Darkseid (DC Comics)
+Darkness + Deity = Darkseid (DC Comics)
+Sky + Deity = Zeus (Myth)
+Ocean + Deity = Poseidon (Myth)
+Hell + Deity = Hades (Myth)
+Sun + Man = Apollo (Myth)
+Sun + Deity = Apollo (Myth)
+Moon + Woman = Artemis (Myth)
+Moon + Deity = Artemis (Myth)
+Fire + Ice = Water (Water)
+Fighter + Vampire = JoJo’s Bizarre Adventure (Miscellaneous Franchises)
+Life + Ground = Mouse (Life)
+Mouse + Electricity = Pikachu (Nintendo)
+Time Travel + Car = Back To The Future (Miscellaneous Franchises)
+Life + Beach = Turtle (Life)
+Turtle + Evil = Bowser (Nintendo)
+Turtle + Fire = Bowser (Nintendo)
+Wall + Music = Pink Floyd (People and Companies)
+Day + Snow = Christmas (Events)
+Day + Tree = Christmas (Events)
+Christmas + Human = Santa Claus (Myth)
+Day + Fear = Halloween (Events)
+Day + Egg = Easter (Events)
+Day + Day = Week (Events)
+Week + Week = Month (Events)
+Month + Month = Year (Events)
+Year + Year = Time (Science)
+
+# Element Descriptions
+7Up - The creators of Cool Spot, the greatest video game character ever.
+Addiction - It’s not an addiction, it’s a choice. I can quit when I want to.
+Algae - Really wet grass. Otherwise a bit unremarkable.
+Air - You breathe it, your heart keeps beating. Simple as that.
+Alcoholic - This is the guy that walks into a bar that everyone talks about.
+Alien - They’d like to come and meet us, but they’d think they’ll blow our minds.
+Amalgam Comics - Now, you can unite and assemble at the same time.
+Anger - You’d better control it, otherwise it’ll control you.
+Annoying Orange - A YouTube relic from a time long past.
+Art - Either it imitates life, or life imitates it.
+Atomica - The Atom, from an alternate universe where heroes are villains.
+Atrocitus - “Together with our hellish hate, we’ll burn you all. That is your fate!”
+Aquaman - Arthur, King of Atlantis. Used to be a pushover but is now played by Jason Momoa.
+Bacon - Often agreed to be the best food created.
+Back To The Future - Time travellers who don’t need roads. This is heavy.
+Batman - He is the darkness, he is the night, he is… Batman!
+Batman Beyond - A Batman from a time yet to come.
+Batman Inc - Ah, so that’s how many Batsonas as there are.
+Be More Chill - Don’t freak out, and don’t resist, and have no doubt if I assist, you will… be more chill.
+Bipolar Disorder - Sad then happy, just like that. It has mixed reviews.
+Bird - This is The Word, according to animated sitcoms.
+Black - The darkest of colours. Well, technically, it’s a shade…
+Blackest Night - The zombie apocalypse, now with superheroes!
+Black Hand - “The Blackest Night falls from the skies. The darkness grows as all light dies.”
+Black Lightning - The show that everyone wants to be in the Arrowverse.
+Blue - The saddest of colours. Da ba dee da ba daa.
+Blue Beetle - The third in a line of blue, bug themed heroes. 
+Bug - Tiny little things that may or may not fly. They can have up to 200 legs.
+Call of Duty - Shoot, shoot, and shoot some more. The same game is released once per year.
+Castlevania - A vampire hunter hunts vampires. The protagonist may vary.
+CatDog - Half cat, half dog. I don’t think anyone else remembers this show.
+Celeste - A little indie game about mountains and difficult platforming.
+Charcoal - Everyone’s least favourite Minecraft item.
+Clay - Mud went through an emo phase, and this was the result.
+Cloud - Floating fluff in the sky that occasionally produce water.
+Coca Cola - The archenemy of Pepsi!
+Cold - The absence of heat. Canada is known for having an abundance of coldness.
+Colour - Yes, it’s spelt with a “u”. I don’t care what America says.
+Concept - It’s everything that exists, yet it’s everything that doesn’t. Huh.
+Chuck E Cheese - A child’s favourite restaurant, yet an adult’s most hated.
+Crisis on Infinite Earths - Worlds will live. Worlds will die. Nothing will ever be the same.
+Darkseid - The New God of Tyranny. No matter the retcons, Darkseid IS.
+Dark Souls - The hardest video game of all time, according to at least one person.
+Depression - Avoid this like the plague, because nowadays, there’s not much of a difference.
+Devil May Cry - An edge lord with white hair takes on demons of every calibre.
+Doki Doki Literature Club - A cute visual novel with absolutely, positively no hidden secrets.
+Dharkon - The Embodiment of Chaos. He and Galeem go way back.
+Doctor Who - The British Star Wars. We don’t know the Doctor’s name either.
+Duality - It takes two to make a thing go right.
+Duck - Water birds. They like grapes, for some reason.
+Dust - All we are is this in the wind. And another one gone, and another one gone…
+Earth - You can walk all over it, but it won’t complain.
+Energy - Ask anyone, and they’ll describe this differently.
+Facebook - Social media for 40-year olds. Despite its reputation, I must commend its wholesomeness.
+Fanta - The funky third soda in the war between Pepsi and Coke.
+Fire - Is it a plasma? An energy? Whatever it is, it’s hot.
+Fish - Scaly swimming creatures. One with no eyes is called a “fsh”.
+Fisherman - Fish thieves. Aka fishnappers.
+Five Nights at Freddys - They’re waiting every night, to finally roam and invite…
+Flashlight - Exploring a questionably demonic cavern? Use this to find your way out.
+Flower - Providing delectable smells since 14 million years ago.
+Frog - Ribbit, ribbit. Kiss it, and you won’t get a prince. You’ll get disease.
+Galeem - The Lord of Light. His invasion of Earth was successful, aside from a certain Star Warrior’s survival.
+Gamer - The master race of humanity. Known for swearing, immature jokes, and banning Hero.
+Ganon - The dark beast. Embodiment of the Triforce of Power, he’ll stop at nothing to destroy Hyrule.
+Ganondorf - The Great King of Evil. In Smash Bros, he’s just a Captain Falcon clone with a sword.
+Gas - Super excited atoms make these. Lots of them are invisible… spooky.
+Grand Theft Auto - The reason people think video games cause violence.
+Grass - Small, green knives that grow from the ground. Supposedly tasty.
+Green - The sourest and mintiest of colours. Can really mean anything.
+Green Lantern - “In brightest day, in blackest night, no evil shall escape my sight.”
+Grey - It’s the union of darkness and light. Because of that, it’s not eye-catching.
+Ground - The stuff that holds our planet together.
+Guitar Hero - Play the guitar to earn some points. Much better with mods.
+Hail - Spiteful rain. Instead of getting wet, you get pelted.
+Harry Potter - The boy who lived. Around the seventh book, you’d have cried at least ten times.
+Happiness - A rare oddity that’s hard to come by in this world.
+Heat - You know it’s summer when this rolls in uninvited.
+Heathers - A musical about love becoming terrorism. That escalated quickly.
+Human - The Earth’s dominant race. Comes in multiple flavours.
+Ice - Solid water. Cold to the touch. Numerous rappers named themselves after him.
+Indigo One - “Tor lorek san, bor nakka mur…” wait, you don’t understand the language. Never mind, then.
+Infinity Train - The Cartoon Network show that was dead for two years.
+Iron - This type of metal never skips leg day.
+Iron Man - Heroes aren’t born. They’re built.
+It - Spooky scary clowns. If you aren’t careful, you’ll float too.
+Justice League - Unlimited action right inside of a comic book.
+Justice Society - The WWII prelude to what would become the Justice League.
+Kid Flash - His name is Wally West, and he is the second fastest man alive.
+Lake - A small source of water. You can find fish and pollution here.
+Larfleeze - The only Lantern without an oath. Wow, lame.
+Legion of Superheroes - A future team of superheroes that adore Bon Jovi.
+Life - The governor of everything. Usually, it’s circular.
+Light - You see it everywhere you go. Look at it for too long, and you won’t.
+Link - Hyaa! The Hero of Time, Twilight, the Wild, Trains… he’s got a good track record.
+Liquid - Semi-excited atoms make these. Lots of them can be consumed.
+Love - You wouldn’t know her; she goes to a different school.
+Luigi - Mario’s eternal understudy. Even though, statistically, Luigi is better than him.
+Master Sword - The blade that can seal the darkness. Excalibur’s cooler younger brother.
+Magma - Volcano extract. Otherwise known as forbidden soup.
+Man Bat - A mad scientist, turned into a bat creature. Creepy.
+Mania - Happiness to the next level. It’s not as pleasant as it sounds.
+Mario - Wahoo! Ever since 1985, he’s been number one.
+McDonalds - A restaurant not known for its healthiness. I’m loving it.
+Mermaid - Water people. They use clams as swimwear, which doesn’t sound too comfortable.
+Metal - The toughest stuff there is. Whoa, this is heavy.
+Minecraft - Blocks upon blocks are here to help you survive. The source of countless music parodies.
+Mogo - A Green Lantern planet. He doesn’t talk much.
+Moss - Baby grass that likes to hug rocks.
+Mountain Dew - A professional gamer’s liquor. Japanese quantum computers love it.
+Motion - Apparently moving is the hit new concept for this generation. Pfft, millennials, am I right?
+Mud - Mushy earth. Please don’t drink it.
+Music - Sounds put together that sound nice. Pretty weird, huh?
+Musical - Often thought to be the worst type of fiction, by those who are intellectually inferior.
+Musician - Someone who orchestrates neat sounds. Among the most famous was a deaf one.
+Multiverse - What if there were more universes? Then you’d have this.
+My Little Pony - The most unlikely adult phenomenon the world has ever seen.
+No Mans Sky - A space exploration game that underwhelmed everyone.
+Ocean - Darling, it’s better down where it’s wetter, take it from me.
+Opposite - Exactly what it is is exactly what everything else isn’t.
+Orange - The warmest of colours. Red and Yellow’s estranged child.
+Overwatch - A unique first-person shooter. Tracer is everyone’s favourite.
+Outer Space - The final frontier. Until you get to the multiverse.
+Pepsi - The archenemy of Coca Cola!
+Pink - The girliest of colours. For some reason, bubblegum is this colour.
+Pink Floyd - A rock band, notable for talking about money, walls and weird medicine.
+Planet - Big spherical rocks in a vast void. Saying the definition out loud sounds weird.
+Planet Earth - Our home. Half water, half land, all terrible.
+Plankton - Whatever you do, don’t give it the Krabby Patty Secret Formula.
+Plasma - The grey area between all types of matter.
+Plumber - Need a pipe fixed and a princess saved? Give these people a call.
+Power Ring - A high tech ring that can make anything, with just your emotions.
+Princess Daisy - Hi, she’s Daisy. Despite only appearing in one mainline Mario game, she’s a fan favourite.
+Princess Peach - The princess of the Mushroom Kingdom. Almost every day she gets kidnapped.
+Princess Zelda - The Triforce of Wisdom. Her hair colour changes depending on the game.
+Purple - The rarest of colours. Like orange, it doesn’t rhyme with anything.
+QWOP - A classic rage game, where you control an athlete who can’t walk.
+Rain - A cloud’s tears. They cry every time they watch Avengers Endgame.
+Red - The hottest of colours. Often paired with death and redemption.
+Revenge - Otherwise known as happiness theft. Aw man.
+Reverse Flash - The archenemy of the Flash. Some would say he is his reverse.
+Rito - A humanlike bird? Or a birdlike human? Whatever they are, they’re from Hyrule.
+Roblox - A computer game that tries to be as popular as Minecraft. Oof!
+Running - Some people would run a thousand miles to fall down at one’s door.
+Sadness - When people tell you to get down, this isn’t usually what they mean.
+Saint Walker - “In a fearful day, in raging night. With strong hearts full, our souls ignite.”
+Sand - A whole bunch of assorted stone particles. Gluten free.
+Seaweed - Why is the beach wet? Because the sea wee’d on it! Haha… I’m not funny.
+Sensation - What you see, feel, hear, and two others that don’t matter as much.
+Sinestro - “In blackest day, in brightest night, beware your fears made into light.”
+Sister Location - FNaF’s story-based spinoff. It keeps the tradition of not giving us straight answers.
+Shark - Evil fish. However, some believe that fish are friends and not food.
+Sharknado - Yeah, this is a movie series.
+Sky - The big blanket of blue that envelops our planet. Pretty crazy, huh?
+Snow - Blended ice. Often turned into spheres and used as a weapon.
+Solid - Unenthusiastic atoms make these. The most unremarkable of the states of matter.
+Space - The existence in-between existing things.
+Sparkling Water - Eugh, this tastes like static.
+Speed Force - The sentient dimension that is responsible for all matter. Wow.
+Spider - Nobody, and I repeat, nobody wants these things crawling on them.
+Spider Gwen - A Spider Man from another universe with some good taste in music.
+Spider Man - Does whatever a spider can.
+Spider Woman - Not as spiderlike as her male counterpart.
+Star Sapphire - “For hearts long lost and full of fright, love conquers all with violet’s light.”
+Static Shock - Actually, his name is just Static.
+Steam - Often paired with the word “punk” in AU fanfiction.
+Steven Universe - Space rocks fight to protect the Earth. “And they’re stronger than you.”
+Stone - A hard-to-break, grey material. It rocks.
+Storm - These clouds are really angry. Sometimes they shoot energy bolts.
+Subnautica - Explore the depths of an alien ocean. What could go wrong?
+Super Smash Bros - Something’s gone wrong in the happy go lucky world of Nintendo!
+Supergirl - It’s not a bird. It’s not a plane. It’s not a man.
+Superman - Superman, defender of Earth. He fights for good, and what it’s worth.
+Terraria - Minecraft, but 2D. Not as popular, not a problem.
+Time - It goes on forever and ever. It can even fly.
+Thanos - Perfectly balanced, as all things should be.
+The Atom - A hero with shrinking powers. He’s one of the OG Legends.
+The Avengers - There was an idea to bring together a group of remarkable people.
+The Flash - His name is Barry Allen, and he is the fastest man alive.
+The League of Nations - The big boys of the planet Earth came together in between the World Wars.
+The Living Tombstone - Half blue, half red, all music. He’s not a fan of puppeteers.
+The Matrix - What if the world was a simulation? Known for having two colourful pills.
+The Umbrella Academy - Superheroes with deconstructed tropes. Seasons change with the scenery, weaving time in a tapestry…
+The Ultimate Showdown of Ultimate Destiny - Good guys, bad guys and explosions as far as the eye can see.
+Tornado - Around and around it goes. It’ll either take you to Oz or rip you to shreds.
+Tree - Grass, but on steroids. Best to leaf them alone.
+Twitter - Full of anime profile pics, celebrity mishaps and armies of clowns.
+Universe - The world as we know it. Expanding since 13.8 billion years ago.
+Vic Stone - The Cyborg. Known for his catchphrase “booyah!”
+Video Games - Nintendo. PlayStation. Xbox. PC. Long ago, the four nations lived in harmony.
+Waluigi - Despite being the fan favourite of the brothers, he’ll never be in Smash.
+Wario - Wa ha ha! This knockoff plumber is known for his love of garlic.
+Water - A clear liquid that’s good to have on a summer day.
+Waterworld - The planet, nearly submerged in water. A better outcome of global warming.
+Waves - They’re like hills, but wet and temporary.
+Weather - Weather or not you spell it correctly, whether is pretty important.
+Wind - Special air that has somewhere to go.
+White - The brightest of colours. Well, technically, it’s a shade…
+White Lantern - “In Brightest Day, there will be light. To cleanse the soul and set wrongs right.”
+Wonder Woman - The Goddess of Truth, and the Justice League’s first female member.
+Yellow - The happiest of colours. Often paired with Pikachu.
+Zora - Depending on the game, they can be civil royalty or monstrous beasts. Thanks, Zelda timeline, very cool!

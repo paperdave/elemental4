@@ -18,9 +18,9 @@ export const builtInInternalServers = [
 ];
 export const builtInThirdPartyServers = [
   'https://elemental-reborn.tk/',
-  'https://dev.elemental5.net/api',
+  // 'https://dev.elemental5.net/api',
   // 'https://e4api.ledomsoft.com',
-  'https://nv7-github.github.io/',
+  'https://nv7haven.tk/',
 ];
 export const allBuiltInServers = [
   ...builtInOfficialServers,

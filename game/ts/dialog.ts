@@ -5,12 +5,8 @@ import marked from 'marked';
 import { AlertDialogOptions, ConfirmDialogOptions, PromptDialogOptions, CustomDialogOptions, DialogButton } from "../../shared/elem";
 
 export async function animateDialogOpen(root: HTMLElement) {
-  if (document.hasFocus()) {
-    playSound('dialog.open');
-  } else {
-    window.focus()
-    playSound('dialog.attention');
-  }
+  playSound('dialog.open');
+  window.focus()
   root.classList.add('dialog-open');
   root.classList.add('dialog-opening');
   (root.firstElementChild as HTMLElement)?.focus()

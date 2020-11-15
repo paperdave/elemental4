@@ -19,7 +19,7 @@
     window.removeEventListener('storage', handler);
     const params = new URLSearchParams(window.location.search)
     const type = params.get('type');
-    const url = params.get('url');
+    const url = (params.get('id') ? `${location.origin}/${type}s/${params.get('id')}` : null) || params.get('url');
     if(!type || !url) {
       document.body.innerHTML = '<h1>Incorrect usage.</h1> You must specify the url as <p><code>'+location.origin+'/install?type=[type]&url=[url]</code></p>';
       return

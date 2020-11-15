@@ -8,6 +8,7 @@ import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers, bu
 
 const data = new Store('data');
 const themes = new Store('theme_data');
+const packs = new Store('pack_data');
 const activeSavefileCache: Record<string, string> = {};
 
 export function removeUrlSuffix(url: string) {

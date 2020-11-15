@@ -9,7 +9,7 @@ import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, 
 import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
-import { updateMusicVolume } from "./audio";
+import { clearSounds, loadSounds, playSound, updateMusicVolume } from "./audio";
 import escapeMarkdown from 'markdown-escape';
 
 let themeUpdated = false;
@@ -35,17 +35,10 @@ export async function InitSettings() {
   const playStartupSound = getConfigBoolean('config-play-startup-sound', true);
   if (playStartupSound) {
     (document.querySelector('#play-startup-sound') as HTMLInputElement).checked = true;
-    document.body.classList.add('config-play-startup-sound');
-  }
-  const playNotificationSound = getConfigBoolean('config-play-notification-sound', true);
-  if (playNotificationSound) {
-    (document.querySelector('#play-notification-sound') as HTMLInputElement).checked = true;
-    document.body.classList.add('config-play-notification-sound');
   }
   const playNewsSound = getConfigBoolean('config-play-news-sound', true);
   if (playNewsSound) {
     (document.querySelector('#play-news-sound') as HTMLInputElement).checked = true;
-    document.body.classList.add('config-play-news-sound');
   }
 
   let lastTab = '';
@@ -84,9 +77,12 @@ export async function InitSettings() {
         if(themeUpdated) {
           themeUpdated = false;
           await updateMountedCss();
+          await clearSounds();
+          await loadSounds();
         }
         animateDialogClose(elemSettingsDialog);
       } else {
+        playSound('dialog.button')
         focus(action);
       }
     });
@@ -164,10 +160,6 @@ export async function InitSettings() {
   document.querySelector('#play-startup-sound').addEventListener('click', (ev) => {
     const v = (ev.currentTarget as HTMLInputElement).checked;
     setConfigBoolean('config-play-startup-sound', v);
-  })
-  document.querySelector('#play-notification-sound').addEventListener('click', (ev) => {
-    const v = (ev.currentTarget as HTMLInputElement).checked;
-    setConfigBoolean('config-play-notification-sound', v);
   })
   document.querySelector('#play-news-sound').addEventListener('click', (ev) => {
     const v = (ev.currentTarget as HTMLInputElement).checked;
@@ -323,12 +315,16 @@ export async function InitSettings() {
   const volumeSound = getConfigNumber('volume-sound', 1);
   const volumeMusic = getConfigNumber('volume-music', 0.5);
   (document.querySelector('[data-volume-slider="sound"]') as any).value = volumeSound * 100;
+  document.querySelector('[data-volume-display="sound"]').innerHTML = escapeHTML(`${Math.floor(volumeSound * 100)}%`);
   document.querySelector('[data-volume-slider="sound"]').addEventListener('input', (x) => {
     setConfigNumber('volume-sound', (x.currentTarget as any).value/100);
+    document.querySelector('[data-volume-display="sound"]').innerHTML = escapeHTML(`${(x.currentTarget as any).value}%`);
   });
   (document.querySelector('[data-volume-slider="music"]') as any).value = volumeMusic * 100;
+  document.querySelector('[data-volume-display="music"]').innerHTML = escapeHTML(`${Math.floor(volumeMusic * 100)}%`);
   document.querySelector('[data-volume-slider="music"]').addEventListener('input', (x) => {
     setConfigNumber('volume-music', (x.currentTarget as any).value/100);
+    document.querySelector('[data-volume-display="music"]').innerHTML = escapeHTML(`${(x.currentTarget as any).value}%`);
     updateMusicVolume();
   })
 }
