@@ -3,7 +3,6 @@ import { humanize } from "juration";
 import { ElementalBaseAPI } from "../../shared/elem";
 import { getAPI } from "./api";
 import { getOwnedElements, getStatistics, setStatistics } from "./savefile";
-import localStorage from '../../shared/localStorage';
 
 interface ClientStats {        // check = tracking setup in the game
   startTime: number;           // √
@@ -50,7 +49,7 @@ function defaultStats(): ClientStats {
 }
 
 export function getTimeSinceStarted() {
-  return sessionStartTime;
+  return (Date.now() - sessionStartTime) / 1000;
 }
 export async function startStatistics() {
   const api = getAPI();
@@ -88,7 +87,7 @@ export async function getDisplayStatistics(): Promise<[string, any][]> {
   const owned = await getOwnedElements(currentAPI)
   return [
     ['Savefile Started', new Date(currentStats.startTime).toLocaleDateString() + ' ' + new Date(currentStats.startTime).toLocaleTimeString()],
-    ['Time Played', humanize(currentStats.playTime)],
+    ['Time Played', humanize(Math.floor(currentStats.playTime + getTimeSinceStarted()))],
     ['Sessions', currentStats.sessionCount],
 
     ['Elements Discovered', owned.length],

@@ -1,5 +1,4 @@
 import localForage from '../../shared/localForage';
-import localStorage from '../../shared/localStorage';
 import { MountThemeCSS, resetBuiltInThemes } from './theme';
 import { InitSettings } from './settings';
 import { InitElementGameUi } from './element-game';

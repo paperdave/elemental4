@@ -4,7 +4,6 @@ import { enableTheme, getThemeList, installTheme, updateMountedCss } from "./the
 import { saveAs } from "file-saver";
 import * as defaultTheme from "../theme_editor_presets/default";
 import { connectApi } from "./api";
-import localStorage from '../../shared/localStorage';
 
 let devTheme
 try {

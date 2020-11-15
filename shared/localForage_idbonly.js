@@ -1,3 +1,5 @@
+// fork of localForage but i removed like one line of code
+
 import idbDriver from 'localforage/src/drivers/indexeddb';
 import serializer from 'localforage/src/utils/serializer';
 import Promise from 'localforage/src/utils/promise';

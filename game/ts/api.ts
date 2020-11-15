@@ -1,6 +1,7 @@
 import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
 import { DebugAllColorsAPI } from "../../shared/api/debug-allcolors";
+import { NV7ElementalAPI } from "../../shared/api/nv7/nv7";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
 import { escapeHTML } from "../../shared/shared";
 import { SingleplayerAPI } from "./api-singleplayer";
@@ -42,13 +43,15 @@ export class NullAPI extends ElementalBaseAPI {
 }
 
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
-  'internal:all-colors': DebugAllColorsAPI,
-  'internal:singleplayer': SingleplayerAPI,
+  // 'internal:all-colors': DebugAllColorsAPI,
+  //'internal:singleplayer': SingleplayerAPI,
   'internal:null': NullAPI,
-  'reborn': RebornElementalAPI,
-  'elemental4': Elemental4API,
-  'elemental5': Elemental5API,
-  'e4': LedomElementalAPI,
+  // 'reborn': RebornElementalAPI,
+  // 'elemental4': Elemental4API,
+  // 'elemental5': Elemental5API,
+  // 'e4': LedomElementalAPI,
+  // 'ledom': LedomElementalAPI,
+  'nv7': NV7ElementalAPI,
 };
 
 let currentAPI: ElementalBaseAPI;
@@ -166,7 +169,7 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
 export async function setAPISaveFile(id: string) {
   if(id !== currentSaveFile) {
     await endStatistics()
-    await ClearElementGameUi();
+    ClearElementGameUi();
     await setActiveSaveFile(currentAPI, id);
     await onSaveFileLoad();
     await startStatistics();

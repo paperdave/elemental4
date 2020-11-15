@@ -334,6 +334,8 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
     dropHoldingElement();
     ev.preventDefault();
 
+    if(!element.stats) element.stats = {};
+
     dom.style.height = '100px';
     dom.style.top = '-10px';
     dom.scrollIntoView({ block: 'nearest' });
@@ -364,10 +366,12 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
       infoContainer.querySelector('#info-tier').setAttribute('data-tier-level', Math.floor(element.stats.treeComplexity / 5).toString());
     }
     
-    infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
-    infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Usage');
-
-    
+    if (element.stats.recipeCount) {
+      infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
+    }
+    if (element.stats.usageCount) {
+      infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Usage');
+    }
 
     infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
       console.log(x);
@@ -381,7 +385,6 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
     infoContainer.querySelector('#element-css-class').innerHTML = `.${getClassFromDisplay(element.display)}`;
     infoContainer.querySelector('#element-css-color').innerHTML = Color(getComputedStyle(dom).backgroundColor).hex();
 
-    
     const fundamentalsDiv = document.getElementById('element-fundamentals');
     fundamentalsDiv.innerHTML = '';
     const fundamentalsWithImages = ['fire', 'water', 'air', 'earth'];
