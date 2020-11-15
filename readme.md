@@ -31,7 +31,7 @@ Develop Server Side
 
 Develop Client Side:
 - Folders: everything but ./server
-- ./client.sh: Starts a server on localhost:8000. Static files DO NOT UPDATE unless you restart client.sh, but the TYPESCRIPT WILL REFRESH
+- ./client.sh: Starts a server on localhost:8000
 - node build-client: builds the client at dist_client, for publishing.
 
 The live server uses voting equations similar to but i change it every so often.

@@ -1,4 +1,5 @@
 import {RecentCombination} from "../../elem";
+import { NV7ElementalAPI } from "./nv7";
 import firebase from "firebase/app";
 import "firebase/database";
 
@@ -14,4 +15,19 @@ export async function getRecents(limit: number): Promise<RecentCombination[]> {
       }
     })
   });
+}
+
+export async function waitForNew(api: NV7ElementalAPI): Promise<void> {
+  api.ref = firebase.database().ref("/recents");
+  return new Promise<void>((resolve, reject) => {
+    var count = 0;
+    api.ref.on("value", (snapshot) => {
+      if (count == 0) {
+        count++;
+      } else {
+        api.ref.off("value");
+        resolve();
+      }
+    });
+  })
 }

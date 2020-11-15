@@ -8,8 +8,6 @@ import (
 	"google.golang.org/api/option"
 )
 
-const json = `{ REVOKED }`
-
 // Element has the data for a created element
 type Element struct {
 	Color     string   `json:"color"`

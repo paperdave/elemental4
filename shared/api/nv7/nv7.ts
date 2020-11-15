@@ -7,51 +7,39 @@ import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
 import {getElem, getCombination} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
-import {getRecents} from "./recents";
+import {getRecents, waitForNew} from "./recents";
+import { IStore } from "../../store";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
 	public uid: string
 	public saveFile;
 	public ui;
 	public votesRequired: number = 3;
+	public ref;
+	public store: IStore;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
-			var firebaseConfig = {
-				apiKey: "AIzaSyCsqvV3clnwDTTgPHDVO2Yatv5JImSUJvU",
-				authDomain: "elementalserver-8c6d0.firebaseapp.com",
-				databaseURL: "https://elementalserver-8c6d0.firebaseio.com",
-				projectId: "elementalserver-8c6d0",
-				storageBucket: "elementalserver-8c6d0.appspot.com",
-				messagingSenderId: "603503529201",
-				appId: "1:603503529201:web:5cd30f72bb4971bdc0ed50",
-				measurementId: "G-K8QX9GEW6V"
-			};
 			// Initialize Firebase
-			firebase.initializeApp(firebaseConfig);
+			firebase.initializeApp(this.config.firebaseConfig);
 			firebase.analytics();
-			firebase.firestore().enablePersistence().catch(async function(error) {
-				ui.status("Showing Error", 0);
-				await this.ui.alert({
-					"text": error.message,
-					"title": "Error",
-					"button": "Ok",
-				});
-			});
 		}
 
 		return await login(this, ui);
   }
-  async close(): Promise<void> {return;}
+  async close(): Promise<void> {
+		this.ref.off("value");
+		return;
+	}
   async getStats(): Promise<ServerStats> {
     return {
       totalElements: 0
     }
   }
-  async getElement(id: string): Promise<Elem> {return getElem(id);}
+  async getElement(id: string): Promise<Elem> {return getElem(this, id);}
   async getCombo(ids: string[]): Promise<string[]> {
 		ids.sort();
-		return getCombination(ids[0], ids[1]);
+		return getCombination(this, ids[0], ids[1]);
 	}
   async getStartingInventory(): Promise<string[]> {
 		return ['Air','Earth','Fire','Water'];
@@ -99,7 +87,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	}
 
 	async waitForNewRecent(): Promise<void> {
-		throw new Error("Method not implemented");
+		return waitForNew(this);
 	}
 
 	lookupCustomPaletteColor(basePalette: Record<ElementalColorPalette, ThemedPaletteEntry>, string: string): Color {
