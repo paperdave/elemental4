@@ -24,15 +24,21 @@ export const builtInDevInternalServers = [
   'internal:stress-test-10k',
 ];
 export const builtInThirdPartyServers = [
-  'https://elemental-reborn.tk/',     // cannot suggest, need google auth
+  'https://elemental-reborn.tk',      // cannot suggest, need google auth
   'https://dev.elemental5.net/api',   // cannot suggest, uses a very different system
   // 'https://e4api.ledomsoft.com',   // api isn't written
-  'https://nv7haven.tk/',             // api is working
+  'https://nv7haven.tk',              // api is working
 ];
 export const allBuiltInServers = [
   ...builtInOfficialServers,
   ...builtInThirdPartyServers
-]
+];
+export const serverOrder = [
+  ...builtInInternalServers,
+  ...builtInOfficialServers,
+  ...builtInDevInternalServers,
+  ...builtInThirdPartyServers,
+];
 
 export async function getServerList(): Promise<ServerEntry[]> {
   return await getInstalledServers() as ServerEntry[];
@@ -42,7 +48,7 @@ export async function installDefaultServers(): Promise<void> {
   const list = allBuiltInServers.filter(x => !servers.some(y => y.baseUrl === x) && x.startsWith('https://'));
   await Promise.all(list.map(x => {
     return addDLCByUrl(x, 'server', true);
-  }))
+  }));
 }
 
 export async function setActiveServer(baseUrl: string) {

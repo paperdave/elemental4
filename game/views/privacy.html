@@ -13,8 +13,14 @@
     body.launching #content {
       display: none;
     }
-    h1 { margin: 0 auto; padding-top: 48px; width: max-content }
+    h1 { margin: 0 auto; padding-top: 48px; width: max-content; max-width: 100vw; }
 
+    h2 {
+      margin: 0.75em;
+    }
+    h3 {
+      margin: 0.75em;
+    }
     #content {
       max-width: 500px;
       margin: auto;
@@ -32,6 +38,12 @@
     a:active {
       color: red;
       text-decoration: underline;
+    }
+    #content svg {
+      max-width: 100vw;
+    }
+    #content p {
+      margin: 1em;
     }
   </style>
 </head>

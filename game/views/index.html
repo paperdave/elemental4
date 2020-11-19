@@ -86,7 +86,13 @@
     }
   </style>
   <style id='remove_styles'>
-    #content h1 { margin: 0 auto; padding-top: 48px; width: 450px; }
+    #content p {
+      margin: 1em;
+    }
+    #content svg {
+      max-width: 100vw;
+    }
+    #content h1 { margin: 0 auto; padding-top: 48px; width: 450px; max-width: 100vw; }
     #content a {
       color: rgb(192, 63, 16);
       text-decoration: none;
@@ -159,7 +165,7 @@
       border-radius: 4px;
       overflow: hidden;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    }   
+    }
   </style>
 </head>
 <body>
@@ -205,6 +211,9 @@
     <p id='archive-org-para' style="display: none;">
       It seems you are viewing this page via archive.org, go to the real site <a href="https://elemental4.net">elemental4.net</a> to use the real game. The version you are viewing is <strong>{CURRENT_VERSION}</strong>.
     </p>
+    <p id='mobile-para' style="display: none;">
+      Currently mobile devices are not supported on elemental 4 yet, see <a href="https://github.com/davecaruso/elemental4/issues/3">this issue tracker</a>.
+    </p>
     <p id="support">
       You need JavaScript enabled to run this game.
     </p>
@@ -241,7 +250,13 @@
       let cache = localStorage.cache || 'resolve';
 
       if(location.href.includes('archive.org')) {
+        document.body.classList.remove('launching')
         document.querySelector('#archive-org-para').removeAttribute('style')
+        return;
+      }
+      if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()) || window.innerWidth < 400) {
+        document.body.classList.remove('launching')
+        document.querySelector('#mobile-para').removeAttribute('style')
         return;
       }
       launch.removeAttribute('disabled');

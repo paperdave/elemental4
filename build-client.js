@@ -136,4 +136,10 @@ process.chdir(__dirname);
         fs.copySync(path.join(__dirname, monacoEditor.base, f), path.join('dist_client/vs/', f));
     })
     fs.writeFileSync('dist_client/version', require('./package.json').version);
+    fs.writeFileSync('dist_client/_redirects',
+        workshopManifest.packs
+            .concat(...workshopManifest.themes)
+            .map(x => `${x.url} https://github.com/davecaruso/elemental4/tree/master/workshop${x.url}`)
+            .join('\n')
+    );
 })();

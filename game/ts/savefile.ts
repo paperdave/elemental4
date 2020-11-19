@@ -4,7 +4,7 @@ import { Store } from '../../shared/store';
 import localForage from '../../shared/localForage';
 import { escapeHTML } from '../../shared/shared';
 import { connectApi, builtInApis } from './api';
-import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers, builtInInternalServers, builtInDevInternalServers } from './server-manager';
+import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers, builtInInternalServers, builtInDevInternalServers, serverOrder } from './server-manager';
 
 const data = new Store('data');
 const themes = new Store('theme_data');
@@ -69,6 +69,10 @@ export async function installServer(baseUrl: string, config: any) {
   serverSelect.appendChild(customOptGroup);
 
   servers
+    .sort((a, b) => {
+      console.log(a.baseUrl, b.baseUrl, (serverOrder.indexOf(b.baseUrl)) - (serverOrder.indexOf(a.baseUrl)));
+      return (serverOrder.indexOf(a.baseUrl)) - (serverOrder.indexOf(b.baseUrl));
+    })
     .concat(...builtInInternalServers.concat(...getConfigBoolean('config-show-internal-servers', false) ? builtInDevInternalServers : []).map(x => {
       return {
         config: builtInApis[x],
