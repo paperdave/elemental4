@@ -38,7 +38,6 @@ let isUnlocked = false;
 let first = true;
 
 export function playMusicTrack(track) {
-  console.log(track)
   currentTrack = track;
   if(!currentTrack) return;
   currentTrackHowl = urlToHowl.get(currentTrack.url) as Howl;

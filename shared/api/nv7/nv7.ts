@@ -63,7 +63,6 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	renameSaveFile(id: string, name: string): Promise<boolean> {throw new Error("Method not implemented.");}
 
 	getSuggestionColorInformation(): SuggestionColorInformation<'dynamic-elemental4'> {
-		console.log("ree");
     return {
       type: 'dynamic-elemental4'
     };

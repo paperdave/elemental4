@@ -288,7 +288,7 @@
             }),
             link("/font.css"),
             new Promise((done) => {
-              if(localStorage.getItem('clear_idb') || parseInt(localStorage.getItem('singleton_time')) < 1605559211904) {
+              if(localStorage.getItem('clear_idb') || parseInt(localStorage.getItem('singleton_time')) < 1605829104749) {
                 const req = indexedDB.deleteDatabase('ELEMENTAL');
                 req.onsuccess = done;
                 req.onerror = done;

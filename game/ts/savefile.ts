@@ -70,7 +70,6 @@ export async function installServer(baseUrl: string, config: any) {
 
   servers
     .sort((a, b) => {
-      console.log(a.baseUrl, b.baseUrl, (serverOrder.indexOf(b.baseUrl)) - (serverOrder.indexOf(a.baseUrl)));
       return (serverOrder.indexOf(a.baseUrl)) - (serverOrder.indexOf(b.baseUrl));
     })
     .concat(...builtInInternalServers.concat(...getConfigBoolean('config-show-internal-servers', false) ? builtInDevInternalServers : []).map(x => {

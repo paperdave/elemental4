@@ -391,10 +391,9 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
     }
 
     infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
-      console.log(x);
-      
       if (x.author) {
-        return `<p>"${x.comment}" - ${x.author}</p>`;
+        // elem4 doesnt properly decode authors
+        return `<p>"${x.comment}" - Error</p>`;
       }
       return `<p>${x.comment}</p>`;
     }).join('');
