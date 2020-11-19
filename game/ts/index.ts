@@ -34,6 +34,8 @@ async function boot(MenuAPI: MenuAPI) {
   delete window["$elemental4"];
   console.log(`👋 Hello Elemental, version ${pkg.version}`);
 
+  if(typeof localStorage === 'undefined') return location.reload();
+
   const ui = MenuAPI.status ? MenuAPI : createLoadingUi();
 
   if(MenuAPI.upgraded) {
