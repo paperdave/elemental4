@@ -10,7 +10,7 @@ import { createLoadingUi } from "./loading";
 
 export type DLCType = 'theme' | 'pack' | 'server';
 
-const corsAnywhereBaseUrl = 'https://cors-anywhere.herokuapp.com/';
+const corsAnywhereBaseUrl = 'https://proxy.elemental4.net/';
 async function fetchCorsAnywhere(url: string, options?: RequestInit) {
   try {
     return { cors: true, response: await fetch(url, options) };
@@ -47,9 +47,19 @@ async function addDLCByUrl2(url: string, intendedType: DLCType, isBuiltIn = fals
   try {
     json = JSON.parse(url);
     url = location.origin + '/'
+    if (json.type === 'server') {
+      throw new Error("Cannot use inline JSON for a Server");
+    }
   } catch (error) {
     if (!url.endsWith('.json')) {
       url += (url.endsWith('/') ? '' : '/') + 'elemental.json';
+    }
+    if (!url.match(/^[a-zA-Z-]+:\/\//) && !isBuiltIn) {
+      if (url.startsWith('localhost')) {
+        url = 'http://' + url;
+      } else {
+        url = 'https://' + url;
+      }
     }
     try {
       const x = await fetchCorsAnywhere(url).then(async(x) => ({ cors: x.cors, response: await x.response.json() }));

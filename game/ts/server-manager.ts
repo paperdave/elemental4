@@ -9,18 +9,25 @@ interface ServerEntry {
 }
 
 export const builtInOfficialServers = [
-  'http://localhost:8001',
   'https://main.elemental4.net',
   'https://anarchy.elemental4.net',
+  // 'https://infinity.elemental4.net', // wonder what that is ;)
 ];
 export const builtInInternalServers = [
-  'internal:singleplayer',
+  // 'internal:singleplayer',
+];
+export const builtInDevInternalServers = [
+  'internal:null',
+  'internal:all-colors',
+  'internal:stress-test-1k',
+  'internal:stress-test-5k',
+  'internal:stress-test-10k',
 ];
 export const builtInThirdPartyServers = [
-  'https://elemental-reborn.tk/',
-  // 'https://dev.elemental5.net/api',
-  // 'https://e4api.ledomsoft.com',
-  'https://nv7haven.tk/',
+  'https://elemental-reborn.tk/',     // cannot suggest, need google auth
+  'https://dev.elemental5.net/api',   // cannot suggest, uses a very different system
+  // 'https://e4api.ledomsoft.com',   // api isn't written
+  'https://nv7haven.tk/',             // api is working
 ];
 export const allBuiltInServers = [
   ...builtInOfficialServers,

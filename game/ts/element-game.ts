@@ -12,6 +12,7 @@ import { incrementStatistic } from "./statistics";
 import { playSound } from "./audio";
 import { endTreeCanvas, getElementTree, initTreeCanvas } from "./tree";
 import Color from "color";
+import { IsNullAPI } from "../../shared/api/internal/internal-null";
 
 function formatCategory(x: string) {
   return x.split('-').map(capitalize).join(' ')
@@ -66,18 +67,26 @@ async function dropHoldingElement(combineWith?: HTMLElement) {
 
     incrementStatistic('elementsDropped');
 
+    x.setAttribute(
+      'style',
+      'left:' + (parseFloat(x.style.left)) + 'px;'
+      + 'top:' + (parseFloat(x.style.top) - 30 + elementContainer.scrollTop) + 'px'
+    );
+    elementContainer.appendChild(x);
+
     if(getConfigBoolean('animations', true)) {
       if(!combineWith) {
         playSound('element.drop');
         x.classList.add('drop');
         await delay(500);
         x.remove();
+
       } else {
         playSound('element.combine');
         x.setAttribute(
           'style',
           '--offset-x:' + ((combineWith.offsetLeft - getElementMargin()) - parseFloat(x.style.left) + 'px;')
-          + '--offset-y:' + ((combineWith.offsetTop - getElementMargin() + 30) - parseFloat(x.style.top) + 'px;')
+          + '--offset-y:' + ((combineWith.offsetTop - getElementMargin()) - parseFloat(x.style.top) + 'px;')
           + 'left:' + x.style.left + ';'
           + 'top:' + x.style.top
         );
@@ -98,7 +107,7 @@ async function elementPopAnimation(element: Elem, source: HTMLElement, dest: HTM
   dest.style.pointerEvents = 'none';
 
   const sourceLeft = source === suggestResultElem ? 36 + 486 - 18 - 160 + 44 : source.offsetLeft;
-  const sourceTop = source === suggestResultElem ? (window.innerHeight - 36 - 370 + 30) : source.offsetTop;
+  const sourceTop = source === suggestResultElem ? (window.innerHeight - 36 - 370) : source.offsetTop;
 
   if (source === suggestResultElem) {
     wrapper.classList.add('is-that-hardcoded-shit');
@@ -122,11 +131,11 @@ async function elementPopAnimation(element: Elem, source: HTMLElement, dest: HTM
     + '--offset-y:' + offsetY + 'px;'
     + '--offset-x-zero:' + (offsetX === 0 ? '1' : '0') + ';'
     + 'left:' + (dest.offsetLeft - getElementMargin()) + 'px;'
-    + 'top:' + (dest.offsetTop - getElementMargin() + 30) + 'px;'
+    + 'top:' + (dest.offsetTop - getElementMargin()) + 'px;'
     + '--calculated-animation-time:' + animationTime + 'ms'
   );
   wrapper.appendChild(dom);
-  document.body.appendChild(wrapper);
+  elementContainer.appendChild(wrapper);
   await delay(animationTime + 250);
   
   wrapper.remove();
@@ -143,7 +152,7 @@ async function elementErrorAnimation(source: HTMLElement) {
   wrapper.setAttribute(
     'style',
     'left:' + (source.offsetLeft - getElementMargin()) + 'px;'
-    + 'top:' + (source.offsetTop - getElementMargin() + 30) + 'px'
+    + 'top:' + (source.offsetTop - getElementMargin()) + 'px'
   );
   wrapper.appendChild(dom);
   elementContainer.appendChild(wrapper);
@@ -181,7 +190,7 @@ export function ElementDom(elem2: Elem) {
 }
 
 // Adds an element and has most element logic
-export async function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
+export function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
   if(!element) return;
   const alreadyExistingDom = document.querySelector(`[data-element="${element.id}"]`) as HTMLElement;
   
@@ -463,8 +472,9 @@ export async function addElementToGame(element: Elem, sourceLocation?: HTMLEleme
   categoryDiv.appendChild(dom);
 
   if(sourceLocation) {
-    await elementPopAnimation(element, sourceLocation, dom, true);
-    dom.style.opacity = '1';
+    elementPopAnimation(element, sourceLocation, dom, true).then(() => {
+      dom.style.opacity = '1';
+    })
   }
 }
 
@@ -823,7 +833,7 @@ export function ClearElementGameUi() {
   tutorial1visible = false;
   tutorial2visible = false;
 
-  if (!getConfigBoolean('tutorial1', false)) {
+  if (!getConfigBoolean('tutorial1', false) && !getAPI()[IsNullAPI]) {
     tutorial1visible = true;
     document.querySelector('#tutorial1').classList.add('tutorial-visible');
     (document.querySelector('#tutorial1') as HTMLElement).style.display = 'block';

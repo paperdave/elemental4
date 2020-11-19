@@ -472,6 +472,7 @@ input[type='text'], input[type='password'], input[type='email'] {
   overflow-y: scroll;
   padding: 0 0.5em;
   flex: 1;
+  position: relative;
   padding-bottom: 50px;
 }
 #element-sidebar {
@@ -557,11 +558,11 @@ textarea.elem {
   animation: element-combine-x 0.28s cubic-bezier(.5,.5,.5,1) both;
 }
 .elem-held-wrapper, .elem-found-wrapper, .elem-error-wrapper {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 99900;
+  z-index: 100;
 }
 .elem-error-wrapper {
   animation: error-wrapper 0.85s both;

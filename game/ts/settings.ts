@@ -1,7 +1,7 @@
-import { escapeHTML } from "../../shared/shared";
+import { escapeHTML, formatDate } from "../../shared/shared";
 import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from "./api";
 import { createLoadingUi } from "./loading";
-import { resetAllThemes, getConfigBoolean, setConfigBoolean, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber, getInstalledServers } from "./savefile";
+import { resetAllThemes, getConfigBoolean, setConfigBoolean, getConfigString, setConfigString, processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer, getConfigNumber, setConfigNumber, getInstalledServers, installServer } from "./savefile";
 import { builtInOfficialServers, setActiveServer } from "./server-manager";
 import { animateDialogClose, animateDialogOpen, ConfirmDialog, CustomDialog, PromptDialog } from "./dialog";
 import { getDisplayStatistics } from "./statistics";
@@ -9,10 +9,50 @@ import { decreaseThemePriority, disableTheme, enableTheme, getEnabledThemeList, 
 import { addDLCByUrl } from "./dlc-fetch";
 import fileSize from "filesize";
 import { openDevThemeEditor } from "./theme-editor";
-import { clearSounds, loadSounds, playSound, updateMusicVolume } from "./audio";
 import escapeMarkdown from 'markdown-escape';
+import { playSound, updateMusicVolume } from "./audio";
+import JSZip from "jszip";
+import browserInfo from "./browser-info";
 
 let themeUpdated = false;
+
+declare const $production: string;
+declare const $build_date: string;
+
+function exportToJson(idbDatabase, cb) {
+  const exportObject = {};
+  const objectStoreNamesSet = new Set(idbDatabase.objectStoreNames);
+  const size = objectStoreNamesSet.size;
+  if (size === 0) {
+    cb(null, JSON.stringify(exportObject));
+  } else {
+    const objectStoreNames = Array.from(objectStoreNamesSet) as string[];
+    const transaction = idbDatabase.transaction(
+        objectStoreNames,
+        'readonly'
+    );
+    transaction.onerror = (event) => cb(event, null);
+
+    objectStoreNames.forEach((storeName) => {
+      const allObjects = {};
+      transaction.objectStore(storeName).openCursor().onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          allObjects[cursor.key] = cursor.value;
+          cursor.continue();
+        } else {
+          exportObject[storeName] = allObjects;
+          if (
+            objectStoreNames.length ===
+            Object.keys(exportObject).length
+          ) {
+            cb(null, exportObject);
+          }
+        }
+      };
+    });
+  }
+}
 
 export async function InitSettings() {
   let settingsOpen = false;
@@ -39,6 +79,10 @@ export async function InitSettings() {
   const playNewsSound = getConfigBoolean('config-play-news-sound', true);
   if (playNewsSound) {
     (document.querySelector('#play-news-sound') as HTMLInputElement).checked = true;
+  }
+  const showInternal = getConfigBoolean('config-show-internal-servers', false);
+  if (showInternal) {
+    (document.querySelector('#show-internal-servers') as HTMLInputElement).checked = true;
   }
 
   let lastTab = '';
@@ -77,8 +121,6 @@ export async function InitSettings() {
         if(themeUpdated) {
           themeUpdated = false;
           await updateMountedCss();
-          await clearSounds();
-          await loadSounds();
         }
         animateDialogClose(elemSettingsDialog);
       } else {
@@ -125,6 +167,43 @@ export async function InitSettings() {
       }
     });
   });
+  document.querySelector('#dump-everything').addEventListener('click', async() => {
+    var zip = new JSZip();
+    zip.file("readme.txt", [
+      `This is a data dump for Elemental 4`,
+      ``,
+      `Elemental v${require('../../package.json').version}${$production ? '' : ' (Local Build)'}`,
+      `Built on ${$build_date}`,
+      `${browserInfo.browserName} ${browserInfo.fullVersion} on ${browserInfo.osName}`,
+      `Exported on ${formatDate(new Date())}`
+    ].join('\n'));
+
+    await new Promise(resolve => {
+      const request = indexedDB.open("ELEMENTAL");
+      request.onsuccess = function() {
+        exportToJson(this.result, (_, result) => {
+          Object.keys(result).forEach(name => {
+            if(name !== 'local-forage-detect-blob-support') {
+              zip.file(name + '.json', JSON.stringify(result[name], null, 2))
+            }
+          });
+          resolve()
+        });
+      };
+    });
+
+    const local = {};
+    for (let index = 0; index < localStorage.length; index++) {
+      const key = localStorage.key(index);
+      local[key] = localStorage.getItem(key);
+    }
+    zip.file('local_storage.json', JSON.stringify(local, null, 2))
+
+    zip.generateAsync({ type: "blob" })
+      .then(function(blob) {
+        saveAs(blob, `Elem4-${Date.now()}.zip`);
+      });
+  });
   document.querySelector("[data-action='open-settings']").addEventListener('click', () => {
     if (!settingsOpen) {
       if (document.querySelector('.animate-panel')) {
@@ -164,6 +243,11 @@ export async function InitSettings() {
   document.querySelector('#play-news-sound').addEventListener('click', (ev) => {
     const v = (ev.currentTarget as HTMLInputElement).checked;
     setConfigBoolean('config-play-news-sound', v);
+  })
+  document.querySelector('#show-internal-servers').addEventListener('click', (ev) => {
+    const v = (ev.currentTarget as HTMLInputElement).checked;
+    setConfigBoolean('config-show-internal-servers', v);
+    installServer(null, null)
   })
 
   document.querySelector("#element-scale").addEventListener('click', (ev) => {

@@ -14,7 +14,7 @@ let currentTrack: MusicEntry = null;
 let currentTrackHowl: Howl = null;
 let currentTrackHowlId: number = null;
 
-export function clearSounds() {
+export async function reloadAudio() {
   urlToHowl.forEach(x => {
     x.stop();
     x.unload();
@@ -23,14 +23,22 @@ export function clearSounds() {
   urlToHowl = new Map();
   soundEvents = new Map<string, SoundEntry[]>();
   musicTracks = new Set<MusicEntry>();
+  currentTrack = null;
+  currentTrackHowl = null;
+  currentTrackHowlId = null;
 
-  playMusicTrack(getNextMusic());
+  isReloadingAudio = true;
+
+  await loadSounds();
+  await playMusicTrack(getNextMusic());
 }
 
+let isReloadingAudio = false;
 let isUnlocked = false;
 let first = true;
 
 export function playMusicTrack(track) {
+  console.log(track)
   currentTrack = track;
   if(!currentTrack) return;
   currentTrackHowl = urlToHowl.get(currentTrack.url) as Howl;
@@ -51,6 +59,9 @@ export function playMusicTrack(track) {
   if(first) {
     currentTrackHowl.fade(0, getConfigNumber('volume-music', 0.35) * 0.5 * (currentTrack.volume ?? 1), 5000);
     first = false;
+  } else if(isReloadingAudio) {
+    currentTrackHowl.fade(0, getConfigNumber('volume-music', 0.35) * 0.5 * (currentTrack.volume ?? 1), 700);
+    isReloadingAudio = false;
   } else {
     currentTrackHowl.volume(getConfigNumber('volume-music', 0.35) * 0.5 * (currentTrack.volume ?? 1));
   }
@@ -148,15 +159,19 @@ export async function loadSounds() {
   });
 
   const tracks = getMusicTracks();
-  tracks.forEach((track) => {
+  await Promise.all(tracks.map((track) => {
+    musicTracks.add(track);
     if (!urlToHowl.has(track.url)) {
-      urlToHowl.set(track.url,
-        new Howl({
+      return new Promise((resolve) => {
+        const howl = new Howl({
           src: track.url,
           preload: true,
-        })
-      );
+        });
+        howl.on('load', resolve);
+        urlToHowl.set(track.url,
+          howl
+        );
+      })
     }
-    musicTracks.add(track);
-  });
+  }));
 }

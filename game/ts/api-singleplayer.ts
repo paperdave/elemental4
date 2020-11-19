@@ -9,6 +9,9 @@ export class SingleplayerAPI extends ElementalBaseAPI {
   private data: Record<string, IStore>;
   
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
+    console.log('holy hell you actually called the singleplayer api somehow')
+    return false;
+
     this.loadedPackIds = this.saveFile.get<string[]>('activePacks') || ['base', 'elemental2'];
     
     const packList: IStore[] = [];

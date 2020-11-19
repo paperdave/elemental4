@@ -87,7 +87,7 @@ process.chdir(__dirname);
     // Minify HTML Files
     fs.readdirSync("./game/views").forEach(file => {
         let input_html = fs.readFileSync(path.join(__dirname, "game/views/", file)).toString();
-        input_html = input_html.replace(/\<script\>((.|\n|\r)*?)\<\/script\>/g, (src) => {
+        input_html = input_html.replace('{CURRENT_VERSION}', require('./package.json').version).replace(/\<script\>((.|\n|\r)*?)\<\/script\>/g, (src) => {
             let js = src.substring(8, src.length - 9);
             
             let result = terser.minify(js, {

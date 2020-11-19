@@ -13,6 +13,7 @@ import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 import { AlertDialog, PromptDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
+import { resolve } from 'path';
 
 declare const $production: string;
 declare const $build_date: string;
@@ -45,35 +46,48 @@ async function boot(MenuAPI: MenuAPI) {
   
   ui.status('Checking Updates', 0);
 
+  let failedUpdateApply;
+
   // check for updates
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== pkg.version || (!$production && !MenuAPI.upgraded)) {
       await resetBuiltInThemes();
-      const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
-      const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
-      progress.on('progress', ({ percent, current, total }) => {
-        ui.status(`Updating Client`, percent);
-      });
-      progress.on('done', async(text) => {
-        localStorage.cache = cacheKey;
-        
-        if (await caches.has(cacheName)) {
-          caches.delete(cacheName);
-        }
-
-        window.localForage = localForage;
-        eval(text);
-
-        // pass the current menu api / ui.
-        window['$elemental4']({
-          ...MenuAPI,
-          ...ui,
-          cache: cacheKey,
-          upgraded: pkg.version
+      if(await new Promise(async(resolve) => {
+        const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
+        const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
+        progress.on('progress', ({ percent, current, total }) => {
+          ui.status(`Updating Client`, percent);
         });
-      })
-      return;
+        progress.on('done', async(text) => {
+          localStorage.cache = cacheKey;
+          
+          if (await caches.has(cacheName)) {
+            caches.delete(cacheName);
+          }
+
+          window.localForage = localForage;
+          
+          try {
+            eval(text);
+
+            // pass the current menu api / ui.
+            window['$elemental4']({
+              ...MenuAPI,
+              ...ui,
+              cache: cacheKey,
+              upgraded: pkg.version
+            });
+            resolve(true)
+          } catch (error) {
+            ui.status('Error Updating', 0);
+            failedUpdateApply = error;
+            resolve(false);
+          }
+        });
+      })) {
+        return;
+      }
     }
   } catch (error) {
     SKIPPED_UPDATES = true;
@@ -120,12 +134,10 @@ async function boot(MenuAPI: MenuAPI) {
       const monacoCache = await caches.open('monaco_editor');
 
       let count = 0;
-      ui.status('Downloading Monaco Editor', 0);
-      await Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`)
+      Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`)
       .map(async (url, i, a) => {
         await monacoCache.add(url);
         count++;
-        ui.status('Downloading Monaco Editor', count/(a.length));
       }))
     }
   } 
@@ -151,6 +163,14 @@ async function boot(MenuAPI: MenuAPI) {
   const initialServer = await getActiveServer();
   ui.status('Loading Themes', 0);
   await MountThemeCSS();
+
+  if (failedUpdateApply) {
+    await AlertDialog({
+      title: 'Failed to apply updates.',
+      text: `You are playing a potentially outdated version of the game. Error: \`\`\`${failedUpdateApply && failedUpdateApply.stack}\`\`\``
+    });
+  }
+
   ui.status('Loading Settings', 0);
   await InitSettings();
   ui.status('Loading Audio', 0);
@@ -165,7 +185,12 @@ async function boot(MenuAPI: MenuAPI) {
   try {
     await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
   } catch (error) {
-    await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
+    if(initialServer.baseUrl === 'internal:singleplayer') {
+      // trollllllll
+      await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}, it might not exist yet. ;)` });
+    } else {
+      await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
+    }
     setActiveServer('internal:null');
     await connectApi('internal:null', null, ui as ElementalLoadingUi)
   }

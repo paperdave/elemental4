@@ -30,6 +30,7 @@
     "fs-extra": "^7.0.0",
     "google-spreadsheet": "^3.0.13",
     "howler": "^2.1.1",
+    "indexeddb-export-import": "^2.1.2",
     "jsonpath": "^1.0.2",
     "jszip": "^3.5.0",
     "juration": "^0.1.1",

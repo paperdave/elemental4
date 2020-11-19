@@ -4,7 +4,7 @@ import { Store } from '../../shared/store';
 import localForage from '../../shared/localForage';
 import { escapeHTML } from '../../shared/shared';
 import { connectApi, builtInApis } from './api';
-import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers, builtInInternalServers } from './server-manager';
+import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers, builtInInternalServers, builtInDevInternalServers } from './server-manager';
 
 const data = new Store('data');
 const themes = new Store('theme_data');
@@ -37,7 +37,7 @@ export async function getInstalledServers() {
 }
 export async function installServer(baseUrl: string, config: any) {
   const servers = (await data.get('servers') || []) as any;
-  if (!baseUrl.startsWith('internal:')) {
+  if (baseUrl && !baseUrl.startsWith('internal:')) {
     baseUrl = removeUrlSuffix(baseUrl);
     const f = servers.find(x => x.baseUrl === baseUrl)
     const name = config && config.name;
@@ -48,53 +48,58 @@ export async function installServer(baseUrl: string, config: any) {
       servers.push({ baseUrl, name, config });
     }
     await data.set('servers', servers);
-
-    const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
-    serverSelect.querySelectorAll('*:not(:first-child)').forEach((x) => {
-      x.remove();
-    })
-    const officialOptGroup = document.createElement('optgroup');
-    officialOptGroup.label = 'Official Servers';
-    const thirdPartyOptGroup = document.createElement('optgroup');
-    thirdPartyOptGroup.label = 'Third Party Servers';
-    const customOptGroup = document.createElement('optgroup');
-    customOptGroup.label = 'Custom Servers';
-  
-    serverSelect.appendChild(officialOptGroup);
-    serverSelect.appendChild(thirdPartyOptGroup);
-    serverSelect.appendChild(customOptGroup);
-  
-    servers
-      .concat(...builtInInternalServers.map(x => {
-        return {
-          config: builtInApis[x],
-          baseUrl: x,
-          name: builtInApis[x].name
-        };
-      }))
-      .forEach((server) => {
-        const option = document.createElement('option');
-        option.value = server.baseUrl;
-        option.innerHTML = escapeHTML(
-          (builtInOfficialServers.includes(server.baseUrl) || builtInInternalServers.includes(server.baseUrl))
-            ? `${server.name}`
-            : `${server.name} - ${processBaseUrl(server.baseUrl)}`
-        );
-    
-        if (builtInOfficialServers.includes(server.baseUrl) || builtInInternalServers.includes(server.baseUrl)) {
-          officialOptGroup.appendChild(option);
-        } else if(builtInThirdPartyServers.includes(server.baseUrl)) {
-          thirdPartyOptGroup.appendChild(option);
-        } else {
-          customOptGroup.appendChild(option);
-        }
-      });
-    serverSelect.value = 'internal:change-btn';
-    if (officialOptGroup.childElementCount === 0) officialOptGroup.remove();
-    if (thirdPartyOptGroup.childElementCount === 0) thirdPartyOptGroup.remove();
-    if (customOptGroup.childElementCount === 0) customOptGroup.remove();
   }
   
+  const serverSelect = document.querySelector('#change-server') as HTMLSelectElement;
+  serverSelect.querySelectorAll('*:not(:first-child)').forEach((x) => {
+    x.remove();
+  })
+  const officialOptGroup = document.createElement('optgroup');
+  officialOptGroup.label = 'Official Servers';
+  const devOptGroup = document.createElement('optgroup');
+  devOptGroup.label = 'Testing/Internal "Servers"';
+  const thirdPartyOptGroup = document.createElement('optgroup');
+  thirdPartyOptGroup.label = 'Third Party Servers';
+  const customOptGroup = document.createElement('optgroup');
+  customOptGroup.label = 'Custom Servers';
+
+  serverSelect.appendChild(officialOptGroup);
+  serverSelect.appendChild(devOptGroup);
+  serverSelect.appendChild(thirdPartyOptGroup);
+  serverSelect.appendChild(customOptGroup);
+
+  servers
+    .concat(...builtInInternalServers.concat(...getConfigBoolean('config-show-internal-servers', false) ? builtInDevInternalServers : []).map(x => {
+      return {
+        config: builtInApis[x],
+        baseUrl: x,
+        name: builtInApis[x].name
+      };
+    }))
+    .forEach((server) => {
+      const option = document.createElement('option');
+      option.value = server.baseUrl;
+      option.innerHTML = escapeHTML(
+        (builtInOfficialServers.includes(server.baseUrl) || builtInInternalServers.includes(server.baseUrl))
+          ? `${server.name}`
+          : `${server.name} - ${processBaseUrl(server.baseUrl)}`
+      );
+
+      if (builtInOfficialServers.includes(server.baseUrl) || builtInInternalServers.includes(server.baseUrl)) {
+        officialOptGroup.appendChild(option);
+      } else if(builtInThirdPartyServers.includes(server.baseUrl)) {
+        thirdPartyOptGroup.appendChild(option);
+      } else if(builtInDevInternalServers.includes(server.baseUrl)) {
+        devOptGroup.appendChild(option);
+      } else {
+        customOptGroup.appendChild(option);
+      }
+    });
+  serverSelect.value = 'internal:change-btn';
+  if (officialOptGroup.childElementCount === 0) officialOptGroup.remove();
+  if (thirdPartyOptGroup.childElementCount === 0) thirdPartyOptGroup.remove();
+  if (customOptGroup.childElementCount === 0) customOptGroup.remove();
+  if (devOptGroup.childElementCount === 0) devOptGroup.remove();
 }
 export async function getServer(baseUrl: string) {
   baseUrl = removeUrlSuffix(baseUrl);

@@ -1,9 +1,8 @@
 import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
-import { DebugAllColorsAPI } from "../../shared/api/debug-allcolors";
 import { NV7ElementalAPI } from "../../shared/api/nv7/nv7";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
-import { escapeHTML } from "../../shared/shared";
+import { delay, delayFrame, escapeHTML } from "../../shared/shared";
 import { SingleplayerAPI } from "./api-singleplayer";
 import { AlertDialog, ConfirmDialog, PromptDialog, CustomDialog } from "./dialog";
 import { addElementToGame, ClearElementGameUi, InitElementNews } from "./element-game";
@@ -15,37 +14,20 @@ import { allBuiltInServers } from "./server-manager";
 import { ChunkedStore } from "../../shared/store-chunk";
 import { LedomElementalAPI } from "../../shared/api/ledom";
 import { resolve } from "url";
+import { InternalNullAPI, IsNullAPI } from "../../shared/api/internal/internal-null";
+import { InternalStressTestAPI } from "../../shared/api/internal/internal-stress-test";
+import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
   baseUrl = '';
 }
 
-const IsNullAPI = Symbol('IsNullAPI');
-
-export class NullAPI extends ElementalBaseAPI {  
-  static type = 'internal:null'
-
-  public [IsNullAPI] = true;
-  
-  async open(ui?: ElementalLoadingUi): Promise<boolean> {
-    return true;
-  }
-  async close(): Promise<void> {
-
-  }
-  async getStats() {
-    return {}
-  }
-  async getElement(id: string) { return null; }
-  async getCombo(ids: string[]): Promise<string[]> { return [] }
-  async getStartingInventory(): Promise<string[]> { return []; }
-}
-
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
+  'internal:null': InternalNullAPI,
   'internal:all-colors': DebugAllColorsAPI,
+  'internal:stress-test': InternalStressTestAPI,
   'internal:singleplayer': SingleplayerAPI,
-  'internal:null': NullAPI,
   'reborn': RebornElementalAPI,
   'elemental4': Elemental4API,
   'elemental5': Elemental5API,
@@ -59,11 +41,11 @@ let currentSaveFile: string;
 let currentSaveFileList: ServerSavefileEntry[];
 
 export const builtInApis = {
-  'internal:all-colors': {
-    type: "internal:all-colors",
-    name: "Theme Debug: All Colors",
-    description: "Contains all colors from the Elemental Palette.",
-    icon: location.origin + '/all-colors-server.png',
+  'internal:null': {
+    type: "internal:null",
+    name: "No Server",
+    description: "You are not connected to any server.",
+    icon: location.origin + '/null-server.png',
   },
   'internal:singleplayer': {
     type: "internal:singleplayer",
@@ -71,12 +53,30 @@ export const builtInApis = {
     description: "Create Element Packs to create your own Elemental Game, or play back shut down databases.",
     icon: location.origin + '/singleplayer.png',
   },
-  'internal:null': {
-    type: "internal:null",
-    name: "No Server",
-    description: "You are not connected to any server.",
-    icon: location.origin + '/null-server.png',
-  }
+  'internal:all-colors': {
+    type: "internal:all-colors",
+    name: "Theme Debug: All Colors",
+    description: "Contains all colors from the Elemental Palette.",
+    icon: location.origin + '/all-colors-server.png',
+  },
+  'internal:stress-test-1k': {
+    type: "internal:stress-test",
+    name: "Stress Test: 5k Elements, 1 Category",
+    description: "1k Dummy Elements",
+    elements: 1000
+  },
+  'internal:stress-test-5k': {
+    type: "internal:stress-test",
+    name: "Stress Test: 5k Elements, 1 Category",
+    description: "5k Dummy Elements",
+    elements: 5000
+  },
+  'internal:stress-test-10k': {
+    type: "internal:stress-test",
+    name: "Stress Test: 10k Elements, 1 Category",
+    description: "10k Dummy Elements",
+    elements: 10000
+  },
 }
 
 export async function getSupportedServerTypes() {
@@ -117,9 +117,6 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     if (!isOpen) {
       throw new Error("Could not open API connection.");
     }
-    if(selfMadeUi) {
-      (ui as any).dispose();
-    }
     if (currentAPI) {
       try {
         currentAPI.close();
@@ -129,8 +126,8 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       }
     }
 
-    ClearElementGameUi();
     currentAPI = api;
+    ClearElementGameUi();
 
     (document.querySelector('#element-sidebar') as HTMLElement).style.display = getSubAPI(api, 'suggestion') ? 'block' : 'none';
     (document.querySelector('#null_server') as HTMLElement).style.display = api[IsNullAPI] ? 'flex' : 'none';
@@ -149,11 +146,18 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       document.querySelector('#server-remove').removeAttribute('disabled');
     }
 
+    ui.status('Loading News');
     await InitElementNews();
 
-    await onSaveFileLoad();
+    await onSaveFileLoad(ui);
+
+    ui.status('Starting Statistics');
 
     await startStatistics();
+
+    if(selfMadeUi) {
+      (ui as any).dispose();
+    }
 
     return true;
   } catch (error) {
@@ -169,19 +173,45 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
 }
 
 export async function setAPISaveFile(id: string) {
-  if(id !== currentSaveFile) {
-    await endStatistics()
-    ClearElementGameUi();
-    await setActiveSaveFile(currentAPI, id);
-    await onSaveFileLoad();
-    await startStatistics();
+  const ui = createLoadingUi();
+  try {
+    if(id !== currentSaveFile) {
+      ui.status('Saving Current Game', 0);
+      await endStatistics()
+      ClearElementGameUi();
+      ui.status('Loading Savefile', 0);
+      await setActiveSaveFile(currentAPI, id);
+      await onSaveFileLoad(ui);
+      ui.status('Finalizing', 0);
+      await startStatistics();
+    }
+  } catch (error) {
+    
   }
+  ui.dispose();
 }
 
-async function onSaveFileLoad() {
+async function onSaveFileLoad(ui: ElementalLoadingUi) {
+  ui.status('Loading Elements');
   const ownedElements = await getOwnedElements(currentAPI);
   const elementsToAdd = await Promise.all(ownedElements.map(id => currentAPI.getElement(id)));
-  elementsToAdd.forEach(elem => addElementToGame(elem));
+  elementsToAdd.forEach((elem, i, a) => {
+    
+  });
+
+  for (let i = 0; i < elementsToAdd.length; i++) {
+    if (i % 500 === 0) {
+      ui.status('Loading Elements', i / elementsToAdd.length)
+      await delay(1);
+    }
+    addElementToGame(elementsToAdd[i])
+  }
+
+  ui.status('Loading Elements', 1);
+
+  // try and wait if a ton of elements exist
+  await delayFrame();
+  await delayFrame();
 
   await recalculateSavefileDropdown();
 }

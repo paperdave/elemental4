@@ -1,6 +1,5 @@
 import { debounce } from "@reverse/debounce";
 import { humanize } from "juration";
-import localStorage from '../../shared/localStorage';
 import { ElementalBaseAPI } from "../../shared/elem";
 import { getAPI } from "./api";
 import { getOwnedElements, getStatistics, setStatistics } from "./savefile";

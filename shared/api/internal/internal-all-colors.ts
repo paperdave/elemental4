@@ -1,5 +1,4 @@
-import Color from "color";
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, ElementalColorPalette } from "../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ElementalRules, ServerStats, ElementalColorPalette } from "../../elem";
 
 const mainPalette = [
   "white",

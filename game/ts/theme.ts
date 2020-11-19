@@ -5,7 +5,7 @@ import { delay } from "../../shared/shared";
 import { addDLCByUrl, DLCType } from "./dlc-fetch";
 import { version } from "../../package.json";
 import { getInstalledThemes, installThemes, uninstallThemes } from "./savefile";
-import { SoundId } from "./audio";
+import { reloadAudio, SoundId } from "./audio";
 import { addThemeToUI } from "./settings";
 import { THEME_VERSION } from "./theme-version";
 import { ConfirmDialog } from "./dialog";
@@ -348,6 +348,7 @@ export async function updateMountedCss(animate = true) {
   }
   document.head.appendChild(style);
   if (oldStyle) {
+    await reloadAudio();
     await delay(20);
     oldStyle.remove();
     reloadElementCssColors()

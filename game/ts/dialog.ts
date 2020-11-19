@@ -4,8 +4,12 @@ import { playSound } from "./audio";
 import marked from 'marked';
 import { AlertDialogOptions, ConfirmDialogOptions, PromptDialogOptions, CustomDialogOptions, DialogButton } from "../../shared/elem";
 
+let lastDialogClose = 0
+
 export async function animateDialogOpen(root: HTMLElement) {
-  playSound('dialog.open');
+  if(Date.now() - lastDialogClose > 500) {
+    playSound('dialog.open');
+  }
   window.focus()
   root.classList.add('dialog-open');
   root.classList.add('dialog-opening');
@@ -15,6 +19,7 @@ export async function animateDialogOpen(root: HTMLElement) {
 }
 
 export async function animateDialogClose(root: HTMLElement) {
+  lastDialogClose = Date.now();
   playSound('dialog.close');
   root.classList.add('dialog-closing');
   await delay(200);
