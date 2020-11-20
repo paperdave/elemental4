@@ -74,7 +74,8 @@ export class RebornElementalAPI extends ElementalBaseAPI {
   async getCombo(ids: string[]): Promise<string[]> {
     const find = await this.store.get(ids.join('+'));
     if (!find) {
-      const elem = await fetch(this.baseUrl + '/api/get-recipe/' + sortCombo(...ids).join('/')).then(x => x.json());
+      const sorted = ids.map(x => parseInt(x)).sort((a, b) => a - b);
+      const elem = await fetch(this.baseUrl + '/api/get-recipe/' + sorted.join('/')).then(x => x.json());
       if (Array.isArray(elem) && elem.length === 0) {
         return [];
       } else {
