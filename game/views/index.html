@@ -252,7 +252,7 @@
       let autoStart = !!(localStorage.auto_start);
       let cache = localStorage.cache || 'resolve';
 
-      if (location.origin === 'https://elemental4.net') {
+      if (location.origin !== 'https://elemental4.net') {
         document.querySelector('#dev-para').removeAttribute('style')
       }
       if (location.href.includes('archive.org')) {
