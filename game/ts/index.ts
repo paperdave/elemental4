@@ -54,7 +54,7 @@ async function boot(MenuAPI: MenuAPI) {
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== pkg.version || (!$production && !MenuAPI.upgraded)) {
-      await resetBuiltInThemes();
+      resetBuiltInThemes();
       if(await new Promise(async(resolve) => {
         const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
         const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
@@ -180,7 +180,7 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Checking for new DLC', 0);
   await showThemeAddDialog()
   ui.status('Loading Element UI', 0);
-  await InitElementGameUi();
+  InitElementGameUi();
 
   ui.status('Loading API', 0);
 
