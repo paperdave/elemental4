@@ -13,16 +13,17 @@ import { playSound } from "./audio";
 import { endTreeCanvas, getElementTree, initTreeCanvas } from "./tree";
 import Color from "color";
 import { IsNullAPI } from "../../shared/api/internal/internal-null";
+import { elementPopAnimation, elementErrorAnimation } from "./element-game/element-animations"
 
 function formatCategory(x: string) {
   return x.split('-').map(capitalize).join(' ')
 }
 
-let elementContainer: HTMLElement;
+export let elementContainer: HTMLElement;
 let infoContainer: HTMLElement;
 let infoContainerContainer: HTMLElement;
 let suggestContainer: HTMLElement;
-let suggestResultElem: HTMLTextAreaElement;
+export let suggestResultElem: HTMLTextAreaElement;
 let suggestLeftElem: HTMLElement;
 let suggestRightElem: HTMLElement;
 let suggestHint: HTMLElement;
@@ -50,7 +51,7 @@ let suggestLeft: Elem;
 let suggestRight: Elem;
 let suggestResult: E4Suggestion;
 
-function getElementMargin() {
+export function getElementMargin() {
   const x = document.querySelector('.elem') as HTMLElement;
   if(x) {
     const y = parseFloat(getComputedStyle(x).marginLeft);
@@ -98,69 +99,6 @@ async function dropHoldingElement(combineWith?: HTMLElement) {
       x.remove();
     }
   }
-}
-
-async function elementPopAnimation(element: Elem, source: HTMLElement, dest: HTMLElement, isNew: boolean) {
-  const dom = ElementDom(element);
-  const wrapper = document.createElement('div');
-  
-  dest.style.pointerEvents = 'none';
-
-  const sourceLeft = source === suggestResultElem ? 36 + 486 - 18 - 160 + 44 : source.offsetLeft;
-  const sourceTop = source === suggestResultElem ? (window.innerHeight - 36 - 370) : source.offsetTop;
-
-  if (source === suggestResultElem) {
-    wrapper.classList.add('is-that-hardcoded-shit');
-  }
-
-  if (isNew) {
-    playSound('element.valid');
-  } else {
-    playSound('element.valid.rediscover');
-  }
-
-  wrapper.classList.add('elem-found-wrapper');
-  const offsetX = ((sourceLeft - getElementMargin()) - (dest.offsetLeft - getElementMargin()));
-  const offsetY = ((sourceTop - getElementMargin()) - (dest.offsetTop - getElementMargin()));
-  const distance = ((offsetX**2 + (4*offsetY)**2) * 0.95) ** (0.4);
-  const animationTime = Math.max(260, Math.min(250 + distance, 1000));
-  wrapper.setAttribute(
-    'style',
-    (source === suggestResultElem ? '--offset-scale:' + 2 + ';' : '')
-    + '--offset-x:' + offsetX + 'px;'
-    + '--offset-y:' + offsetY + 'px;'
-    + '--offset-x-zero:' + (offsetX === 0 ? '1' : '0') + ';'
-    + 'left:' + (dest.offsetLeft - getElementMargin()) + 'px;'
-    + 'top:' + (dest.offsetTop - getElementMargin()) + 'px;'
-    + '--calculated-animation-time:' + animationTime + 'ms'
-  );
-  wrapper.appendChild(dom);
-  elementContainer.appendChild(wrapper);
-  await delay(animationTime + 250);
-  
-  wrapper.remove();
-  dest.style.pointerEvents = '';
-}
-
-async function elementErrorAnimation(source: HTMLElement) {
-  const dom = document.createElement('div');
-  dom.className = `elem error`;
-  
-  const wrapper = document.createElement('div');
-
-  wrapper.classList.add('elem-error-wrapper');
-  wrapper.setAttribute(
-    'style',
-    'left:' + (source.offsetLeft - getElementMargin()) + 'px;'
-    + 'top:' + (source.offsetTop - getElementMargin()) + 'px'
-  );
-  wrapper.appendChild(dom);
-  elementContainer.appendChild(wrapper);
-
-  playSound('element.invalid');
-
-  await delay(850);
-  wrapper.remove();
 }
 
 function formatSuggestDisplay(x: number) {
