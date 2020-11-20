@@ -7,6 +7,7 @@ import { setSuggestOthers, suggestOtherHeader, suggestOther1Downvote, suggestOth
 import { addElementToGame } from "../add-element";
 import { incrementStatistic } from "../statistics";
 import DomToImage from 'dom-to-image';
+import { capitalize } from "@reverse/string";
 
 export function closeSuggestionMenu() {
   if(suggestContainer.classList.contains('animate-panel')) {
@@ -75,6 +76,16 @@ export function openSuggestionMenu() {
 export async function submitSuggestion() {
   const api = getAPI('suggestion');
     if(api) {
+      const suggestTextarea = document.querySelector('textarea.elem') as HTMLTextAreaElement;
+      suggestTextarea.value = (suggestTextarea.value.slice(0, 50).replace(/^ |( ) +/, '$1')).split(' ').map(capitalize).join(' ');
+      while(suggestTextarea.scrollHeight > 80) {
+        if(suggestTextarea.value.length === 0) {
+          return;
+        }
+        suggestTextarea.value = suggestTextarea.value.slice(0, -1);
+      }
+      suggestResult.text = suggestTextarea.value;
+      
       document.querySelector('#suggest-loader').classList.add('animate-in');
       const result = await api.createSuggestion([suggestLeft.id, suggestRight.id], {
         color: suggestResult.color as any,
