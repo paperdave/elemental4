@@ -1,6 +1,6 @@
 import localForage from '../../shared/localForage';
 import { MountThemeCSS, resetBuiltInThemes, showThemeAddDialog } from './theme';
-import { InitSettings } from './settings';
+import { InitSettings } from './settings/settings';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
 import { fetchWithProgress } from '../../shared/fetch-progress';
@@ -10,10 +10,9 @@ import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
-import { AlertDialog, PromptDialog } from './dialog';
+import { AlertDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
-import { resolve } from 'path';
 
 declare const $production: string;
 declare const $build_date: string;

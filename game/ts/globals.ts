@@ -3,7 +3,7 @@ export function exposeGlobals() {
     window["$ts"] = {
         'api': require('./api'),
         'savefile': require('./savefile'),
-        'settings': require('./settings'),
+        'settings': require('./settings/settings'),
         'theme': require('./theme'),
         'server': require('./server-manager'),
         'game': require('./element-game'),
