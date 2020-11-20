@@ -18,6 +18,7 @@
   --background-button: var(--primary);
   --background-button-discord: #7289DA;
   --background-button-source: #7eda72;
+  --background-button-more-content: #daca72;
 
   --text-info: var(--text-main);
   --background-info:var(--background-main);
@@ -375,6 +376,9 @@ a:active {
 }
 .button-source {
   background-color: var(--background-button-source);
+}
+.button-more-content {
+  background-color: var(--background-button-more-content);
 }
 .button-black {
   background-color: var(--background-top-bar);
