@@ -3,7 +3,8 @@ Elemental 4 is a fan made recreation of [Elemental 3](http://htwins.net/elem3/),
 technologies, and with many client customization features.
 
 ## Play Live Build
-[Elemental4.net](https://elemental4.net)
+[elemental4.net](https://elemental4.net) <br>
+[dev.elemental4.net (development branch)](https://dev.elemental4.net)
 
 ## Development
 The game is separated onto two parts: server (server folder) and client (game folder). They are
