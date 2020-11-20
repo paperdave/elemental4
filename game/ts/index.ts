@@ -1,6 +1,6 @@
 import localForage from '../../shared/localForage';
 import { MountThemeCSS, resetBuiltInThemes, showThemeAddDialog } from './theme';
-import { InitSettings } from './settings';
+import { InitSettings } from './settings/settings';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
 import { fetchWithProgress } from '../../shared/fetch-progress';
@@ -10,10 +10,9 @@ import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
-import { AlertDialog, PromptDialog } from './dialog';
+import { AlertDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
-import { resolve } from 'path';
 
 declare const $production: string;
 declare const $build_date: string;
@@ -54,7 +53,7 @@ async function boot(MenuAPI: MenuAPI) {
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== pkg.version || (!$production && !MenuAPI.upgraded)) {
-      await resetBuiltInThemes();
+      resetBuiltInThemes();
       if(await new Promise(async(resolve) => {
         const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
         const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
@@ -180,7 +179,7 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Checking for new DLC', 0);
   await showThemeAddDialog()
   ui.status('Loading Element UI', 0);
-  await InitElementGameUi();
+  InitElementGameUi();
 
   ui.status('Loading API', 0);
 
