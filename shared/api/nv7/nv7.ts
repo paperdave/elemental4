@@ -28,7 +28,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		return await login(this, ui);
   }
   async close(): Promise<void> {
-		this.ref.off("value");
+		this.ref.close();
 		return;
 	}
   async getStats(): Promise<ServerStats> {
