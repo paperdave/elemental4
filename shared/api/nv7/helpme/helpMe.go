@@ -11,7 +11,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-x// Element has the data for a created element
+// Element has the data for a created element
 type Element struct {
 	Color     string   `json:"color"`
 	Comment   string   `json:"comment"`
