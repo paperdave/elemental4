@@ -40,3 +40,5 @@ The live server uses voting equations similar to but i change it every so often.
 VOTE_THRESHOLD_EQUATION=(5-0.1*voters)+(100^(-hours+1.5)+1.03^(-hours+48))
 VOTE_SCORES_EQUATION=-2^(-hours*1.8)+1
 ```
+
+SVG stuff designed in figma, see project [here](https://www.figma.com/file/wrCKu78yrbRzMdHAS3EpNv/Elemental-4?node-id=0%3A1)
