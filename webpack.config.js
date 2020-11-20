@@ -23,7 +23,7 @@ module.exports = (prod = false) => ({
     },
     plugins: [
         new webpack.DefinePlugin({
-            $version: version,
+            $version: JSON.stringify(version),
             $isDevDeployBranch: (process.env.CONTEXT === 'deploy-preview') || (process.env.CONTEXT === 'branch-preview'),
             $production: JSON.stringify(prod),
             $build_date: JSON.stringify(execSync('date +"%F %H:%M:%S"').toString()),
