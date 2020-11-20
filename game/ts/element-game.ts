@@ -114,7 +114,8 @@ export function InitElementGameUi() {
     if (!(ev.target && ev.target.classList && ev.target.classList.contains('elem'))) {
       dropHoldingElement();
     }
-    if (!(ev.path && ev.path.includes(infoContainer))) {
+    const path = ev.path || (ev.composedPath && ev.composedPath());
+    if (!(path && path.includes(infoContainer))) {
       if (infoOpen) {
         infoContainer.style.display = 'none';
         infoOpen = false;

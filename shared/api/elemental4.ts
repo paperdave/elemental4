@@ -28,7 +28,7 @@ export class Elemental4API
              OptionsMenuAPI,
              RecentCombinationsAPI  {
   static type = 'elemental4';
-  private static DB_VERSION = 5;
+  private static DB_VERSION = 6;
 
   private dbMeta: DBMeta;
 
@@ -43,7 +43,7 @@ export class Elemental4API
     const eResult = typeof eResultI === 'string' ? await this.getElement(eResultI) : eResultI;
     
     const complexity = Math.max(eLeft.stats.treeComplexity, eRight.stats.treeComplexity) + 1;
-    if (complexity < eResult.stats.treeComplexity || eResult.stats.treeComplexity === 0) {
+    if ((complexity < eResult.stats.treeComplexity || (eResult.stats.treeComplexity === 0 && eResult.stats.usageCount === 0))) {
       eResult.stats.treeComplexity = complexity;
       eResult.stats.simplestRecipe = sortCombo(eLeft.id, eRight.id);
       eResult.stats.fundamentals = {
