@@ -1,4 +1,5 @@
-import { ElementDom, suggestResultElem, getElementMargin, elementContainer } from "../element-game"
+import { suggestResultElem, getElementMargin, elementContainer } from "../element-game"
+import { ElementDom } from "../utils";
 import { Elem } from "../../../shared/elem";
 import { playSound } from "../audio";
 import { delay } from "../../../shared/shared";

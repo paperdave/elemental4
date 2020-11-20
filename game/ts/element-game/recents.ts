@@ -1,5 +1,5 @@
 import { getAPI } from "../api";
-import { ElementDom } from "../element-game";
+import { ElementDom } from "../utils";
 import { playSound } from "../audio";
 import { ElementalBaseAPI, RecentCombination } from "../../../shared/elem";
 
