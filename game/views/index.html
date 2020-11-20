@@ -303,28 +303,30 @@
                   });
                 }
               } else done();
-            }).then((done, error) => {
-              let timer;
-              localStorage.singleton_time = Date.now();
-              const handler = (e) => {
-                if(e.key == "singleton_available"){
-                  clearTimeout(timer);
-                  document.body.classList.remove('launching')
-                  document.querySelector('#content').innerHTML = '<h1>Unfortunately, you cannot run elemental in more than one browser tab at a time.</h1>'
-                  window.close();
-                  error();
-                }
-              };
-              window.addEventListener('storage', handler, false);
-              timer = setTimeout(() => {
-                window.removeEventListener('storage', handler, false);
-                window.addEventListener('storage', function(e){
-                  if(e.key == "singleton_time"){
-                    localStorage.singleton_available = Date.now();
+            }).then(() => {
+              return new Promise((done, error) => {
+                let timer;
+                localStorage.singleton_time = Date.now();
+                const handler = (e) => {
+                  if(e.key == "singleton_available"){
+                    clearTimeout(timer);
+                    document.body.classList.remove('launching')
+                    document.querySelector('#content').innerHTML = '<h1>Unfortunately, you cannot run elemental in more than one browser tab at a time.</h1>'
+                    window.close();
+                    error();
                   }
-                }, false);
-                done();
-              }, 100);
+                };
+                window.addEventListener('storage', handler, false);
+                timer = setTimeout(() => {
+                  window.removeEventListener('storage', handler, false);
+                  window.addEventListener('storage', function(e){
+                    if(e.key == "singleton_time"){
+                      localStorage.singleton_available = Date.now();
+                    }
+                  }, false);
+                  done();
+                }, 100);
+              })
             }),
           ]).then(function(){
             d();
