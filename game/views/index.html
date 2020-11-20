@@ -303,15 +303,16 @@
                   });
                 }
               } else done();
-            }).then(done => {
+            }).then((done, error) => {
               let timer;
               localStorage.singleton_time = Date.now();
               const handler = (e) => {
                 if(e.key == "singleton_available"){
-                  clearInterval(timer);
+                  clearTimeout(timer);
                   document.body.classList.remove('launching')
                   document.querySelector('#content').innerHTML = '<h1>Unfortunately, you cannot run elemental in more than one browser tab at a time.</h1>'
                   window.close();
+                  error();
                 }
               };
               window.addEventListener('storage', handler, false);
