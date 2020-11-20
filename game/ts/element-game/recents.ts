@@ -35,6 +35,7 @@ export async function InitElementNews() {
     const newsItems = await Promise.all(combinations.map((x) => getRecentCombinationDOM(rc, x)));
 
     const container = document.querySelector('.news-container');
+    container.innerHTML = '';
     newsItems.forEach(x => container.appendChild(x));
 
     async function onNewRecent() {
