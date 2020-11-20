@@ -1,63 +1,52 @@
-import { getClassFromDisplay, getCSSFromDisplay } from "./element-color";
+import { getCSSFromDisplay } from "./element-color";
 import { arrayGet3Random, delay, delayFrame, escapeHTML, formatDate, sortCombo } from "../../shared/shared";
-import { capitalize, plural } from "@reverse/string";
+import { capitalize } from "@reverse/string";
 import { getConfigBoolean, setConfigBoolean, setElementAsOwned } from "./savefile";
-import { Elem, ElementalBaseAPI, RecentCombination, Suggestion } from "../../shared/elem";
+import { Elem, Suggestion } from "../../shared/elem";
 import { getAPI } from "./api";
 import { E4Suggestion } from "../../shared/elemental4-types";
-import { randomOf } from "@reverse/random";
-import { compactMiniNumber } from "@reverse/compact";
 import DomToImage from 'dom-to-image';
 import { incrementStatistic } from "./statistics";
 import { playSound } from "./audio";
-import { endTreeCanvas, getElementTree, initTreeCanvas } from "./tree";
-import Color from "color";
+import { endTreeCanvas } from "./tree";
 import { IsNullAPI } from "../../shared/api/internal/internal-null";
-import { elementPopAnimation, elementErrorAnimation } from "./element-game/element-animations"
-import { formatCategory, updateSuggestion, ElementDom} from "./utils";
+import { updateSuggestion } from "./utils";
+import { addElementToGame } from "./add-element";
+import { getElementMargin } from "./utils";
 
 export let elementContainer: HTMLElement;
-let infoContainer: HTMLElement;
-let infoContainerContainer: HTMLElement;
-let suggestContainer: HTMLElement;
+export let infoContainer: HTMLElement;
+export let infoContainerContainer: HTMLElement;
+export let suggestContainer: HTMLElement;
 export let suggestResultElem: HTMLTextAreaElement;
-let suggestLeftElem: HTMLElement;
-let suggestRightElem: HTMLElement;
-let suggestHint: HTMLElement;
+export let suggestLeftElem: HTMLElement;
+export let suggestRightElem: HTMLElement;
+export let suggestHint: HTMLElement;
 
-let suggestOtherHeader: HTMLElement;
-let suggestOther1Elem: HTMLElement;
-let suggestOther1Downvote: HTMLElement;
-let suggestOther2Elem: HTMLElement;
-let suggestOther2Downvote: HTMLElement;
-let suggestOther3Elem: HTMLElement;
-let suggestOther3Downvote: HTMLElement;
-let suggestOther1: Suggestion<'dynamic-elemental4'>;
-let suggestOther2: Suggestion<'dynamic-elemental4'>;
-let suggestOther3: Suggestion<'dynamic-elemental4'>;
+export let suggestOtherHeader: HTMLElement;
+export let suggestOther1Elem: HTMLElement;
+export let suggestOther1Downvote: HTMLElement;
+export let suggestOther2Elem: HTMLElement;
+export let suggestOther2Downvote: HTMLElement;
+export let suggestOther3Elem: HTMLElement;
+export let suggestOther3Downvote: HTMLElement;
+export let suggestOther1: Suggestion<'dynamic-elemental4'>;
+export let suggestOther2: Suggestion<'dynamic-elemental4'>;
+export let suggestOther3: Suggestion<'dynamic-elemental4'>;
 
-let tutorial1visible = false;
-let tutorial2visible = false;
+export let tutorial1visible = false;
+export let tutorial2visible = false;
 
 let infoOpen = false;
-let holdingElement: Elem = null;
-let holdingElementDom: HTMLElement = null;
-let holdingRect: DOMRect;
+export let holdingElement: Elem = null;
+export let holdingElementDom: HTMLElement = null;
+export let holdingRect: DOMRect;
 
-let suggestLeft: Elem;
-let suggestRight: Elem;
+export let suggestLeft: Elem;
+export let suggestRight: Elem;
 export let suggestResult: E4Suggestion;
 
-export function getElementMargin() {
-  const x = document.querySelector('.elem') as HTMLElement;
-  if(x) {
-    const y = parseFloat(getComputedStyle(x).marginLeft);
-    return y;
-  }
-  return 8 
-}
-
-async function dropHoldingElement(combineWith?: HTMLElement) {
+export async function dropHoldingElement(combineWith?: HTMLElement) {
   holdingElement = null;
   if (holdingElementDom) {
     const x = holdingElementDom;
@@ -95,294 +84,6 @@ async function dropHoldingElement(combineWith?: HTMLElement) {
     } else {
       x.remove();
     }
-  }
-}
-
-// Adds an element and has most element logic
-export function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
-  if(!element) return;
-  const alreadyExistingDom = document.querySelector(`[data-element="${element.id}"]`) as HTMLElement;
-  
-  if (alreadyExistingDom) {
-    incrementStatistic('rediscoveries');
-
-    if(!sourceLocation) {
-      if (!alreadyExistingDom.classList.contains('animate-bounce')) {
-        alreadyExistingDom.classList.add('animate-bounce');
-        setTimeout(() => {
-          alreadyExistingDom.classList.remove('animate-bounce');
-        }, 600);
-      }
-    } else {
-      elementPopAnimation(element, sourceLocation, alreadyExistingDom, false);
-    }
-    return;
-  } else {
-    setElementAsOwned(getAPI(), element.id);
-  }
-
-  const dom = ElementDom(element);
-
-  dom.addEventListener('click', async(ev) => {
-    if (tutorial1visible) {
-      document.querySelector('#tutorial1').classList.remove('tutorial-visible');
-      tutorial1visible = false;
-      setConfigBoolean('tutorial1', true);
-      setTimeout(() => {
-        (document.querySelector('#tutorial1') as HTMLElement).style.display = 'none';
-      }, 250);
-    }
-  
-    if (holdingElement) {
-      const id1 = element.id
-      const id2 = holdingElement.id
-      const element2 = holdingElement;
-
-      const [results] = await Promise.all([
-        // Combo Logic, returns elements to add
-        (async() => {
-          const combo = await getAPI().getCombo(sortCombo(id1, id2));
-          if(combo.length === 0) {
-            return null;
-          } else {
-            return Promise.all(combo.map(x => getAPI().getElement(x)))
-          }
-        })(),
-        // Play Animation.
-        dropHoldingElement(dom),
-      ]);
-
-      dom.classList.remove('restock');
-      void dom.offsetWidth;
-      dom.classList.add('restock');
-
-      if (results) {
-        incrementStatistic('combinationsSuccess');
-        results.forEach(result => {
-          addElementToGame(result, dom);
-        });
-      } else {
-        incrementStatistic('combinationsFailure');
-        elementErrorAnimation(dom);
-        
-        const api = getAPI('suggestion');
-        if (api) {
-          const [base, saturation, lightness] = randomOf([element, element2]).display.color.split('_');
-          
-          suggestResult = {
-            color: {
-              base: base as any,
-              lightness: parseFloat(lightness),
-              saturation: parseFloat(saturation),
-            },
-            text:'New Element'
-          };
-          suggestLeft = element;
-          suggestRight = element2;
-
-          suggestLeftElem.innerHTML = escapeHTML(element.display.text);
-          suggestLeftElem.className = `elem ${getClassFromDisplay(element.display)}`;
-          suggestRightElem.innerHTML = escapeHTML(element2.display.text);
-          suggestRightElem.className = `elem ${getClassFromDisplay(element2.display)}`;
-
-          document.querySelector('[data-suggest-prompt="left"]').innerHTML = escapeHTML(element.display.text);
-          document.querySelector('[data-suggest-prompt="right"]').innerHTML = escapeHTML(element2.display.text);
-
-          suggestResultElem.style.display = '';
-
-          updateSuggestion();
-
-          suggestContainer.classList.add('animate-prompt');
-          suggestContainer.style.width = '';
-          suggestContainer.style.width = (suggestContainer.offsetWidth+5) + 'px'
-
-          suggestOtherHeader.classList.add('no');
-          suggestOther1Elem.classList.add('no');
-          suggestOther1Downvote.classList.add('no');
-          suggestOther2Elem.classList.add('no');
-          suggestOther2Downvote.classList.add('no');
-          suggestOther3Elem.classList.add('no');
-          suggestOther3Downvote.classList.add('no');
-
-          suggestHint.classList.add('animate-in');
-          if (!getConfigBoolean('tutorial2', false)) {
-            tutorial2visible = true;
-            document.querySelector('#tutorial2').classList.add('tutorial-visible');
-            (document.querySelector('#tutorial2') as HTMLElement).style.display = 'block';
-          }
-          if (getConfigBoolean('always-suggest', false)) {
-            suggestContainer.style.width = '486px'
-            document.querySelector('.suggest-label').dispatchEvent(new MouseEvent('click'));
-          }
-        }
-      }
-    } else {
-      playSound('element.pickup');
-      incrementStatistic('elementsPickedUp');
-      holdingRect = dom.getBoundingClientRect();
-
-      dom.classList.remove('restock');
-      void dom.offsetWidth;
-      dom.classList.add('restock');
-
-      holdingElement = element;
-
-      const holdingDom = ElementDom(element);
-      holdingDom.classList.add('held');
-      const wrapper = document.createElement('div');
-      wrapper.setAttribute(
-        'style',
-        '--offset-x:' + ((holdingRect.left - 8) - (ev.pageX)) + 'px;'
-        + '--offset-y:' + ((holdingRect.top - 8) - (ev.pageY + 4)) + 'px;'
-        + 'left:' + ev.pageX + 'px;'
-        + 'top:' + (ev.pageY + 4) + 'px'
-      )
-      wrapper.classList.add('elem-held-wrapper');
-      wrapper.appendChild(holdingDom);
-      document.body.appendChild(wrapper);
-      holdingElementDom = wrapper;
-    }
-  });
-
-  dom.addEventListener('contextmenu', async(ev) => {
-    incrementStatistic('infoOpened');
-    
-    infoContainer.classList.remove('animate-in');
-
-    dropHoldingElement();
-    ev.preventDefault();
-
-    if(!element.stats) element.stats = {};
-
-    dom.style.height = '150px';
-    dom.style.top = '-10px';
-    dom.scrollIntoView({ block: 'nearest' });
-    dom.style.height = '';
-    dom.style.top = '';
-    await delay(0);
-
-    infoContainer.style.display = 'flex';
-    const box = dom.getBoundingClientRect();
-    const x = Math.max(8, Math.min(window.innerWidth - 462 - 8, box.left - 17));
-    const y = Math.max(38, Math.min(window.innerHeight - 402 - 8, box.top - 17));
-    const elemOffsetX = x - (box.top - 17);
-    const elemOffsetY = y - (box.left - 17);
-    infoContainer.style.left = x + 'px';
-    infoContainer.style.top = y + 'px';
-    infoContainer.classList.add('animate-in');
-    infoOpen = true;
-
-    infoContainer.querySelectorAll('.info-tab,.info-section')
-      .forEach(x => x.classList.remove('selected'));
-
-    infoContainer.querySelector('.info-section-info').classList.add('selected');
-    infoContainer.querySelector('[data-info-tab="info"]').classList.add('selected');
-
-    infoContainer.querySelector('.elem').innerHTML = escapeHTML(element.display.text);
-    infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`;
-    infoContainer.querySelector('#element-info-title').innerHTML = isNaN(Number(element.id)) ? 'Element Info' : `Element #${Number(element.id)}`;
-
-    (infoContainer.querySelector('#element-created-date-root') as HTMLElement).style.display = element.createdOn ? '' : 'none';
-    if (element.createdOn) {
-      infoContainer.querySelector('#element-created-date').innerHTML = `${formatDate(new Date(element.createdOn))}`;
-    }
-    (infoContainer.querySelector('#info-tier') as HTMLElement).style.display = element.stats.treeComplexity !== undefined ? '' : 'none';
-    if (element.stats.treeComplexity !== undefined) {
-      infoContainer.querySelector('#info-tier').innerHTML = element.stats.treeComplexity ? `Tier ${element.stats.treeComplexity}` : 'Starter';
-      infoContainer.querySelector('#info-tier').setAttribute('data-tier-level', Math.floor(element.stats.treeComplexity / 5).toString());
-    }
-    
-    if (typeof element.stats.recipeCount === 'number') {
-      infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
-    }
-    if (typeof element.stats.usageCount === 'number') {
-      infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Usage');
-    }
-
-    infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
-      if (x.author) {
-        // elem4 doesnt properly decode authors
-        return `<p>"${x.comment}" - Error</p>`;
-      }
-      return `<p>${x.comment}</p>`;
-    }).join('');
-    infoContainer.querySelector('#element-data-json').innerHTML = JSON.stringify(element, null, 2);
-    infoContainer.querySelector('#element-css-class').innerHTML = `.${getClassFromDisplay(element.display)}`;
-    infoContainer.querySelector('#element-css-color').innerHTML = Color(getComputedStyle(dom).backgroundColor).hex();
-
-    const fundamentalsDiv = document.getElementById('element-fundamentals');
-    fundamentalsDiv.innerHTML = '';
-    const fundamentalsWithImages = ['fire', 'water', 'air', 'earth'];
-    if(element.stats.fundamentals) {
-      Object.keys(element.stats.fundamentals).forEach((key) => {
-        const root = document.createElement('div');
-        root.classList.add('data-row')
-  
-        if (fundamentalsWithImages.includes(key)) {
-          const img = document.createElement('img');
-          img.src = '/' + key + '.svg';
-          root.appendChild(img);
-        } else {
-          const text = document.createElement('strong');
-          text.innerHTML = escapeHTML(capitalize(key));
-          root.appendChild(text);
-        }
-  
-        const text = document.createElement('span');
-        text.innerHTML = compactMiniNumber(element.stats.fundamentals[key]);
-        root.appendChild(text);
-  
-        fundamentalsDiv.appendChild(root);
-      });
-    }
-
-    (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
-
-    getElementTree(element).then((tree) => {
-      if (tree.parent1) {
-        let left = tree.parent1;
-        let right = tree.parent2 || tree.parent1;
-        (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
-        infoContainer.querySelector('#info-left-element').innerHTML = escapeHTML(left.elem.display.text);
-        infoContainer.querySelector('#info-left-element').setAttribute('style', getCSSFromDisplay(left.elem.display));
-        infoContainer.querySelector('#info-right-element').innerHTML = escapeHTML(right.elem.display.text);
-        infoContainer.querySelector('#info-right-element').setAttribute('style', getCSSFromDisplay(right.elem.display));
-        initTreeCanvas(tree);
-      } else {
-        (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = 'none';
-      }
-    });
-  });
-
-  dom.setAttribute('data-element', element.id);
-
-  const categoryName = element.display.categoryName || element.display.color || 'none';
-  let categoryDiv = elementContainer.querySelector(`[data-category="${categoryName}"]`);
-  if (!categoryDiv) {
-    const header = document.createElement('h3');
-    header.classList.add('category-header')
-    header.appendChild(document.createTextNode(formatCategory(categoryName)));
-    elementContainer.appendChild(header);
-    categoryDiv = document.createElement('div');
-    categoryDiv.setAttribute('data-category', categoryName);
-    elementContainer.appendChild(categoryDiv);
-  }
-
-  if(sourceLocation) {
-    dom.style.opacity = '0';
-  } else {
-    dom.classList.add('animate-in');
-    setTimeout(() => {
-      dom.classList.remove('animate-in');
-    }, 1000);
-  }
-
-  categoryDiv.appendChild(dom);
-
-  if(sourceLocation) {
-    elementPopAnimation(element, sourceLocation, dom, true).then(() => {
-      dom.style.opacity = '1';
-    })
   }
 }
 
@@ -704,3 +405,14 @@ export function ClearElementGameUi() {
 }
 export function DisposeElementGameUi() {
 }
+export function setTutorial1Visible(val: boolean) {tutorial1visible = val}
+export function setTutorial2Visible(val: boolean) {tutorial2visible = val}
+export function setSuggestResult(suggestresult: E4Suggestion, element1: Elem, element2: Elem) {
+  suggestResult = suggestresult;
+  suggestLeft = element1;
+  suggestRight = element2;
+}
+export function setInfoOpen(val: boolean) {infoOpen = val;}
+export function setHoldingRect(val: DOMRect) {holdingRect = val;}
+export function setHoldingElement(val: Elem) {holdingElement = val;}
+export function setHoldingElementDom(val: HTMLElement) {holdingElementDom = val;}

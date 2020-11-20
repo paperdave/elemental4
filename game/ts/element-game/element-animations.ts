@@ -1,8 +1,9 @@
-import { suggestResultElem, getElementMargin, elementContainer } from "../element-game"
+import { suggestResultElem, elementContainer } from "../element-game"
 import { ElementDom } from "../utils";
 import { Elem } from "../../../shared/elem";
 import { playSound } from "../audio";
 import { delay } from "../../../shared/shared";
+import { getElementMargin } from "../utils";
 
 export async function elementPopAnimation(element: Elem, source: HTMLElement, dest: HTMLElement, isNew: boolean) {
   const dom = ElementDom(element);

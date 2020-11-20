@@ -8,6 +8,15 @@ export function formatSuggestDisplay(x: number) {
   return y + '%';
 }
 
+export function getElementMargin() {
+  const x = document.querySelector('.elem') as HTMLElement;
+  if(x) {
+    const y = parseFloat(getComputedStyle(x).marginLeft);
+    return y;
+  }
+  return 8 
+}
+
 export function updateSuggestion() {
   suggestResultElem.value = suggestResult.text;
   suggestResultElem.setAttribute('style', getCSSFromDisplay({ text: '', color: `${[suggestResult.color.base,suggestResult.color.saturation,suggestResult.color.lightness].join('_')}` }));

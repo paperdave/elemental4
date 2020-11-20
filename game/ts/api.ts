@@ -5,7 +5,8 @@ import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs
 import { delay, delayFrame, escapeHTML } from "../../shared/shared";
 import { SingleplayerAPI } from "./api-singleplayer";
 import { AlertDialog, ConfirmDialog, PromptDialog, CustomDialog } from "./dialog";
-import { addElementToGame, ClearElementGameUi} from "./element-game";
+import { ClearElementGameUi} from "./element-game";
+import { addElementToGame } from "./add-element";
 import { InitElementNews } from "./element-game/recents";
 import { createLoadingUi } from "./loading";
 import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
