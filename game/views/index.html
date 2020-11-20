@@ -208,6 +208,9 @@
       element it should create. It is exactly how Elemental 3 worked, but it is not running anymore, so I created my own
       version.
     </p>
+    <p id='dev-para' style="display: none;">
+      This is the development branch of the game for version <strong>{TARGET_CURRENT_VERSION}</strong>. This page lets you play the current code of that version. It is incomplete and may not work properly. You can play the stable version <a href="https://elemental4.net">Here</a>
+    </p>
     <p id='archive-org-para' style="display: none;">
       It seems you are viewing this page via archive.org, go to the real site <a href="https://elemental4.net">elemental4.net</a> to use the real game. The version you are viewing is <strong>{CURRENT_VERSION}</strong>.
     </p>
@@ -249,12 +252,15 @@
       let autoStart = !!(localStorage.auto_start);
       let cache = localStorage.cache || 'resolve';
 
-      if(location.href.includes('archive.org')) {
+      if (location.origin === 'https://elemental4.net') {
+        document.querySelector('#dev-para').removeAttribute('style')
+      }
+      if (location.href.includes('archive.org')) {
         document.body.classList.remove('launching')
         document.querySelector('#archive-org-para').removeAttribute('style')
         return;
       }
-      if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()) || window.innerWidth < 400) {
+      if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()) || window.innerWidth < 400) {
         document.body.classList.remove('launching')
         document.querySelector('#mobile-para').removeAttribute('style')
         return;

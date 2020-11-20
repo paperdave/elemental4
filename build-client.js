@@ -8,6 +8,10 @@ const terser = require("uglify-es");
 const chalk = require("chalk");
 const url = require("url");
 
+let version = require('./package.json').version;
+if (process.env.CONTEXT === 'deploy-preview') version += '-' + (process.env.COMMIT_REF || 'unknown').slice(0, 4);
+if (process.env.CONTEXT === 'branch-deploy') version += '-dev-' + (process.env.COMMIT_REF || 'unknown').slice(0, 4);
+
 process.chdir(__dirname);
 
 (async() => {
@@ -87,7 +91,10 @@ process.chdir(__dirname);
     // Minify HTML Files
     fs.readdirSync("./game/views").forEach(file => {
         let input_html = fs.readFileSync(path.join(__dirname, "game/views/", file)).toString();
-        input_html = input_html.replace('{CURRENT_VERSION}', require('./package.json').version).replace(/\<script\>((.|\n|\r)*?)\<\/script\>/g, (src) => {
+        input_html = input_html
+            .replace('{CURRENT_VERSION}', version)
+            .replace('{TARGET_CURRENT_VERSION}', require('./package.json').version)
+            .replace(/\<script\>((.|\n|\r)*?)\<\/script\>/g, (src) => {
             let js = src.substring(8, src.length - 9);
             
             let result = terser.minify(js, {
@@ -135,7 +142,7 @@ process.chdir(__dirname);
     monacoEditor.files.forEach((f) => {
         fs.copySync(path.join(__dirname, monacoEditor.base, f), path.join('dist_client/vs/', f));
     })
-    fs.writeFileSync('dist_client/version', require('./package.json').version);
+    fs.writeFileSync('dist_client/version', version);
     fs.writeFileSync('dist_client/_redirects',
         workshopManifest.packs
             .concat(...workshopManifest.themes)

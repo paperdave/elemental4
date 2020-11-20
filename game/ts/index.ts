@@ -15,6 +15,7 @@ import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
 
 declare const $production: string;
+declare const $version: string;
 declare const $build_date: string;
 
 const cacheName = 'ELEMENTAL';
@@ -31,7 +32,7 @@ type MenuAPI = {
 async function boot(MenuAPI: MenuAPI) {
   // Initial Stuff
   delete window["$elemental4"];
-  console.log(`👋 Hello Elemental, version ${pkg.version}`);
+  console.log(`👋 Hello Elemental, version ${$version}`);
 
   if(typeof localStorage === 'undefined') return location.reload();
 
@@ -52,7 +53,7 @@ async function boot(MenuAPI: MenuAPI) {
   // check for updates
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
-    if (latestVersion !== pkg.version || (!$production && !MenuAPI.upgraded)) {
+    if (latestVersion !== $version || (!$production && !MenuAPI.upgraded)) {
       resetBuiltInThemes();
       if(await new Promise(async(resolve) => {
         const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
@@ -77,7 +78,7 @@ async function boot(MenuAPI: MenuAPI) {
               ...MenuAPI,
               ...ui,
               cache: cacheKey,
-              upgraded: pkg.version
+              upgraded: $version
             });
             resolve(true)
           } catch (error) {
@@ -148,7 +149,7 @@ async function boot(MenuAPI: MenuAPI) {
   gameRoot.innerHTML = await fetch('/game').then((x) => x.text());
 
   const versionInfo = {
-    'version': pkg.version,
+    'version': $version,
     'build-date': $build_date
   };
   document.querySelectorAll('[data-build-info]').forEach(x => x.innerHTML = versionInfo[x.getAttribute('data-build-info')]);

@@ -4,6 +4,10 @@ const gamedir = path.resolve(__dirname, 'game');
 const {execSync} = require('child_process');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
  
+let version = require('./package.json').version;
+if (process.env.CONTEXT === 'deploy-preview') version += '-' + (process.env.COMMIT_REF || 'unknown').slice(0, 4);
+if (process.env.CONTEXT === 'branch-deploy') version += '-dev-' + (process.env.COMMIT_REF || 'unknown').slice(0, 4);
+
 module.exports = (prod = false) => ({
     entry: [
         path.resolve(gamedir, 'ts/index.ts'),
@@ -19,6 +23,8 @@ module.exports = (prod = false) => ({
     },
     plugins: [
         new webpack.DefinePlugin({
+            $version: version,
+            $isDevDeployBranch: (process.env.CONTEXT === 'deploy-preview') || (process.env.CONTEXT === 'branch-preview'),
             $production: JSON.stringify(prod),
             $build_date: JSON.stringify(execSync('date +"%F %H:%M:%S"').toString()),
             $password: JSON.stringify(/*prod ? 'username' : */false)
