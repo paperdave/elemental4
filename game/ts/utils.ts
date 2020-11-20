@@ -1,6 +1,7 @@
 import { suggestResultElem, suggestResult } from "./element-game";
 import { getCSSFromDisplay, getClassFromDisplay } from "./element-color";
 import { Elem } from "../../shared/elem";
+import { capitalize } from "@reverse/string";
 
 export function formatSuggestDisplay(x: number) {
   const y = Math.round(x * 50 + 50);
@@ -26,4 +27,8 @@ export function ElementDom(elem2: Elem) {
   elem.appendChild(document.createTextNode(display.text));
   elem.className = `elem ${getClassFromDisplay(display)}`;
   return elem;
+}
+
+export function formatCategory(x: string) {
+  return x.split('-').map(capitalize).join(' ')
 }

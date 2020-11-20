@@ -14,11 +14,7 @@ import { endTreeCanvas, getElementTree, initTreeCanvas } from "./tree";
 import Color from "color";
 import { IsNullAPI } from "../../shared/api/internal/internal-null";
 import { elementPopAnimation, elementErrorAnimation } from "./element-game/element-animations"
-import { formatSuggestDisplay, updateSuggestion, ElementDom} from "./utils";
-
-function formatCategory(x: string) {
-  return x.split('-').map(capitalize).join(' ')
-}
+import { formatCategory, updateSuggestion, ElementDom} from "./utils";
 
 export let elementContainer: HTMLElement;
 let infoContainer: HTMLElement;
