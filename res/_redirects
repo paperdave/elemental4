@@ -1,3 +1,3 @@
-/git https://github.com/davecaruso/elemental4.git
-/source https://github.com/davecaruso/elemental4.git
+/git/* https://github.com/davecaruso/elemental4.git
+/source/* https://github.com/davecaruso/elemental4.git
 /discord https://discord.gg/XwM2uSPwaV
