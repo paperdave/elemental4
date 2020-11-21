@@ -143,7 +143,8 @@ process.chdir(__dirname);
         fs.copySync(path.join(__dirname, monacoEditor.base, f), path.join('dist_client/vs/', f));
     })
     fs.writeFileSync('dist_client/version', version);
-    fs.writeFileSync('dist_client/_redirects',
+    fs.appendFileSync('dist_client/_redirects',
+        '\n' +
         workshopManifest.packs
             .concat(...workshopManifest.themes)
             .map(x => `${x.url} https://github.com/davecaruso/elemental4/tree/master/workshop${x.url}`)
