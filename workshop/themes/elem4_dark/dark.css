@@ -20,7 +20,7 @@
   border-color: white;
 }
 
-button, select, input {
+button, select, input, input:not([type=range]) {
   border: 1px solid #aaaaaa;
   background-color: #222222;
   color: white;
