@@ -6,7 +6,7 @@ import { addDLCByUrl, DLCType } from "./dlc-fetch";
 import { version } from "../../package.json";
 import { getInstalledThemes, installThemes, uninstallThemes } from "./savefile";
 import { reloadAudio, SoundId } from "./audio";
-import { addThemeToUI } from "./settings";
+import { addThemeToUI } from "./settings/theme";
 import { THEME_VERSION } from "./theme-version";
 import { ConfirmDialog } from "./dialog";
 import { capitalize } from "@reverse/string";

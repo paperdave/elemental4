@@ -1,6 +1,6 @@
 import localForage from '../../shared/localForage';
 import { MountThemeCSS, resetBuiltInThemes, showThemeAddDialog } from './theme';
-import { InitSettings } from './settings';
+import { InitSettings } from './settings/settings';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
 import { fetchWithProgress } from '../../shared/fetch-progress';
@@ -10,12 +10,12 @@ import { createLoadingUi } from './loading';
 import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
-import { AlertDialog, PromptDialog } from './dialog';
+import { AlertDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
-import { resolve } from 'path';
 
 declare const $production: string;
+declare const $version: string;
 declare const $build_date: string;
 
 const cacheName = 'ELEMENTAL';
@@ -32,7 +32,7 @@ type MenuAPI = {
 async function boot(MenuAPI: MenuAPI) {
   // Initial Stuff
   delete window["$elemental4"];
-  console.log(`👋 Hello Elemental, version ${pkg.version}`);
+  console.log(`👋 Hello Elemental, version ${$version}`);
 
   if(typeof localStorage === 'undefined') return location.reload();
 
@@ -53,8 +53,8 @@ async function boot(MenuAPI: MenuAPI) {
   // check for updates
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
-    if (latestVersion !== pkg.version || (!$production && !MenuAPI.upgraded)) {
-      await resetBuiltInThemes();
+    if (latestVersion !== $version || (!$production && !MenuAPI.upgraded)) {
+      resetBuiltInThemes();
       if(await new Promise(async(resolve) => {
         const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
         const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
@@ -78,7 +78,7 @@ async function boot(MenuAPI: MenuAPI) {
               ...MenuAPI,
               ...ui,
               cache: cacheKey,
-              upgraded: pkg.version
+              upgraded: $version
             });
             resolve(true)
           } catch (error) {
@@ -149,7 +149,7 @@ async function boot(MenuAPI: MenuAPI) {
   gameRoot.innerHTML = await fetch('/game').then((x) => x.text());
 
   const versionInfo = {
-    'version': pkg.version,
+    'version': $version,
     'build-date': $build_date
   };
   document.querySelectorAll('[data-build-info]').forEach(x => x.innerHTML = versionInfo[x.getAttribute('data-build-info')]);
@@ -180,7 +180,7 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Checking for new DLC', 0);
   await showThemeAddDialog()
   ui.status('Loading Element UI', 0);
-  await InitElementGameUi();
+  InitElementGameUi();
 
   ui.status('Loading API', 0);
 
