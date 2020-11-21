@@ -1,5 +1,3 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
 import {Element} from "./types";
 import {Elem} from "../../elem";
 import { NV7ElementalAPI } from "./nv7";
