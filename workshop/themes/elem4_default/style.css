@@ -400,7 +400,7 @@ button, select {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  color: black;
+  color: var(--text-main);
   padding: 8px;
 }
 input:not([type="range"]) {
@@ -409,7 +409,7 @@ input:not([type="range"]) {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  color: black;
+  color: var(--text-main);
   padding: 8px;
 }
 button.huge, select.huge {
