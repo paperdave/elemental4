@@ -41,43 +41,15 @@ async function getSuggestion(api: NV7ElementalAPI, id: string): Promise<Suggesti
 
 export async function downSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<void> {
   var id = request.text;
-
-  var existing: SuggestionData = await getSuggestion(api, id);
-
-  if (!existing.voted) {
-    existing.voted = []
-  }
-
-  if (existing.voted.includes(id)) {
+  let resp = await fetch(api.prefix  + "down_suggestion/" + id + "/" + api.uid);
+  var text = await resp.text();
+  if (text != "") {
     await api.ui.alert({
-      title: "Already Downvoted",
-      text: "You already voted!"
-    })
-    return;
+      "text": text,
+      "title": "Error",
+      "button": "Ok",
+    });
   }
-
-  existing.votes--;
-
-  if (existing.votes < -1) {
-    await firebase.database().ref("/suggestions/" + id).remove();
-    return new Promise<void>(async (resolve, reject) => {
-      firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).once("value").then(async (snapshot) => {
-        var data = snapshot.val();
-        if (!data) {
-         resolve();
-        } else {
-          data.splice(data.indexOf(id), 1);
-          await firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).set(data);
-
-          resolve();
-        }
-      });
-    })
-  }
-
-  existing.voted.push(api.uid);
-
-  return firebase.database().ref("/suggestions/" + id).update(existing);
 }
 
 async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: SuggestionRequest<"dynamic-elemental4">, parents: string[]): Promise<SuggestionResponse> {
