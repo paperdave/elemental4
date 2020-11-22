@@ -6,12 +6,9 @@ import 'firebase/firestore';
 import { NV7ElementalAPI } from "./nv7";
 import { Element } from "./types";
 
-async function getSuggestionCombo(elem1: string, elem2: string): Promise<string[]> {
-  var suggestions = await new Promise<string[]>((resolve, _) => {
-    firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).once("value").then((snapshot) => {
-      resolve(snapshot.val());
-    });
-  });
+async function getSuggestionCombo(api: NV7ElementalAPI, elem1: string, elem2: string): Promise<string[]> {
+  let resp = await fetch(api.prefix + "suggestion_combos/" + encodeURIComponent(elem1) + "/" + encodeURIComponent(elem2))
+  let suggestions = await resp.json() as string[];
   if (suggestions == null) {
     suggestions = [];
   }
@@ -19,7 +16,7 @@ async function getSuggestionCombo(elem1: string, elem2: string): Promise<string[
 }
 
 export async function getSuggests(api: NV7ElementalAPI, elem1: string, elem2: string): Promise<Suggestion<"dynamic-elemental4">[]>{
-  var suggestions = await getSuggestionCombo(elem1, elem2);
+  var suggestions = await getSuggestionCombo(api, elem1, elem2);
 
   var output: Suggestion<"dynamic-elemental4">[] = [];
   for (var val in suggestions) {
@@ -191,7 +188,7 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
 }
 
 export async function newSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<SuggestionResponse> {
-  var existing = await getSuggestionCombo(elem1, elem2);
+  var existing = await getSuggestionCombo(api, elem1, elem2);
   
   for (var i = 0; i < existing.length; i++) {
     if (existing[i] == request.text) {
