@@ -53,25 +53,10 @@ export async function downSuggestion(elem1: string, elem2: string, request: Sugg
 }
 
 async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: SuggestionRequest<"dynamic-elemental4">, parents: string[]): Promise<SuggestionResponse> {
-  var existing: SuggestionData = await getSuggestion(api, id);
-
-  if (!existing.voted) {
-    existing.voted = []
-  }
-
-  if (existing.voted.includes(api.uid)) {
-    await api.ui.alert({
-      title: "Already Voted",
-      text: "You already voted!"
-    })
-    return {
-      suggestType: "already-added"
-    }
-  }
-
-  existing.votes++;
-
-  if (existing.votes > api.votesRequired) {
+  let resp = await fetch(api.prefix  + "up_suggestion/" + id + "/" + api.uid);
+  var text = await resp.text();
+  if (text == "create") {
+    var existing = await getSuggestion(api, id);
     await firebase.database().ref("/suggestions/" + id).remove();
     await firebase.database().ref("/suggestionMap/" + parents[0] + "/" + parents[1]).remove();
 
@@ -125,26 +110,19 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
       })
     })
   }
-
-  existing.voted.push(api.uid);
-
-  return new Promise<SuggestionResponse>(async (resolve, reject) => {
-    await firebase.database().ref("/suggestions/" + id).update(existing).catch(async (error) => {
-      api.ui.status("Showing Error", 0);
-      await api.ui.alert({
-        "text": error.message,
-        "title": "Error",
-        "button": "Ok",
-      });
-      resolve({
-        suggestType: 'failed'
-      })
-    }).then(() => {
-      resolve({
-        suggestType: 'vote'
-      })
-    })
-  })
+  if (text != "") {
+    await api.ui.alert({
+      "text": text,
+      "title": "Error",
+      "button": "Ok",
+    });
+    return {
+      suggestType: "failed"
+    }
+  }
+  return {
+    suggestType: "vote"
+  }
 }
 
 export async function newSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<SuggestionResponse> {
