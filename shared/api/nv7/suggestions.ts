@@ -23,7 +23,6 @@ export async function getSuggests(api: NV7ElementalAPI, elem1: string, elem2: st
     output.push(await getSuggestion(api, suggestions[val]));
   }
 
-
   return output;
 }
 
