@@ -20,32 +20,29 @@ export async function getSuggests(api: NV7ElementalAPI, elem1: string, elem2: st
 
   var output: Suggestion<"dynamic-elemental4">[] = [];
   for (var val in suggestions) {
-    output.push(await getSuggestion(api, suggestions[val]));
+    var data = await getSuggestion(api, suggestions[val])
+    output.push({
+      text: data.name,
+      color: data.color
+    });
   }
 
   return output;
 }
 
-async function getSuggestion(api: NV7ElementalAPI, id: string): Promise<Suggestion<"dynamic-elemental4">> {
+async function getSuggestion(api: NV7ElementalAPI, id: string): Promise<SuggestionData> {
   let resp = await fetch(api.prefix + "get_suggestion/" + encodeURIComponent(id));
   let data = await resp.json() as SuggestionData;
   if (data == null) {
     return null;
   }
-  return {
-    text: data.name,
-    color: data.color
-  }
+  return data;
 }
 
 export async function downSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<void> {
   var id = request.text;
 
-  var existing: SuggestionData = await new Promise<SuggestionData>((resolve, _) => {
-    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
-      resolve(snapshot.val() as SuggestionData);
-    });
-  });
+  var existing: SuggestionData = await getSuggestion(api, id);
 
   if (!existing.voted) {
     existing.voted = []
@@ -84,11 +81,7 @@ export async function downSuggestion(elem1: string, elem2: string, request: Sugg
 }
 
 async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: SuggestionRequest<"dynamic-elemental4">, parents: string[]): Promise<SuggestionResponse> {
-  var existing: SuggestionData = await new Promise<SuggestionData>((resolve, _) => {
-    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
-      resolve(snapshot.val() as SuggestionData); 
-    });
-  });
+  var existing: SuggestionData = await getSuggestion(api, id);
 
   if (!existing.voted) {
     existing.voted = []
@@ -135,11 +128,7 @@ async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: Sugge
       result: request.text,
     }
 
-    var existingCombos: RecentCombination[] = await new Promise<RecentCombination[]>((resolve, _) => {
-      firebase.database().ref("/recent/").once("value").then((snapshot) => {
-        resolve(snapshot.val() as RecentCombination[]); 
-      });
-    });
+    var existingCombos: RecentCombination[] = await api.getRecentCombinations(30);
     if (!existingCombos) {
       existingCombos = [];
     }
