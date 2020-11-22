@@ -91,7 +91,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	}
 
 	async getRecentCombinations(limit: number): Promise<RecentCombination[]> {
-		return getRecents(limit);
+		return getRecents(this);
 	}
 
 	async waitForNewRecent(): Promise<void> {

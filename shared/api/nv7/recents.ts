@@ -1,20 +1,14 @@
 import {RecentCombination} from "../../elem";
 import { NV7ElementalAPI } from "./nv7";
-import firebase from "firebase/app";
-import "firebase/database";
 
-export async function getRecents(limit: number): Promise<RecentCombination[]> {
-  return new Promise<RecentCombination[]>((resolve, reject) => {
-    firebase.database().ref("/recent/").once("value").then(async (snapshot) => {
-      var data: RecentCombination[] = snapshot.val();
-      if (!data) {
-        resolve([]);
-      } else {
-        data.reverse();
-        resolve(data);
-      }
-    })
-  });
+export async function getRecents(api: NV7ElementalAPI): Promise<RecentCombination[]> {
+  let resp = await fetch(api.prefix + "recents")
+  let data = await resp.json();
+  for (var i = 0; i < data.length; i++) {
+    data[i].recipe = data[i].Recipe;
+    data[i].result = data[i].Result;
+  }
+  return data as RecentCombination[];
 }
 
 export async function waitForNew(api: NV7ElementalAPI): Promise<void> {
