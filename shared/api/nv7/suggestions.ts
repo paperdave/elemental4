@@ -18,34 +18,28 @@ async function getSuggestionCombo(elem1: string, elem2: string): Promise<string[
   return suggestions
 }
 
-export async function getSuggests(elem1: string, elem2: string): Promise<Suggestion<"dynamic-elemental4">[]>{
+export async function getSuggests(api: NV7ElementalAPI, elem1: string, elem2: string): Promise<Suggestion<"dynamic-elemental4">[]>{
   var suggestions = await getSuggestionCombo(elem1, elem2);
 
   var output: Suggestion<"dynamic-elemental4">[] = [];
   for (var val in suggestions) {
-    output.push(await getSuggestion(suggestions[val]));
+    output.push(await getSuggestion(api, suggestions[val]));
   }
 
 
   return output;
 }
 
-async function getSuggestion(id: string): Promise<Suggestion<"dynamic-elemental4">> {
-  return await new Promise<Suggestion<"dynamic-elemental4">>((resolve, _) => {
-    firebase.database().ref("/suggestions/" + id).once("value").then((snapshot) => {
-      var val = snapshot.val() as SuggestionData;
-      if (val) {
-        resolve({
-          text: val.name,
-          color: val.color
-        });
-      } else {
-        resolve(null);
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-  });
+async function getSuggestion(api: NV7ElementalAPI, id: string): Promise<Suggestion<"dynamic-elemental4">> {
+  let resp = await fetch(api.prefix + "get_suggestion/" + encodeURIComponent(id));
+  let data = await resp.json() as SuggestionData;
+  if (data == null) {
+    return null;
+  }
+  return {
+    text: data.name,
+    color: data.color
+  }
 }
 
 export async function downSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<void> {

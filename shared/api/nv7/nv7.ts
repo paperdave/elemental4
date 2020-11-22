@@ -78,7 +78,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
   }
 	async getSuggestions(ids: string[]): Promise<Suggestion<"dynamic-elemental4">[]> {
 		ids.sort();
-		return getSuggests(ids[0], ids[1]);
+		return getSuggests(this, ids[0], ids[1]);
 	}
 	async createSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<SuggestionResponse> {
 		ids.sort();
