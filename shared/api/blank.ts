@@ -19,6 +19,6 @@ export class BlankExampleAPI extends ElementalBaseAPI {
     return [];
   }
   async getStartingInventory(): Promise<string[]> {
-    return ['1','2','3','4'];
+    return [];
   }
 }

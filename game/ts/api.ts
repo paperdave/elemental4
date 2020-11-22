@@ -19,6 +19,7 @@ import { resolve } from "url";
 import { InternalNullAPI, IsNullAPI } from "../../shared/api/internal/internal-null";
 import { InternalStressTestAPI } from "../../shared/api/internal/internal-stress-test";
 import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors";
+import { BlankExampleAPI } from "../../shared/api/blank";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -27,6 +28,7 @@ class IHateTypescript extends ElementalBaseAPI {
 
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'internal:null': InternalNullAPI,
+  'internal:blank': BlankExampleAPI,
   'internal:all-colors': DebugAllColorsAPI,
   'internal:stress-test': InternalStressTestAPI,
   'internal:singleplayer': SingleplayerAPI,
@@ -34,7 +36,7 @@ const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'elemental4': Elemental4API,
   'elemental5': Elemental5API,
   'e4': LedomElementalAPI,
-  'ledom': LedomElementalAPI,
+  'le4': LedomElementalAPI,
   'nv7': NV7ElementalAPI,
 };
 
