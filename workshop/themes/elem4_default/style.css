@@ -483,6 +483,7 @@ input[type='text'], input[type='password'], input[type='email'] {
   background-color: var(--background-main);
   color: var(--text-main);
   flex: 0 0 350px;
+  overflow-y: overlay;
 }
 #element-sidebar h2 {
   text-align: center;
