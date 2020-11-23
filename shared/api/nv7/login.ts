@@ -60,6 +60,8 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
 
         if (data.success == true) {
           api.uid = data.data;
+          api.saveFile.set("email", creds["email"])
+          api.saveFile.set("password", creds["password"])
           ui.status("Loading Game", 0);
           return true;
         } else {
