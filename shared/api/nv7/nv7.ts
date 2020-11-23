@@ -87,7 +87,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 
 	async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> {
 		ids.sort();
-		return downSuggestion(ids[0], ids[1], suggestion, this);
+		return downSuggestion(suggestion, this);
 	}
 
 	async getRecentCombinations(limit: number): Promise<RecentCombination[]> {

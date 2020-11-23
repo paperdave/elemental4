@@ -38,7 +38,7 @@ async function getSuggestion(api: NV7ElementalAPI, id: string): Promise<Suggesti
   return data;
 }
 
-export async function downSuggestion(elem1: string, elem2: string, request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<void> {
+export async function downSuggestion(request: SuggestionRequest<"dynamic-elemental4">, api: NV7ElementalAPI): Promise<void> {
   var id = request.text;
   let resp = await fetch(api.prefix  + "down_suggestion/" + id + "/" + api.uid);
   var text = await resp.text();
@@ -51,7 +51,7 @@ export async function downSuggestion(elem1: string, elem2: string, request: Sugg
   }
 }
 
-async function upvoteSuggestion(id: string, api: NV7ElementalAPI, request: SuggestionRequest<"dynamic-elemental4">, parents: string[]): Promise<SuggestionResponse> {
+async function upvoteSuggestion(id: string, api: NV7ElementalAPI, parents: string[]): Promise<SuggestionResponse> {
   let resp = await fetch(api.prefix  + "up_suggestion/" + id + "/" + api.uid);
   var text = await resp.text();
   if (text == "create") {
@@ -101,7 +101,7 @@ export async function newSuggestion(elem1: string, elem2: string, request: Sugge
   
   for (var i = 0; i < existing.length; i++) {
     if (existing[i] == request.text) {
-      return upvoteSuggestion(existing[i], api, request, [elem1, elem2]);
+      return upvoteSuggestion(existing[i], api, [elem1, elem2]);
     }
   }
 
