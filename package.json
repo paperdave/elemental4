@@ -26,7 +26,6 @@
     "express": "^4.16.3",
     "file-saver": "^2.0.2",
     "filesize": "^6.1.0",
-    "firebase": "^8.0.0",
     "fs-extra": "^7.0.0",
     "google-spreadsheet": "^3.0.13",
     "howler": "^2.1.1",
