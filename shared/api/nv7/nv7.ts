@@ -1,6 +1,4 @@
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination} from "../../elem";
-import firebase from "firebase/app";
-import "firebase/analytics";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
@@ -21,12 +19,6 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public prefix: string;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
-		if (firebase.apps.length != 1) {
-			// Initialize Firebase
-			firebase.initializeApp(this.config.firebaseConfig);
-			firebase.analytics();
-		}
-
 		if ($production) {
 			this.prefix = "https://api.nv7haven.tk/"
 		} else {
