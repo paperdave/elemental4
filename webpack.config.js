@@ -3,7 +3,10 @@ const webpack = require('webpack');
 const gamedir = path.resolve(__dirname, 'game');
 const {execSync} = require('child_process');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
- 
+const date = new Date();
+const build_date = `${date.getFullYear()}-${date.getMonth().toString().padStart(2,'0')}-${date.getDate().toString().padStart(2,'0')} ${date.getHours()}:${date.getMinutes().toString().padStart(2,'0')}`
+
+console.log(JSON.stringify(build_date))
 let version = require('./package.json').version;
 if (process.env.CONTEXT === 'deploy-preview') version += '-' + (process.env.COMMIT_REF || 'unknown').slice(0, 4);
 if (process.env.CONTEXT === 'branch-deploy') version += '-dev-' + (process.env.COMMIT_REF || 'unknown').slice(0, 4);
@@ -26,7 +29,7 @@ module.exports = (prod = false) => ({
             $version: JSON.stringify(version),
             $isDevDeployBranch: (process.env.CONTEXT === 'deploy-preview') || (process.env.CONTEXT === 'branch-preview'),
             $production: JSON.stringify(prod),
-            $build_date: JSON.stringify(execSync('date +"%F %H:%M:%S"').toString()),
+            $build_date: JSON.stringify(build_date),
             $password: JSON.stringify(/*prod ? 'username' : */false)
         }),
         new webpack.IgnorePlugin(/polling-xhr\.js/),
