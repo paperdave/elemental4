@@ -32,8 +32,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		} else {
 			this.prefix = "http://0.0.0.0:8080/"
 		}
-
-		return await login(this, ui);
+		return login(this, ui);
   }
   async close(): Promise<void> {
 		this.ref.close();
