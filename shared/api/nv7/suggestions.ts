@@ -1,8 +1,5 @@
-import {Suggestion, SuggestionRequest, SuggestionResponse, RecentCombination} from "../../elem";
+import {Suggestion, SuggestionRequest, SuggestionResponse} from "../../elem";
 import {SuggestionData} from "./types";
-import firebase from "firebase/app";
-import 'firebase/database';
-import 'firebase/firestore';
 import { NV7ElementalAPI } from "./nv7";
 
 async function getSuggestionCombo(api: NV7ElementalAPI, elem1: string, elem2: string): Promise<string[]> {
