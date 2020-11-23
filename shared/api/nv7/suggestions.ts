@@ -113,20 +113,16 @@ export async function newSuggestion(elem1: string, elem2: string, request: Sugge
     voted: [api.uid]
   }
 
-  await firebase.database().ref("/suggestions/" + newSuggest.name).set(newSuggest);
-
-  return new Promise<SuggestionResponse>(async (resolve, reject) => {
-    firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).once("value").then(async (snapshot) => {
-      var data = snapshot.val();
-      if (!data) {
-        data = [];
-      }
-      data.push(newSuggest.name);
-      await firebase.database().ref("/suggestionMap/" + elem1 + "/" + elem2).set(data);
-
-      resolve({
-        suggestType: "suggest"
-      })
+  let resp = await fetch(api.prefix + "new_suggestion/" + encodeURIComponent(elem1) + "/" + encodeURIComponent(elem2) + "/" + encodeURIComponent(JSON.stringify(newSuggest)))
+  const text = await resp.text();
+  if (text != "") {
+    await api.ui.alert({
+      "text": text,
+      "title": "Error",
+      "button": "Ok",
     });
-  })
+  }
+  return {
+    suggestType: "suggest"
+  }
 }
