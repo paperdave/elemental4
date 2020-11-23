@@ -1,7 +1,6 @@
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
-import "firebase/firestore";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
