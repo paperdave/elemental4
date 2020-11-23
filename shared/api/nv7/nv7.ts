@@ -1,7 +1,6 @@
 import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination} from "../../elem";
 import firebase from "firebase/app";
 import "firebase/analytics";
-import "firebase/firestore";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
@@ -10,6 +9,8 @@ import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
 import {getRecents, waitForNew} from "./recents";
 import { IStore } from "../../store";
 
+declare const $production: string;
+
 export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
 	public uid: string
 	public saveFile;
@@ -17,6 +18,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public votesRequired: number = 3;
 	public ref;
 	public store: IStore;
+	public prefix: string;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (firebase.apps.length != 1) {
@@ -25,10 +27,15 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 			firebase.analytics();
 		}
 
-		return await login(this, ui);
+		if ($production) {
+			this.prefix = "https://api.nv7haven.tk/"
+		} else {
+			this.prefix = "http://0.0.0.0:8080/"
+		}
+		return login(this, ui);
   }
   async close(): Promise<void> {
-		this.ref.off("value");
+		this.ref.close();
 		return;
 	}
   async getStats(): Promise<ServerStats> {
@@ -69,7 +76,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
   }
 	async getSuggestions(ids: string[]): Promise<Suggestion<"dynamic-elemental4">[]> {
 		ids.sort();
-		return getSuggests(ids[0], ids[1]);
+		return getSuggests(this, ids[0], ids[1]);
 	}
 	async createSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<SuggestionResponse> {
 		ids.sort();
@@ -78,11 +85,11 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 
 	async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> {
 		ids.sort();
-		return downSuggestion(ids[0], ids[1], suggestion, this);
+		return downSuggestion(suggestion, this);
 	}
 
 	async getRecentCombinations(limit: number): Promise<RecentCombination[]> {
-		return getRecents(limit);
+		return getRecents(this);
 	}
 
 	async waitForNewRecent(): Promise<void> {
