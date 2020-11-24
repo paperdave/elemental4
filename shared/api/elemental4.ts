@@ -28,7 +28,7 @@ export class Elemental4API
              OptionsMenuAPI,
              RecentCombinationsAPI  {
   static type = 'elemental4';
-  private static DB_VERSION = 6;
+  private static DB_VERSION = 7;
 
   private dbMeta: DBMeta;
 
@@ -130,7 +130,6 @@ export class Elemental4API
         result: entry.result
       })
       await this.store.set(entry.recipe, entry.result);
-      await this.saveFile.set('meta', this.dbMeta);
       this.waitNewComboEmitter.emit();
       
       const eResult = await this.getElement(entry.result);
@@ -147,11 +146,11 @@ export class Elemental4API
         eRight = await this.getElement(recipe[1]);
         eRight.stats.usageCount++;
         eRight.stats.usageList.push({ recipe, result: [entry.result] });
-        this.store.set(eRight.id, eRight);
+        await this.store.set(eRight.id, eRight);
       }
 
-      this.store.set(eLeft.id, eLeft);
-      this.store.set(eResult.id, eResult);
+      await this.store.set(eLeft.id, eLeft);
+      await this.store.set(eResult.id, eResult);
 
       await this.calculateFundamentals(eLeft, eRight, eResult);
     } else if(entry.type === 'comment') {
@@ -160,7 +159,8 @@ export class Elemental4API
       await this.store.set(entry.id, x);
     }
     this.dbMeta.lastEntry = entry.entry;
-    this.waitNewEntryEmitter.emit(entry)
+    this.saveFile.set('meta', this.dbMeta);
+    this.waitNewEntryEmitter.emit(entry);
   });
   private async notifyUsername() {
     const id = this.saveFile.get('clientSecret');
@@ -215,11 +215,12 @@ export class Elemental4API
       }
 
       if (dbFetch !== 'none') {
+        console.log(`Elem4 Fetch "${dbFetch}", have #${this.dbMeta.lastEntry} at ${this.dbMeta.lastUpdated}.`)
         await this.store.bulkTransfer(() => new Promise(async(done, err) => {
           const endpoint = dbFetch === 'full'
             ? '/api/v1/db/all'
             : dbFetch === 'today'
-              ? '/api/v1/db/after-entry/' + this.dbMeta.lastEntry
+              ? '/api/v1/db/after-entry/' + (this.dbMeta.lastEntry - 1)
               : '/api/v1/db/from-date/' + dbFetch
           const f = await fetch(this.baseUrl + endpoint)
           const progress = fetchWithProgress(f, true);
@@ -503,8 +504,27 @@ export class Elemental4API
             },
           }
         ]
+      },
+      {
+        title: 'Database',
+        items: [
+          {
+            label: 'Reset Local Database',
+            type: 'button',
+            onChange: () => {
+              this.ui.loading(this.resetDatabase.bind(this));
+            }
+          }
+        ]
       }
     ]
+  }
+
+  async resetDatabase(ui: ElementalLoadingUi) {
+    ui.status('Resetting Database');
+    this.dbMeta.version = -100;
+    await this.saveFile.set('meta', this.dbMeta);
+    await this.ui.reloadSelf();
   }
 
   async getRecentCombinations(limit: number) {

@@ -189,6 +189,7 @@ export interface ElementalPopupBackend {
 export interface SaveFileAPI {
   get<T>(k: string, def?: T): T;
   set(k: string, v: any): void;
+  close: () => void;
 }
 
 interface ElementalBaseAPIParams<Config extends ElementalConfig = ElementalConfig> {
@@ -259,6 +260,10 @@ export interface ElementalRuntimeUI {
   popup: (frameUrl?: string) => Promise<ElementalPopupBackend | null>
   /** Creates a highly customizable dialog with markdown, inputs, and buttons. Client will provide a user interface. */
   dialog(opt: CustomDialogOptions): Promise<Record<string, string>>
+  /** Shows a loading UI while an action takes place. */
+  loading<X>(job: (ui: ElementalLoadingUi) => Promise<X>): Promise<X>
+  /** Reloads UI */
+  reloadSelf: () => Promise<void>;
 }
 
 /** Base API */

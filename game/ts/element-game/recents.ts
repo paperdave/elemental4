@@ -35,18 +35,17 @@ export async function InitElementNews() {
     const newsItems = await Promise.all(combinations.map((x) => getRecentCombinationDOM(rc, x)));
 
     const container = document.querySelector('.news-container');
-    const sidebar = document.querySelector('#element-sidebar');
     container.innerHTML = '';
     newsItems.forEach(x => container.appendChild(x));
 
     async function onNewRecent() {
       rc.waitForNewRecent().then(onNewRecent);
       playSound('news.new-element');
-      sidebar.scrollTo(0,0);
       const combo = await rc.getRecentCombinations(1);
       const elem = await getRecentCombinationDOM(rc, combo[0]);
       elem.classList.add('animate-in');
       container.prepend(elem);
+      container.lastElementChild.remove();
     }
     rc.waitForNewRecent().then(onNewRecent);
   }

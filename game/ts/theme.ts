@@ -264,7 +264,6 @@ export async function MountThemeCSS() {
   );
   await delay(100)
   init = true;
-  await updateMountedCss();
 }
 
 export async function showThemeAddDialog() {
