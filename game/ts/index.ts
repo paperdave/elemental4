@@ -51,7 +51,6 @@ async function boot(MenuAPI: MenuAPI) {
 
   // check for updates
   try {
-    throw 1;
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== $version || (!$production && !MenuAPI.upgraded)) {
       resetBuiltInThemes();
