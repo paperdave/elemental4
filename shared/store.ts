@@ -15,9 +15,11 @@ export abstract class IStore {
 
 export class Store extends IStore {
   private localForage: typeof localForage;
+  private storeName: string;
 
   constructor(storeName: string) {
     super();
+    this.storeName = storeName;
     this.localForage = localForage.createInstance({
       name: 'ELEMENTAL',
       storeName: storeName,
@@ -28,7 +30,10 @@ export class Store extends IStore {
     return this.localForage.getItem(key);
   }
   set(key: string, item: any) {
-    return this.localForage.setItem(key, item);
+    return this.localForage.setItem(key, item).catch((e) => {
+      console.log('Error Writing to Store');
+      console.error(e);
+    });
   }
   del(key: string) {
     return this.localForage.removeItem(key);

@@ -1398,8 +1398,12 @@ button.secondary {
   transition: opacity 150ms
 }
 #server-config > * > * {
-  margin-top: 10px;
+  margin-top: 0;
+  margin-bottom: 10px;
   margin-right: 5px;
+}
+#server-config h1 {
+  margin-bottom: 10px;
 }
 #server-config > * > p {
   margin-right: 0;

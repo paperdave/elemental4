@@ -1,7 +1,7 @@
 import { CustomPaletteAPI, Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionRequest, SuggestionResponse, applyColorTransform, ThemedPaletteEntry, OptionsSection, OptionsItem, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, SuggestionColorInformation } from "../elem";
 import { E4SuggestionResponse, Entry } from '../elemental4-types';
 import { fetchWithProgress } from '../fetch-progress';
-import { randomString, sortCombo } from '../shared';
+import { delay, randomString, sortCombo } from '../shared';
 import Color from 'color';
 import { SimpleEmitter } from '@reverse/emitter';
 import io from 'socket.io-client';
@@ -64,10 +64,11 @@ export class Elemental4API
   }
   private processEntry = createQueueExec(async(entry: Entry) => {
     if (entry.entry <= this.dbMeta.lastEntry) {
+      console.log('[E4API] Skipping Entry ' + entry.entry + '; ' + entry.type)
       return;
     }
     if (entry.entry !== this.dbMeta.lastEntry + 1) {
-      console.log('entry out of order. expected #' + (this.dbMeta.lastEntry + 1) + ' but got #' + entry.entry + '. calling later');
+      console.log('[E4API] Entry out of order. expected #' + (this.dbMeta.lastEntry + 1) + ' but got #' + entry.entry + '. calling later');
       this.processEntry.callLater(entry);
       return;
     }
@@ -98,8 +99,9 @@ export class Elemental4API
         }
       } as Elem);
       // TODO get public client id
-      // if (this.saveFile.get('clientPublic') === entry.creators[0]) {
-      if (false) {
+      if (entry.creators.includes(this.saveFile.get('clientPublic'))) {
+        console.log('Request Comment', entry);
+      // if (false) {
         // const mark = await this.ui.prompt({
         //   title: 'Suggestion Created!',
         //   text: `An Element you previously suggested was voted into the game. Since you were the first suggester, you get to add one of the two Creator Marks on this Element.\n\nPlease write your mark for "${entry.text}"`,
@@ -178,7 +180,9 @@ export class Elemental4API
     }
   }
 
-  async open(ui?: ElementalLoadingUi): Promise<boolean> {
+  async open(ui?: ElementalLoadingUi, errorRecovery: boolean = false): Promise<boolean> {
+    (window as any).repair = this.ui.loading.bind(this.ui, this.resetDatabase.bind(this));
+
     if (this.saveFile.get('clientSecret', '[unset]') === '[unset]') {
       this.saveFile.set('clientSecret', randomString(32));
       this.saveFile.set('clientName', '[Ask on Element Suggestion]');
@@ -187,7 +191,7 @@ export class Elemental4API
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
-      if(this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
+      if(errorRecovery || this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
         dbFetch = 'full';
       } else if (formatDate(new Date()) === formatDate(new Date(this.dbMeta.lastUpdated))) {
         dbFetch = 'today';
@@ -200,11 +204,13 @@ export class Elemental4API
       dbFetch = 'full';
     }
 
+    this.running = true;
+
     try {
       ui?.status('Updating Database');
 
       if(dbFetch === 'full') {
-        this.store.clear();
+        await this.store.clear();
         this.dbMeta = {
           lastEntry: 0,
           lastUpdated: Date.now(),
@@ -215,82 +221,88 @@ export class Elemental4API
       }
 
       if (dbFetch !== 'none') {
-        console.log(`Elem4 Fetch "${dbFetch}", have #${this.dbMeta.lastEntry} at ${this.dbMeta.lastUpdated}.`)
+        console.log(`[E4API] Fetch "${dbFetch}", have #${this.dbMeta.lastEntry} at ${this.dbMeta.lastUpdated}.`)
         await this.store.bulkTransfer(() => new Promise(async(done, err) => {
-          const endpoint = dbFetch === 'full'
-            ? '/api/v1/db/all'
-            : dbFetch === 'today'
-              ? '/api/v1/db/after-entry/' + (this.dbMeta.lastEntry - 1)
-              : '/api/v1/db/from-date/' + dbFetch
-          const f = await fetch(this.baseUrl + endpoint)
-          const progress = fetchWithProgress(f, true);
-          
-          let downloadProgress = 0;
-          let processProgress = 0;
-          let totalEntryCount = parseInt(f.headers.get('Elem4-Entry-Length'));
-  
-          progress.on('progress', ({ percent, current, total }) => {
-            downloadProgress = percent;
-            ui?.status('Updating Database', (downloadProgress + processProgress) / 2);
-          });
-          progress.on('done', async(text) => {
-            downloadProgress = 1;
-            if(text.length === 0) {
-              ui?.status('Updating Database', 1);
-              done();
-            } else {
+          try {
+            const endpoint = dbFetch === 'full'
+              ? '/api/v1/db/all'
+              : dbFetch === 'today'
+                ? '/api/v1/db/after-entry/' + (this.dbMeta.lastEntry - 1)
+                : '/api/v1/db/from-date/' + dbFetch
+            const f = await fetch(this.baseUrl + endpoint)
+            const progress = fetchWithProgress(f, true);
+            
+            let downloadProgress = 0;
+            let processProgress = 0;
+            let totalEntryCount = parseInt(f.headers.get('Elem4-Entry-Length'));
+    
+            progress.on('progress', ({ percent, current, total }) => {
+              downloadProgress = percent;
               ui?.status('Updating Database', (downloadProgress + processProgress) / 2);
-            }
-          });
-  
-          let finishedProcessing = 0;
-          const processEntry = createQueueExec(async(x: Entry) => {
-            await this.processEntry(x);
-            finishedProcessing++;
-            processProgress = finishedProcessing / totalEntryCount;
-            ui?.status('Updating Database', (downloadProgress + processProgress) / 2);
-            if (finishedProcessing === totalEntryCount) {
-              done();
-            }
-          });
-  
-          let data = '';
-          let stop = false;
-          const queue = createQueueExec((entry: any) => {
-            if(stop)return;
-            return processEntry(entry)
-          })
-          progress.on('data', (chunk) => {
-            if(stop)return;
-            const split = (data + chunk).split('\n');
-            data = split.pop();
-            split.forEach((x) => {
-              let json;
-              try {
-                json = JSON.parse(x);
-              } catch (error) {
-                err(error);
+            });
+            progress.on('done', async(text) => {
+              downloadProgress = 1;
+              if(text.length === 0) {
+                ui?.status('Updating Database', 1);
+                done();
+              } else {
+                ui?.status('Updating Database', (downloadProgress + processProgress) / 2);
               }
-              queue(json).catch((e) => {
-                stop = true;
-                err(e)
+            });
+    
+            let finishedProcessing = 0;
+            const processEntry = createQueueExec(async(x: Entry) => {
+              await this.processEntry(x);
+              finishedProcessing++;
+              processProgress = finishedProcessing / totalEntryCount;
+              ui?.status('Updating Database', (downloadProgress + processProgress) / 2);
+              if (finishedProcessing === totalEntryCount) {
+                done();
+              }
+            });
+    
+            let data = '';
+            let stop = false;
+            const queue = createQueueExec((entry: any) => {
+              if(stop)return;
+              return processEntry(entry)
+            })
+            progress.on('data', (chunk) => {
+              if(stop)return;
+              const split = (data + chunk).split('\n');
+              data = split.pop();
+              split.forEach((x) => {
+                let json;
+                try {
+                  json = JSON.parse(x);
+                } catch (error) {
+                  err(error);
+                }
+                queue(json).catch((e) => {
+                  stop = true;
+                  err(e)
+                });
               });
             });
-          });
-        })).catch((e) => {
-          console.error(e)
-        })
+          } catch (error) {
+            err(error)
+          }
+        })).catch(() => {})
         this.dbMeta.lastUpdated = Date.now();
       }
 
       await this.saveFile.set('meta', this.dbMeta);
 
-      this.notifyUsername();
+      await this.notifyUsername();
 
       this.socket = io(this.baseUrl);
+      this.socket.on('disconnect', () => {
+        console.log('[E4API] Disconnected');
+        this.onAPIDisconnect();
+      });
       this.socket.on('new-entry', (entry) => {
         this.processEntry(entry);
-      })
+      });
     } catch(e) {
       // you need at least the first four elements.
       if(!await this.getElement('4')) {
@@ -299,11 +311,15 @@ export class Elemental4API
           text: 'To play Elemental 4, you will need to go online to download the database.'
         });
       }
-    }   
+      this.onAPIDisconnect();
+    }
+
     return true;
   }
   async close(): Promise<void> {
+    this.running = false;
     this.socket.close();
+    delete (window as any).repair;
   }
   async getStats(): Promise<ServerStats> {
     return {
@@ -319,6 +335,22 @@ export class Elemental4API
   }
   async getStartingInventory(): Promise<string[]> {
     return ['1','2','3','4'];
+  }
+
+  private running = false;
+  async onAPIDisconnect() {
+    while (this.running) {
+      try {
+        const response = await fetch(this.baseUrl + '/');
+        if (response.ok) {
+          this.ui.reloadSelf();
+          return;
+        }
+      } catch (error) {
+
+      }
+      await delay(8000);
+    }
   }
 
   getSuggestionColorInformation(): SuggestionColorInformation<'dynamic-elemental4'> {

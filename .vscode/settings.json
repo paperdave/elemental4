@@ -7,9 +7,11 @@
     "eslint.enable": false,
     "cSpell.words": [
         "DATALOG",
+        "Diancie",
         "Downvote",
         "Downvoted",
         "Ledom",
+        "Melecie's",
         "Nonexisty",
         "ROWID",
         "Singleplayer",
@@ -18,6 +20,7 @@
         "downlevel",
         "downvotes",
         "localforage",
+        "melecie",
         "savefile",
         "vari"
     ]

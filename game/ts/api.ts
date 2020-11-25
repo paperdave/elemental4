@@ -112,7 +112,20 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
   }
   await endStatistics()
   try {
-    const json = config || builtInApis[baseUrl] || (await fetch(baseUrl + '/elemental.json').then(x => x.json()));
+    const json = config
+      || builtInApis[baseUrl]
+      || (await fetch(baseUrl + '/elemental.json')
+        .then(x => x.json())
+        .catch(async() => {
+          console.log(baseUrl);
+          return (await getServer(baseUrl)).config;
+        }));
+        
+        console.log(json);
+
+    if (!json) {
+      throw new Error('Could not find Server.');
+    }
     installServer(baseUrl, json);
 
     const API = apiTypeMap[json.type];
@@ -145,6 +158,11 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     });
     let isOpen = await api.open(ui);
     if (!isOpen) {
+      try {
+        api.close();
+      } catch (error) {
+        //
+      }
       throw new Error("Could not open API connection.");
     }
 

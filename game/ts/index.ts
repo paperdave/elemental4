@@ -91,6 +91,7 @@ async function boot(MenuAPI: MenuAPI) {
       }
     }
   } catch (error) {
+    console.log(error)
     SKIPPED_UPDATES = true;
     console.log("Could not check version, Updates Skipped.");
   }
