@@ -483,6 +483,10 @@ input[type='text'], input[type='password'], input[type='email'] {
   background-color: var(--background-main);
   color: var(--text-main);
   flex: 0 0 350px;
+  overflow-y: hidden;
+}
+#element-sidebar:hover {
+  overflow-y: overlay;
 }
 #element-sidebar h2 {
   text-align: center;
@@ -1394,8 +1398,12 @@ button.secondary {
   transition: opacity 150ms
 }
 #server-config > * > * {
-  margin-top: 5px;
+  margin-top: 0;
+  margin-bottom: 10px;
   margin-right: 5px;
+}
+#server-config h1 {
+  margin-bottom: 10px;
 }
 #server-config > * > p {
   margin-right: 0;
@@ -1413,9 +1421,15 @@ button.secondary {
   text-align: center;
   margin: 16px;
 }
+.news-container {
+  padding-bottom: 1em;
+}
 .news-combo.animate-in {
   animation: news-entry-appear 0.5s cubic-bezier(0.38, 0, 0, 1) 0.1s both
 }
 .news-combo.animate-in + .news-combo {
   animation: news-entry-slide-down 0.4s cubic-bezier(.38,0,0,1) 0s both;
+}
+[data-settings="changelog"] h3 {
+  margin-bottom: 0;
 }

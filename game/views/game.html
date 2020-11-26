@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex" />
 <div id="tutorial1">
   <div>
     <svg width="160" height="48" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="fill:var(--text-main)">
@@ -356,8 +357,36 @@
       </p>
     </div>
     <div class="settings-content settings-changelog" data-settings='changelog'>
+      <h2>Elemental 4.1.0 (2020-11-26)</h2>
+      <h3>Main Game</h3>
+      <ul>
+        <li>You can now change your username after it has been set, and also backup your login token. (@davecaruso)</li>
+        <li>Offline mode provided you have loaded the database once. (#25, @davecaruso)</li>
+        <li>Socket Reconnecting code, may be buggy. (@davecaruso)</li>
+        <li>Debug console command <code>repair()</code> to trigger a database redownload. [TEMP FIX #17] (@davecaruso)</li>
+      </ul>
+      <h3>Engine</h3>
+      <ul>
+        <li>Scrollbar for recent element creations. (@Zolo101)</li>
+        <li>Server specific options now show up if defined. (@davecaruso)</li>
+        <li>Bug: If an API fails to load, it will force you to the No Server screen. (@davecaruso)</li>
+        <li>Bug: Null Server no longer tracks statistics. (@davecaruso)</li>
+        <li>Bug: Current server was not always saved in config. (#24 @davecaruso)</li>
+        <li>Optimizations in the loading process. (@davecaruso)</li>
+        <li>Support for Offline Mode on supported APIs. (#25 @davecaruso)</li>
+        <li>Typo: Element Info say "Uses" instead of "Usages" (#26 @davecaruso)</li>
+      </ul>
+      <h3>Other APIS</h3>
+      <ul>
+        <li>NV7 Server: Security fixes, and many optimizations. (@Nv7-GitHub)</li>
+      </ul>
+      <h3>API Features</h3>
+      <ul>
+        <li><code>loading</code> and <code>reloadSelf</code> UI functions. (@davecaruso)</li>
+        <li><code>internal:blank</code> server is now available, this is a joke idea for the <code>https://zero.elemental4.net</code> server. (@davecaruso)</li>
+      </ul>
+
       <h2>Elemental 4.0.1 (2020-11-21)</h2>
-      <h3>Changes</h3>
       <ul>
         <li>Refactored and split up complex chunks of code (@Nv7-GitHub)</li>
         <li>Bug: Made it so the Recent Additions menu clears when changing APIs</li>

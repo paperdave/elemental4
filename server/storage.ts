@@ -3,11 +3,13 @@ import { Database, RunResult } from 'sqlite3';
 import { elementNameToStorageID, randomString } from "../shared/shared";
 import { DynamicColor, ElementEntry, Entry, EntryNoNumber } from '../shared/elemental4-types';
 import sha256 from 'sha256';
+import { v4 as uuid } from 'uuid';
 import { lookupIpCheck } from './ip-duplication';
 import { SimpleEmitter } from '@reverse/emitter';
 import { getCurrentTime, logCombo, logElement } from './data-logging';
 import { createJoinedQueue } from '../shared/async-queue-exec';
 import { debounce } from '@reverse/debounce';
+import { DAILY_RESET } from './constants';
 const ONE_DAY = 24*60*60*1000;
 
 let currentDay: string;
@@ -177,19 +179,28 @@ const debouncedStorageSave = debounce(storageSave, 1000);
 
 export async function processDayPassing() {
   const today = getToday();
-  if(currentDay !== today) {
-    if(await fs.pathExists(`data/db/${get32DaysAgo()}.e4db`)) {
-      await fs.remove(`data/db/${get32DaysAgo()}.e4db`);
+  if (currentDay !== today) {
+    if(DAILY_RESET) {
+      await fs.writeFile('data/db/today.e4db', '');
+      await fs.writeFile('data/db/all.e4db', '');
+      dbId = uuid();
+      await storageSave();
+      return true;
+    } else {
+      if(await fs.pathExists(`data/db/${get32DaysAgo()}.e4db`)) {
+        await fs.remove(`data/db/${get32DaysAgo()}.e4db`);
+      }
+      await fs.move('data/db/today.e4db', `data/db/${currentDay}.e4db`);
+      await fs.writeFile('data/db/today.e4db', '');
+      currentDay = today;
+      await storageSave();
     }
-    await fs.move('data/db/today.e4db', `data/db/${currentDay}.e4db`);
-    await fs.writeFile('data/db/today.e4db', '');
-    currentDay = today;
-    await storageSave();
   }
+  return false;
 }
 
 export const storageAddEntry = queue(async function storageAddEntry(obj: EntryNoNumber) {
-  await processDayPassing();
+  if(await processDayPassing()) return;
   
   entryCount++;
   const entry = entryCount;

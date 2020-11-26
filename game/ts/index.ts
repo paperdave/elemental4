@@ -1,5 +1,5 @@
 import localForage from '../../shared/localForage';
-import { MountThemeCSS, resetBuiltInThemes, showThemeAddDialog } from './theme';
+import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitSettings } from './settings/settings';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
@@ -7,7 +7,6 @@ import { fetchWithProgress } from '../../shared/fetch-progress';
 import { connectApi } from './api';
 import { ElementalLoadingUi } from '../../shared/elem';
 import { createLoadingUi } from './loading';
-import * as pkg from '../../package.json';
 import { getActiveServer, installDefaultServers, setActiveServer } from './server-manager';
 import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 import { AlertDialog } from './dialog';
@@ -92,57 +91,57 @@ async function boot(MenuAPI: MenuAPI) {
       }
     }
   } catch (error) {
+    console.log(error)
     SKIPPED_UPDATES = true;
     console.log("Could not check version, Updates Skipped.");
   }
 
-  if('serviceWorker' in navigator) {
+  if(!('serviceWorker' in navigator)) {
+    alert('Error Loading Service!')
+    location.reload();
+    return;
+  } else {
     ui.status('Loading Service', 0);
     const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+  }
 
-    if(!await caches.has(cacheName)) {
-      ui.status('Downloading Game Files', 0);
-      const cache = await caches.open(cacheName)
-      let count = 0;
-      await Promise.all([
-        '/elemental.js?v=' + MenuAPI.cache,
-        '/',
-        '/logo.svg',
-        '/air.svg',
-        '/earth.svg',
-        '/fire.svg',
-        '/water.svg',
-        '/logo-workshop.svg',
-        '/no-element.svg',
-        '/game',
-        '/font.css',
-        '/icon/maskable.png',
-        '/icon/normal.png',
-        '/developer.png',
-        '/theme.schema.json',
-        '/p5_background',
-        '/theme_editor',
-        '/p5.min.js',
-        '/manifest.json',
-        '/chrome-bypass.mp3',
-      ].map(async (url, i, a) => {
-        await cache.add(url);
-        count++;
-        ui.status('Downloading Game Files', count/(a.length));
-      }))
-    }
-
-    if(!await caches.has('monaco_editor')) {
-      const monacoCache = await caches.open('monaco_editor');
-
-      let count = 0;
-      Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`)
-      .map(async (url, i, a) => {
-        await monacoCache.add(url);
-        count++;
-      }))
-    }
-  } 
+  if(!await caches.has(cacheName)) {
+    ui.status('Downloading Game Files', 0);
+    const cache = await caches.open(cacheName)
+    let count = 0;
+    await Promise.all(
+      [
+        ...[
+          '/elemental.js?v=' + MenuAPI.cache,
+          '/',
+          '/logo.svg',
+          '/air.svg',
+          '/earth.svg',
+          '/fire.svg',
+          '/water.svg',
+          '/logo-workshop.svg',
+          '/no-element.svg',
+          '/game',
+          '/font.css',
+          '/icon/maskable.png',
+          '/icon/normal.png',
+          '/developer.png',
+          '/theme.schema.json',
+          '/p5_background',
+          '/theme_editor',
+          '/manifest.json',
+          '/chrome-bypass.mp3',
+        ].map(async (url, i, a) => {
+          await cache.add(url);
+          count++;
+          ui.status('Downloading Game Files', count/(a.length));
+        }),
+        MountThemeCSS()
+      ]
+    );
+  } else {
+    MountThemeCSS()
+  }
 
   ui.status('Loading Game HTML', 0);
   const gameRoot = document.getElementById('game');
@@ -164,7 +163,7 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Loading Servers', 0.8);
   const initialServer = await getActiveServer();
   ui.status('Loading Themes', 0);
-  await MountThemeCSS();
+  await updateMountedCss();
 
   if (failedUpdateApply) {
     await AlertDialog({
@@ -184,18 +183,7 @@ async function boot(MenuAPI: MenuAPI) {
 
   ui.status('Loading API', 0);
 
-  try {
-    await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
-  } catch (error) {
-    if(initialServer.baseUrl === 'internal:singleplayer') {
-      // trollllllll
-      await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}, it might not exist yet. ;)` });
-    } else {
-      await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${initialServer.baseUrl}.` });
-    }
-    setActiveServer('internal:null');
-    await connectApi('internal:null', null, ui as ElementalLoadingUi)
-  }
+  await connectApi(initialServer.baseUrl, null, ui as ElementalLoadingUi)
   
   'dispose' in ui && ui.dispose();
 
@@ -221,6 +209,19 @@ async function boot(MenuAPI: MenuAPI) {
     await delay(500);
   }
   playMusicTrack(getNextMusic());
+
+  if (await caches.has('monaco_editor')) {
+    caches.delete('monaco_editor');
+  }
+
+  if(!await caches.has('secondary_cache')) {
+    const monacoCache = await caches.open('secondary_cache');
+
+    Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`).concat('/p5.min.js')
+      .map(async (url, i, a) => {
+        await monacoCache.add(url);
+      }))
+  }
 }
 async function kill() {
   

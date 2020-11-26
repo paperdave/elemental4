@@ -1,7 +1,7 @@
 import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
 import { NV7ElementalAPI } from "../../shared/api/nv7/nv7";
-import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, ServerSavefileEntry } from "../../shared/elem";
+import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, SaveFileAPI, ServerSavefileEntry } from "../../shared/elem";
 import { delay, delayFrame, escapeHTML } from "../../shared/shared";
 import { SingleplayerAPI } from "./api-singleplayer";
 import { AlertDialog, ConfirmDialog, PromptDialog, CustomDialog } from "./dialog";
@@ -12,13 +12,15 @@ import { createLoadingUi } from "./loading";
 import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
 import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";
-import { allBuiltInServers } from "./server-manager";
+import { allBuiltInServers, setActiveServer } from "./server-manager";
 import { ChunkedStore } from "../../shared/store-chunk";
 import { LedomElementalAPI } from "../../shared/api/ledom";
 import { resolve } from "url";
 import { InternalNullAPI, IsNullAPI } from "../../shared/api/internal/internal-null";
 import { InternalStressTestAPI } from "../../shared/api/internal/internal-stress-test";
 import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors";
+import { BlankExampleAPI } from "../../shared/api/blank";
+import { disposeServerConfigGui, reRenderServerConfigGui } from "./settings-server-config";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -27,6 +29,7 @@ class IHateTypescript extends ElementalBaseAPI {
 
 const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'internal:null': InternalNullAPI,
+  'internal:blank': BlankExampleAPI,
   'internal:all-colors': DebugAllColorsAPI,
   'internal:stress-test': InternalStressTestAPI,
   'internal:singleplayer': SingleplayerAPI,
@@ -34,11 +37,12 @@ const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'elemental4': Elemental4API,
   'elemental5': Elemental5API,
   'e4': LedomElementalAPI,
-  'ledom': LedomElementalAPI,
+  'le4': LedomElementalAPI,
   'nv7': NV7ElementalAPI,
 };
 
 let currentAPI: ElementalBaseAPI;
+let currentSaveFileAPI: SaveFileAPI;
 let currentSaveFile: string;
 let currentSaveFileList: ServerSavefileEntry[];
 
@@ -88,6 +92,19 @@ export async function getSupportedServerTypes() {
 export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: ElementalLoadingUi) {
   baseUrl = baseUrl.replace(/\/(elemental\.json)?$/, '');
   
+  if (currentAPI) {
+    try {
+      currentSaveFileAPI.close();
+      disposeServerConfigGui();
+      currentAPI.close();
+    } catch (error) {
+      console.error('Could not close the current API. This will probably cause a memory leak.');
+      console.error(error);
+    }
+    currentAPI = null;
+    currentSaveFileAPI = null;
+  }
+
   let selfMadeUi = false;
   if(!ui) {
     ui = createLoadingUi();
@@ -95,21 +112,45 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
   }
   await endStatistics()
   try {
-    const json = config || builtInApis[baseUrl] || (await fetch(baseUrl + '/elemental.json').then(x => x.json()));
+    const json = config
+      || builtInApis[baseUrl]
+      || (await fetch(baseUrl + '/elemental.json')
+        .then(x => x.json())
+        .catch(async() => {
+          console.log(baseUrl);
+          return (await getServer(baseUrl)).config;
+        }));
+        
+        console.log(json);
+
+    if (!json) {
+      throw new Error('Could not find Server.');
+    }
     installServer(baseUrl, json);
 
     const API = apiTypeMap[json.type];
+    
+    currentSaveFileAPI = await getAPISaveFile(baseUrl);
 
     const api = new API({
       baseUrl,
       config: json,
-      saveFile: await getAPISaveFile(baseUrl),
+      saveFile: currentSaveFileAPI,
       ui: {
         alert: AlertDialog,
         confirm: ConfirmDialog,
         prompt: PromptDialog,
         dialog: CustomDialog,
         popup: (o) => Promise.resolve(null),
+        loading: async(cb) => {
+          const ui = createLoadingUi();
+          const r = await cb(ui);
+          ui.dispose();
+          return r;
+        },
+        reloadSelf: async() => {
+          await connectApi(baseUrl, config, null);
+        }
       },
       store: json.type.startsWith('internal:')
         ? new ChunkedStore('data.' + json.type.slice(9))
@@ -117,15 +158,12 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     });
     let isOpen = await api.open(ui);
     if (!isOpen) {
-      throw new Error("Could not open API connection.");
-    }
-    if (currentAPI) {
       try {
-        currentAPI.close();
+        api.close();
       } catch (error) {
-        console.error('Could not close the current API. This will probably cause a memory leak.');
-        console.error(error);
+        //
       }
+      throw new Error("Could not open API connection.");
     }
 
     currentAPI = api;
@@ -149,6 +187,13 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     }
 
     ui.status('Loading News');
+
+    const optionsApi = getSubAPI(currentAPI, 'optionsMenu');
+    if (optionsApi) {
+      reRenderServerConfigGui(optionsApi);
+    }
+
+    ui.status('Loading News');
     await InitElementNews();
 
     await onSaveFileLoad(ui);
@@ -161,16 +206,13 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       (ui as any).dispose();
     }
 
+    setActiveServer(baseUrl);
+
     return true;
   } catch (error) {
     console.error(error);
-    if(selfMadeUi) {
-      (ui as any).dispose();
-    }
-    
-    if(currentAPI)startStatistics();
-
-    throw error; 
+    await AlertDialog({ title: 'Error Connecting', text: `Failed to connect to ${baseUrl}.` });
+    await connectApi('internal:null', null, ui);
   }
 }
 
@@ -197,9 +239,6 @@ async function onSaveFileLoad(ui: ElementalLoadingUi) {
   ui.status('Loading Elements');
   const ownedElements = await getOwnedElements(currentAPI);
   const elementsToAdd = await Promise.all(ownedElements.map(id => currentAPI.getElement(id)));
-  elementsToAdd.forEach((elem, i, a) => {
-    
-  });
 
   for (let i = 0; i < elementsToAdd.length; i++) {
     if (i % 500 === 0) {

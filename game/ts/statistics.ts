@@ -1,5 +1,6 @@
 import { debounce } from "@reverse/debounce";
 import { humanize } from "juration";
+import { IsNullAPI } from "../../shared/api/internal/internal-null";
 import { ElementalBaseAPI } from "../../shared/elem";
 import { getAPI } from "./api";
 import { getOwnedElements, getStatistics, setStatistics } from "./savefile";
@@ -53,6 +54,8 @@ export function getTimeSinceStarted() {
 }
 export async function startStatistics() {
   const api = getAPI();
+  if(api[IsNullAPI]) return;
+  
   const newStats = ((await getStatistics(api)) || defaultStats()) as ClientStats;
 
   newStats.sessionCount++;

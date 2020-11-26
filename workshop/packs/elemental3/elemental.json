@@ -5,6 +5,7 @@
   "name": "Elemental 3 Archive",
   "description": "Play the Archived Elemental 3 Dataset in a modern Elemental client.",
   "format": "elemental3",
+  "icon": "./icon.png",
   "author": "Cary Huang + Voters",
   "files": [
     "./Elements.json",

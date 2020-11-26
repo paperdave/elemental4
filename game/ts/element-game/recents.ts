@@ -43,8 +43,9 @@ export async function InitElementNews() {
       playSound('news.new-element');
       const combo = await rc.getRecentCombinations(1);
       const elem = await getRecentCombinationDOM(rc, combo[0]);
-      elem.classList.add('animate-in')
+      elem.classList.add('animate-in');
       container.prepend(elem);
+      container.lastElementChild.remove();
     }
     rc.waitForNewRecent().then(onNewRecent);
   }
