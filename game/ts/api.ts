@@ -245,7 +245,7 @@ async function onSaveFileLoad(ui: ElementalLoadingUi) {
       ui.status('Loading Elements', i / elementsToAdd.length)
       await delay(1);
     }
-    addElementToGame(elementsToAdd[i])
+    addElementToGame(elementsToAdd[i], null, true);
   }
 
   ui.status('Loading Elements', 1);
