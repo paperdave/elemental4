@@ -1,0 +1,59 @@
+{
+  "type": "elemental4:theme",
+  "format_version": 1,
+  "id": "example",
+  "version": 1,
+  "name": "Example: Customizing Colors",
+  "description": "An example theme to show the basics.",
+  "author": "Dave Caruso",
+  "colors": {
+    "white": {
+      "color": "#000000",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "black": {
+      "color": "#ffffff"
+    },
+    "grey": {
+      "color": "#808080"
+    },
+    "brown": {
+      "color": "#4a7eb7"
+    },
+    "red": {
+      "color": "#1cabab"
+    },
+    "orange": {
+      "color": "#1c7bab"
+    },
+    "yellow": {
+      "color": "#1c34ab"
+    },
+    "yellow-green": {
+      "color": "#4c1cab"
+    },
+    "green": {
+      "color": "#ab1c9f"
+    },
+    "aqua": {
+      "color": "#ab1c4c"
+    },
+    "blue": {
+      "color": "#ab1c4c"
+    },
+    "dark-blue": {
+      "color": "#ab8a1c"
+    },
+    "purple": {
+      "color": "#79ab1c"
+    },
+    "magenta": {
+      "color": "#2fab1c"
+    },
+    "hot-pink": {
+      "color": "#1cab5d"
+    }
+  },
+  "icon": "/developer.png"
+}
