@@ -3,14 +3,12 @@
   "format_version": 1,
   "id": "example",
   "version": 1,
-  "name": "Example: Customizing Colors",
-  "description": "An example theme to show the basics.",
-  "author": "Dave Caruso",
+  "name": "Inverted Colors",
+  "description": "A simple theme made for accessibility. Made using https://pinetools.com/invert-color and the official theme source code.",
+  "author": "DavidDGTNT",
   "colors": {
     "white": {
-      "color": "#000000",
-      "lightnessMultiplier": 1,
-      "saturationMultiplier": 1
+      "color": "#000000"
     },
     "black": {
       "color": "#ffffff"
@@ -55,5 +53,5 @@
       "color": "#1cab5d"
     }
   },
-  "icon": "/developer.png"
+  "icon": "/cache_data/elem4_default/icon"
 }
