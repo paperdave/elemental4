@@ -1,10 +1,11 @@
 {
+  "$schema": "../../../res/theme.schema.json",
   "type": "elemental4:theme",
   "format_version": 1,
   "id": "inverted_colors",
   "version": 1,
   "name": "Inverted Colors",
-  "description": "A simple theme made for accessibility. Made using https://pinetools.com/invert-color and the official theme source code.",
+  "description": "A simple theme made for accessibility.",
   "author": "DavidDGTNT",
   "colors": {
     "white": {
@@ -52,5 +53,6 @@
     "hot-pink": {
       "color": "#1cab5d"
     }
-  }
+  },
+  "icon": "icon.png"
 }
