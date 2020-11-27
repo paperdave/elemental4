@@ -1,0 +1,56 @@
+{
+  "type": "elemental4:theme",
+  "format_version": 1,
+  "id": "inverted_colors",
+  "version": 1,
+  "name": "Inverted Colors",
+  "description": "A simple theme made for accessibility. Made using https://pinetools.com/invert-color and the official theme source code.",
+  "author": "DavidDGTNT",
+  "colors": {
+    "white": {
+      "color": "#000000"
+    },
+    "black": {
+      "color": "#ffffff"
+    },
+    "grey": {
+      "color": "#808080"
+    },
+    "brown": {
+      "color": "#4a7eb7"
+    },
+    "red": {
+      "color": "#1cabab"
+    },
+    "orange": {
+      "color": "#1c7bab"
+    },
+    "yellow": {
+      "color": "#1c34ab"
+    },
+    "yellow-green": {
+      "color": "#4c1cab"
+    },
+    "green": {
+      "color": "#ab1c9f"
+    },
+    "aqua": {
+      "color": "#ab1c4c"
+    },
+    "blue": {
+      "color": "#ab1c4c"
+    },
+    "dark-blue": {
+      "color": "#ab8a1c"
+    },
+    "purple": {
+      "color": "#79ab1c"
+    },
+    "magenta": {
+      "color": "#2fab1c"
+    },
+    "hot-pink": {
+      "color": "#1cab5d"
+    }
+  }
+}
