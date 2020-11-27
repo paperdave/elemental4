@@ -1,7 +1,7 @@
 {
   "type": "elemental4:theme",
   "format_version": 1,
-  "id": "example",
+  "id": "inverted_colors",
   "version": 1,
   "name": "Inverted Colors",
   "description": "A simple theme made for accessibility. Made using https://pinetools.com/invert-color and the official theme source code.",
@@ -52,6 +52,5 @@
     "hot-pink": {
       "color": "#1cab5d"
     }
-  },
-  "icon": "/cache_data/elem4_default/icon"
+  }
 }
