@@ -15,7 +15,7 @@ import Color from "color";
 import { tutorial1visible, holdingElement, elementContainer, setTutorial1Visible, setTutorial2Visible, suggestLeftElem, suggestRightElem, dropHoldingElement, suggestContainer, suggestOther1Elem, suggestOther2Elem, suggestOther3Elem, suggestOther1Downvote, suggestOther2Downvote, suggestOther3Downvote, suggestOtherHeader, suggestHint, suggestResultElem, holdingRect, infoContainer, setSuggestResult, setInfoOpen, setHoldingRect, setHoldingElement, setHoldingElementDom } from "./element-game";
 
 // Adds an element and has most element logic
-export function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
+export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, duringLoad?: boolean) {
   if(!element) return;
   const alreadyExistingDom = document.querySelector(`[data-element="${element.id}"]`) as HTMLElement;
   
@@ -34,7 +34,9 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement) {
     }
     return;
   } else {
-    setElementAsOwned(getAPI(), element.id);
+    if (!duringLoad) {
+      setElementAsOwned(getAPI(), element.id);
+    }
   }
 
   const dom = ElementDom(element);
