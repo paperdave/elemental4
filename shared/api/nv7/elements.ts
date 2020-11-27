@@ -32,16 +32,10 @@ export async function getElem(api: NV7ElementalAPI, id: string): Promise<Elem> {
 }
 
 export async function getCombination(api: NV7ElementalAPI, elem1: string, elem2: string): Promise<string[]> {
-  var combo = await api.store.get(encodeURIComponent(elem1) + "+" + encodeURIComponent(elem2));
-  if (!combo) {
-    const comboResp = await fetch(api.prefix + "get_combo/" + encodeURIComponent(elem1) + "/" + encodeURIComponent(elem2))
-    let comboData = await comboResp.json()
-    if (!comboData.exists) {
-      return [];
-    }
-    combo = comboData.combo;
-    await api.store.set(encodeURIComponent(elem1) + "+" + encodeURIComponent(elem2), combo);
-    return [combo];
+  const comboResp = await fetch(api.prefix + "get_combo/" + encodeURIComponent(elem1) + "/" + encodeURIComponent(elem2))
+  let comboData = await comboResp.json()
+  if (!comboData.exists) {
+    return [];
   }
-  return [combo];
+  return [comboData.combo];
 }
