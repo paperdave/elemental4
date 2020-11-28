@@ -14,9 +14,9 @@ export async function getRecents(api: NV7ElementalAPI): Promise<RecentCombinatio
 export async function waitForNew(api: NV7ElementalAPI): Promise<void> {
   api.ref = new EventSource(api.config.databaseURL + "/recent.json");
   return new Promise<void>((resolve, _) => {
-    api.ref.onmessage = function() {
+    api.ref.addEventListener("put", function() {
       api.ref.close();
       resolve();
-    }
+    });
   })
 }
