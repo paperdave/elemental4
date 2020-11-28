@@ -102,7 +102,7 @@ async function boot(MenuAPI: MenuAPI) {
     return;
   } else {
     ui.status('Loading Service', 0);
-    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+    await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
   }
 
   if(!await caches.has(cacheName)) {
@@ -192,8 +192,8 @@ async function boot(MenuAPI: MenuAPI) {
   while (Howler.ctx.state === 'suspended') {
     await AlertDialog({
       title: 'Autoplay Disabled',
-      text: 'Your browser does not allow autoplaying audio until the page has been clicked. Please click the button. [Learn More](/chrome_autoplay)',
-    })
+      text: 'Click OK on this dialog to enable audio autoplay. [Learn More](/chrome_autoplay)',
+    });
     await delay(350);
   }
 
