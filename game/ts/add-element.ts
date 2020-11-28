@@ -210,7 +210,7 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, du
       infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
     }
     if (typeof element.stats.usageCount === 'number') {
-      infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Uses');
+      infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Use');
     }
 
     infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
