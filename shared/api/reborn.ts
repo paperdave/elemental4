@@ -1,6 +1,4 @@
 import { Elem, ElementalBaseAPI, ElementalColorPalette, ElementalLoadingUi, ElementalRules, ServerStats, Suggestion, SuggestionRequest, SuggestionResponse } from "../elem";
-import { sortCombo } from "../shared";
-import { ChunkedStore } from "../store-chunk";
 
 const colorMap: Record<string, ElementalColorPalette> = {
   sky: 'blue',

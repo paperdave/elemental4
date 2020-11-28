@@ -127,11 +127,6 @@ export class Elemental4API
 
       const recipe = entry.recipe.split('+') as [string, string];
       
-      if(!recipe[0] || recipe[1]) {
-        console.log(recipe);
-        debugger;
-      }
-
       this.dbMeta.recentCombos.unshift({
         recipe: recipe,
         result: entry.result
@@ -196,9 +191,10 @@ export class Elemental4API
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
+      console.log('db last updated = ', this.dbMeta.lastUpdated);
       if(errorRecovery || this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
         dbFetch = 'full';
-      } else if (formatDate(new Date()) === formatDate(new Date(this.dbMeta.lastUpdated))) {
+      } else if (formatDate(new Date(Date.now())) === formatDate(new Date(this.dbMeta.lastUpdated))) {
         dbFetch = 'today';
       } else if (Date.now() - this.dbMeta.lastUpdated > (30*ONE_DAY)) {
         dbFetch = 'full';

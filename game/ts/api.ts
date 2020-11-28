@@ -13,7 +13,6 @@ import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveF
 import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";
 import { allBuiltInServers, setActiveServer } from "./server-manager";
-import { ChunkedStore } from "../../shared/store-chunk";
 import { LedomElementalAPI } from "../../shared/api/ledom";
 import { resolve } from "url";
 import { InternalNullAPI, IsNullAPI } from "../../shared/api/internal/internal-null";
@@ -21,6 +20,7 @@ import { InternalStressTestAPI } from "../../shared/api/internal/internal-stress
 import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors";
 import { BlankExampleAPI } from "../../shared/api/blank";
 import { disposeServerConfigGui, reRenderServerConfigGui } from "./settings-server-config";
+import { Store } from "../../shared/store";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -153,8 +153,8 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
         }
       },
       store: json.type.startsWith('internal:')
-        ? new ChunkedStore('data.' + json.type.slice(9))
-        : new ChunkedStore(json.type + ':' + processBaseUrl(baseUrl))
+        ? new Store('data.' + json.type.slice(9))
+        : new Store(json.type + ':' + processBaseUrl(baseUrl))
     });
     let isOpen = await api.open(ui);
     if (!isOpen) {
