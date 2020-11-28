@@ -130,7 +130,6 @@ export class Elemental4API
       if(!recipe[0] || recipe[1]) {
         console.log(recipe);
         debugger;
-        
       }
 
       this.dbMeta.recentCombos.unshift({

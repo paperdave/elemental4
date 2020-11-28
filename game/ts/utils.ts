@@ -31,9 +31,6 @@ export function updateSuggestion() {
 
 // Makes the HTML for an element
 export function ElementDom(elem2: Elem) {
-  if(!elem2) {
-    debugger;
-  }
   const display = elem2.display;
   const elem = document.createElement('div');
   elem.appendChild(document.createTextNode(display.text));

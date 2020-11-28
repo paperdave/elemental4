@@ -4,7 +4,7 @@ import { elementNameToStorageID, sortCombo } from '../shared/shared';
 import { VOTE_SCORES_EQUATION, VOTE_THRESHOLD_EQUATION } from './constants';
 import { createQueueExec } from '../shared/async-queue-exec';
 import { Parser } from 'expr-eval';
-import { storageAddCombo, storageAddElement, getPublicId, storageIncElementCount, storageSetSuggestion, storageGetSuggestion, DbVariant, DbSuggestionEntry, storageCheckIP, storageGetElementNumberFromName, storageIncSuggestCount, storageDecSuggestCount } from './storage';
+import { storageAddCombo, storageAddElement, getPublicId, storageIncElementCount, storageSetSuggestion, storageGetSuggestion, DbVariant, DbSuggestionEntry, storageCheckIP, storageGetElementNumberFromName, storageIncSuggestCount, storageDecSuggestCount, storageGetElementCount } from './storage';
 import { E4SuggestionRequest, E4SuggestionResponse } from '../shared/elemental4-types';
 import sha256 from 'sha256';
 import { getCurrentTime, logCombo, logSuggestion } from './data-logging';
@@ -44,6 +44,16 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
     return {
       result: 'vote-fraud-detect-down'
     }
+  }
+
+  const r = recipe.split('+');
+
+  if(!(parseInt(r[0]).toString() === r[0] && parseInt(r[0]) <= storageGetElementCount())) {
+    return { result: 'internal-error' };
+  }
+
+  if(!(parseInt(r[1]).toString() === r[1] && parseInt(r[1]) <= storageGetElementCount())) {
+    return { result: 'internal-error' };
   }
 
   try {
