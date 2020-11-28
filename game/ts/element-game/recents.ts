@@ -14,10 +14,29 @@ export async function getRecentCombinationDOM(rc: ElementalBaseAPI, x: RecentCom
   eq1.innerHTML = '+';
   eq2.innerHTML = '=';
 
+  if (!x.recipe[0]) { debugger; }
+  if (!x.recipe[1]) { debugger; }
+  if (!x.result) { debugger; }
+
   const [elem1, elem2, elem3] = await Promise.all([
-    rc.getElement(x.recipe[0]).then(x => ElementDom(x)),
-    rc.getElement(x.recipe[1]).then(x => ElementDom(x)),
-    rc.getElement(x.result).then(x => ElementDom(x)),
+    rc.getElement(x.recipe[0]).then(x => {
+      if(!x) {
+        debugger;
+      }
+      return ElementDom(x);
+    }),
+    rc.getElement(x.recipe[1]).then(x => {
+      if(!x) {
+        debugger;
+      }
+      return ElementDom(x);
+    }),
+    rc.getElement(x.result).then(x => {
+      if(!x) {
+        debugger;
+      }
+      return ElementDom(x);
+    }),
   ]);
 
   root.appendChild(elem1);

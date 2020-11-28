@@ -39,7 +39,7 @@ export const SERVER_ICON = env.SERVER_ICON;
 
 export const IP_FORWARDING = env.IP_FORWARDING === "true";
 /** API Key */
-export const IP_DUPLICATION_KEY = env.IP_DUPLICATION_KEY;
+export const IP_DUPLICATION_KEY = env.IP_DUPLICATION_KEY2;
 
 export const DATALOG_SHEET_ID = env.DATALOG_SHEET_ID;
 export const DAILY_RESET = env.DAILY_RESET;

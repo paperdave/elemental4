@@ -127,6 +127,12 @@ export class Elemental4API
 
       const recipe = entry.recipe.split('+') as [string, string];
       
+      if(!recipe[0] || recipe[1]) {
+        console.log(recipe);
+        debugger;
+        
+      }
+
       this.dbMeta.recentCombos.unshift({
         recipe: recipe,
         result: entry.result

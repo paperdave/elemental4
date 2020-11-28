@@ -40,6 +40,7 @@
     "monaco-editor": "^0.21.2",
     "node-fetch": "^2.3.0",
     "p5": "^1.1.9",
+    "proxycheck-node.js": "^2.0.0-a",
     "sha256": "^0.2.0",
     "showdown": "^1.9.1",
     "socket.io": "^2.3.0",
