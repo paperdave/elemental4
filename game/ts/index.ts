@@ -140,7 +140,7 @@ async function boot(MenuAPI: MenuAPI) {
       ]
     );
   } else {
-    MountThemeCSS()
+    await MountThemeCSS();
   }
 
   ui.status('Loading Game HTML', 0);
