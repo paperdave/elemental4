@@ -1,7 +1,7 @@
+import P5 from 'p5';
 import { Elem } from "../../shared/elem";
 import { getAPI } from "./api";
 import { getTheme } from "./theme";
-
 interface Tree {
   /** The element itself. */
   elem: Elem;
@@ -29,8 +29,8 @@ export async function getElementTree(elem: Elem): Promise<Tree|null> {
   }
 }
 
-let canvasRunning = true;
-let canvas: HTMLCanvasElement;
+let p5: P5 | null = null;
+let container: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 let currentTree: Tree;
 const elementSize = 35;
@@ -98,32 +98,29 @@ function addParents(tree: Tree, x: number, y: number) {
     addParents(tree.parent2, x+50, y-yChange)
   }
 }
-function update() {
-  if(!canvasRunning) {
-    return;
-  }
-  
-  ctx.fillStyle = '#999999';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  requestAnimationFrame(update);
+function setup() {
+  p5.createCanvas(350, 400)
+  // ctx.fillStyle = getTheme().colors[tree.elem.display.categoryName].color
+  // ctx.fillRect(175, 350, elementSize, elementSize)
+  // addText(currentTree.elem.display.text, 175, 357.5)
+  // addParents(currentTree, 175, 350);
 }
+function draw() {
+  p5.background('red');
+}
+
 export async function initTreeCanvas(tree: Tree) {
+  endTreeCanvas();
+  container = document.getElementById("element-info-tree") as HTMLCanvasElement;
   currentTree = tree;
-  canvas = document.getElementById("element-info-tree") as HTMLCanvasElement;
-  ctx = canvas.getContext("2d");
-  canvas.width = 350;
-  canvas.height = 400;
-  update();
-
-  console.log(currentTree);
-
-  ctx.fillStyle = getTheme().colors[tree.elem.display.categoryName].color
-  ctx.fillRect(175, 350, elementSize, elementSize)
-  addText(currentTree.elem.display.text, 175, 357.5)
-  addParents(currentTree, 175, 350);
+  p5 = new P5((p5) => {
+    p5.setup = setup;
+    p5.draw = draw;
+  }, container);
 }
 export async function endTreeCanvas() {
-  canvasRunning = false;
+  if (p5) {
+    p5.remove();
+  }
   currentTree = null;
 }
