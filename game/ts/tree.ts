@@ -33,7 +33,7 @@ let canvasRunning = true;
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 let currentTree: Tree;
-let elementSize = 35;
+const elementSize = 35;
 
 function addText(text: string, x: number, y: number) {
   const textToAdd = text.match(/.{1,6}/g);
@@ -45,32 +45,42 @@ function addText(text: string, x: number, y: number) {
 function makeElement(color: string, text: string, x: number, y: number, cx: number, cy: number) {
   ctx.fillStyle = color
   ctx.fillRect(x+cx, y+cy, elementSize, elementSize)
-  addText(text, x+cx, y+cy + 14)
+  addText(text, x + cx, y + cy + 14)
+  // up
   ctx.beginPath();
   ctx.moveTo(x+(elementSize/2),y);
+  ctx.lineTo(x+(elementSize/2),y-(elementSize / 8));
+  ctx.stroke();
+  // line (left or right)
+  ctx.moveTo(x+(elementSize/2),y-(elementSize / 8));
+  ctx.lineTo(x+cx+(elementSize/2),y-(elementSize / 8));
+  ctx.stroke();
+  // up again
+  ctx.moveTo(x+cx+(elementSize/2),y-(elementSize / 8));
   ctx.lineTo(x+cx+(elementSize/2),y+cy+(elementSize));
   ctx.stroke();
 }
 function addParents(tree: Tree, x: number, y: number) {
-  // console.warn(getTheme().colors[parent1element.categoryName])
   let yChange = 45
   const parent1Exist = (tree.parent1 !== null) ? true : false
   const parent2Exist = (tree.parent2 !== null) ? true : false
   const singleParent = ((parent1Exist || parent2Exist) && !(parent1Exist && parent2Exist)) ? true : false
 
-  if (parent1Exist && singleParent) {
-    makeElement(
-      getTheme().colors[tree.parent1.elem.display.categoryName].color,
-      tree.parent1.elem.display.text,
-      x,y,-30,-yChange
-    )
-    makeElement(
-      getTheme().colors[tree.parent1.elem.display.categoryName].color,
-      tree.parent1.elem.display.text,
-      x,y,30,-yChange
-    )
-    addParents(tree.parent1, x-30,y-yChange)
-  } else if (parent1Exist) {
+  if (singleParent) {
+    ctx.beginPath();
+    // up line
+    ctx.moveTo(x + (elementSize / 2), y);
+    ctx.lineTo(x + (elementSize / 2), y - (elementSize / 4));
+    ctx.stroke();
+    // first line
+    ctx.moveTo(x, y - (elementSize / 4));
+    ctx.lineTo(x + elementSize, y - (elementSize / 4));
+    ctx.stroke();
+    addParents(tree.parent1, x, y - (elementSize / 4))
+    return
+  }
+  
+  if (parent1Exist) {
     makeElement(
       getTheme().colors[tree.parent1.elem.display.categoryName].color,
       tree.parent1.elem.display.text,
@@ -78,20 +88,8 @@ function addParents(tree: Tree, x: number, y: number) {
     )
     addParents(tree.parent1, x+25, y-yChange)
   }
-
-  if (parent2Exist && singleParent) {
-    makeElement(
-      getTheme().colors[tree.parent2.elem.display.categoryName].color,
-      tree.parent2.elem.display.text,
-      x,y,-30,-yChange
-    )
-    makeElement(
-      getTheme().colors[tree.parent2.elem.display.categoryName].color,
-      tree.parent2.elem.display.text,
-      x,y,30,-yChange
-    )
-    addParents(tree.parent2, x+30, y-yChange)
-  } else if (parent2Exist) {
+  
+  if (parent2Exist) {
     makeElement(
       getTheme().colors[tree.parent2.elem.display.categoryName].color,
       tree.parent2.elem.display.text,
