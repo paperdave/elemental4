@@ -55,14 +55,16 @@ function addText(text: string, x: number, y: number) {
 }
 function makeElement(color: string, text: string, x: number, y: number, cx: number, cy: number) {
   p5.fill(p5.color(color.toString()))
-  p5.rect(x+cx, y+cy, elementSize, elementSize)
+  p5.rect(x+cx, y+cy, elementSize, elementSize, 4)
   addText(text, x + cx, y + cy + (elementSize/2))
+  p5.strokeWeight(2)
   // up
   p5.line(x+(elementSize/2),y,x+(elementSize/2),y-(elementSize / 8));
   // line (left or right)
   p5.line(x+(elementSize/2),y-(elementSize / 8),x+cx+(elementSize/2),y-(elementSize / 8));
   // up again
   p5.line(x+cx+(elementSize/2),y-(elementSize / 8),x+cx+(elementSize/2),y+cy+(elementSize));
+  p5.strokeWeight(0)
 }
 function addParents(tree: Tree, x: number, y: number) {
   let yChange = 45
@@ -71,10 +73,12 @@ function addParents(tree: Tree, x: number, y: number) {
   const singleParent = ((parent1Exist || parent2Exist) && !(parent1Exist && parent2Exist)) ? true : false
 
   if (singleParent) {
+    p5.strokeWeight(2)
     // up line
-    p5.line(x + (elementSize / 2), y,x + (elementSize / 2), y - (elementSize / 4));
+    p5.line(x + (elementSize / 2), y, x + (elementSize / 2), y - (elementSize / 4));
     // first line
-    p5.line(x, y - (elementSize / 4),x + elementSize, y - (elementSize / 4));
+    p5.line(x, y - (elementSize / 4), x + elementSize, y - (elementSize / 4));
+    p5.strokeWeight(0)
     addParents(tree.parent1, x, y - (elementSize / 4))
     return
   }
@@ -99,13 +103,14 @@ function addParents(tree: Tree, x: number, y: number) {
 }
 function renderTree(x: number, y: number) {
   p5.fill(p5.color(getTheme().colors[currentTree.elem.display.categoryName].color.toString()))
-  p5.rect(x, y, elementSize, elementSize)
+  p5.rect(x, y, elementSize, elementSize, 4)
   addText(currentTree.elem.display.text, x, y+7.5)
   addParents(currentTree, x, y);
 }
 function setup() {
   p5.createCanvas(treeCanvasSizeX,treeCanvasSizeY)
   console.log(getTheme().colors[currentTree.elem.display.categoryName].color.toString())
+  p5.strokeWeight(0)
   renderTree(175, 350);
 }
 function draw() {
