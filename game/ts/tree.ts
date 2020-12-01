@@ -36,29 +36,21 @@ let currentTree: Tree;
 const elementSize = 35;
 
 function addText(text: string, x: number, y: number) {
-  const textToAdd = text.match(/.{1,6}/g);
-  textToAdd.forEach((text, i) => {
-    ctx.fillStyle = "#000"
-    ctx.fillText(text, x, y+(i*14))
-  })
+  p5.fill(0)
+  p5.textSize(10)
+  // TODO: Add dynamic text scaling (Low priority)
+  p5.text(text, x, y, elementSize, elementSize)
 }
 function makeElement(color: string, text: string, x: number, y: number, cx: number, cy: number) {
-  ctx.fillStyle = color
-  ctx.fillRect(x+cx, y+cy, elementSize, elementSize)
-  addText(text, x + cx, y + cy + 14)
+  p5.fill(p5.color(color.toString()))
+  p5.rect(x+cx, y+cy, elementSize, elementSize)
+  addText(text, x + cx, y + cy + (elementSize/2))
   // up
-  ctx.beginPath();
-  ctx.moveTo(x+(elementSize/2),y);
-  ctx.lineTo(x+(elementSize/2),y-(elementSize / 8));
-  ctx.stroke();
+  p5.line(x+(elementSize/2),y,x+(elementSize/2),y-(elementSize / 8));
   // line (left or right)
-  ctx.moveTo(x+(elementSize/2),y-(elementSize / 8));
-  ctx.lineTo(x+cx+(elementSize/2),y-(elementSize / 8));
-  ctx.stroke();
+  p5.line(x+(elementSize/2),y-(elementSize / 8),x+cx+(elementSize/2),y-(elementSize / 8));
   // up again
-  ctx.moveTo(x+cx+(elementSize/2),y-(elementSize / 8));
-  ctx.lineTo(x+cx+(elementSize/2),y+cy+(elementSize));
-  ctx.stroke();
+  p5.line(x+cx+(elementSize/2),y-(elementSize / 8),x+cx+(elementSize/2),y+cy+(elementSize));
 }
 function addParents(tree: Tree, x: number, y: number) {
   let yChange = 45
@@ -67,15 +59,10 @@ function addParents(tree: Tree, x: number, y: number) {
   const singleParent = ((parent1Exist || parent2Exist) && !(parent1Exist && parent2Exist)) ? true : false
 
   if (singleParent) {
-    ctx.beginPath();
     // up line
-    ctx.moveTo(x + (elementSize / 2), y);
-    ctx.lineTo(x + (elementSize / 2), y - (elementSize / 4));
-    ctx.stroke();
+    p5.line(x + (elementSize / 2), y,x + (elementSize / 2), y - (elementSize / 4));
     // first line
-    ctx.moveTo(x, y - (elementSize / 4));
-    ctx.lineTo(x + elementSize, y - (elementSize / 4));
-    ctx.stroke();
+    p5.line(x, y - (elementSize / 4),x + elementSize, y - (elementSize / 4));
     addParents(tree.parent1, x, y - (elementSize / 4))
     return
   }
@@ -100,23 +87,31 @@ function addParents(tree: Tree, x: number, y: number) {
 }
 function setup() {
   p5.createCanvas(350, 400)
-  // ctx.fillStyle = getTheme().colors[tree.elem.display.categoryName].color
-  // ctx.fillRect(175, 350, elementSize, elementSize)
-  // addText(currentTree.elem.display.text, 175, 357.5)
-  // addParents(currentTree, 175, 350);
 }
 function draw() {
-  p5.background('red');
+  // TODO: Mouse panning to move the tree
+  /*
+  We could very lazily do the whole thing every frame,
+  or we could redo the code to only compute the tree once, also
+  allowing us to do the spacing thingy i mentioned in the
+  discord. I'm probably going to do the latter. ~Zelo101
+  */
 }
 
 export async function initTreeCanvas(tree: Tree) {
   endTreeCanvas();
   container = document.getElementById("element-info-tree") as HTMLCanvasElement;
   currentTree = tree;
-  p5 = new P5((p5) => {
+  p5 = new P5((instance) => {
+    p5 = instance
     p5.setup = setup;
     p5.draw = draw;
   }, container);
+  console.log(getTheme().colors[tree.elem.display.categoryName].color.toString())
+  p5.fill(p5.color(getTheme().colors[tree.elem.display.categoryName].color.toString()))
+  p5.rect(175, 350, elementSize, elementSize)
+  addText(currentTree.elem.display.text, 175, 357.5)
+  addParents(currentTree, 175, 350);
 }
 export async function endTreeCanvas() {
   if (p5) {
