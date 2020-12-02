@@ -11,7 +11,8 @@ import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 import { AlertDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
-import { getServiceWorker, setWorkerRegistration } from './service-worker';
+import { setWorkerRegistration } from './service-worker';
+import marked from 'marked';
 
 declare const $production: string;
 declare const $version: string;
@@ -31,6 +32,7 @@ type MenuAPI = {
 async function boot(MenuAPI: MenuAPI) {
   // Initial Stuff
   delete window["$elemental4"];
+  console.clear();
   console.log(`👋 Hello Elemental, version ${$version}`);
 
   if(typeof localStorage === 'undefined') return location.reload();
@@ -129,6 +131,7 @@ async function boot(MenuAPI: MenuAPI) {
           '/p5_background',
           '/theme_editor',
           '/manifest.json',
+          '/changelog.md',
           '/chrome-bypass.mp3',
         ].map(async (url, i, a) => {
           await cache.add(url);
@@ -145,6 +148,8 @@ async function boot(MenuAPI: MenuAPI) {
   ui.status('Loading Game HTML', 0);
   const gameRoot = document.getElementById('game');
   gameRoot.innerHTML = await fetch('/game').then((x) => x.text());
+  const changelogRoot = document.getElementById('changelog-root');
+  changelogRoot.innerHTML = marked(await fetch('/changelog.md').then((x) => x.text()));
 
   const versionInfo = {
     'version': $version,
