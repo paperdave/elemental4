@@ -6,7 +6,7 @@ import { version } from "../../package.json";
 import { installServer } from "./savefile";
 import { capitalize } from "@reverse/string";
 import { THEME_VERSION } from "./theme-version";
-import { createLoadingUi } from "./loading";
+import { createLoadingUi } from "./init/loading";
 
 export type DLCType = 'theme' | 'pack' | 'server';
 

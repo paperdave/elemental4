@@ -4,7 +4,7 @@ import { addDLCByUrl } from "../dlc-fetch";
 import { builtInOfficialServers, setActiveServer } from "../server-manager";
 import { processBaseUrl, getActiveSaveFile, createNewSaveFile, renameSaveFile, deleteSaveFile, setActiveSaveFile, getAPISaveFiles, uninstallServer } from "../savefile";
 import escapeMarkdown from 'markdown-escape';
-import { createLoadingUi } from "../loading";
+import { createLoadingUi } from "../init/loading";
 import { setAPISaveFile, connectApi, getAPI, recalculateSavefileDropdown } from "../api";
 
 export function serverSettings() {

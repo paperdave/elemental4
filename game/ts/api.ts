@@ -8,7 +8,7 @@ import { AlertDialog, ConfirmDialog, PromptDialog, CustomDialog } from "./dialog
 import { ClearElementGameUi} from "./element-game";
 import { addElementToGame } from "./add-element";
 import { InitElementNews } from "./element-game/recents";
-import { createLoadingUi } from "./loading";
+import { createLoadingUi } from "./init/loading";
 import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveFile, getAPISaveFile, getAPISaveFiles, getOwnedElements, getServer, installServer, processBaseUrl, setActiveSaveFile } from "./savefile";
 import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";

@@ -1,4 +1,8 @@
-import { createFramePopup } from "./iframe";
+import { createFramePopup } from "../iframe";
+
+export interface ElementalLoadingUi {
+  status: (text: string, progress?: number) => void;
+}
 
 export function createLoadingUi() {
   let timer: number;

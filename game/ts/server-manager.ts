@@ -1,8 +1,7 @@
 import { ElementalConfig } from "../../shared/elem";
-import { addDLCByUrl } from "./dlc-fetch";
 import { getConfigString, getInstalledServers, setConfigString } from "./savefile";
 
-interface ServerEntry {
+export interface ServerEntry {
   baseUrl: string,
   name: string,
   config: ElementalConfig,
@@ -44,11 +43,7 @@ export async function getServerList(): Promise<ServerEntry[]> {
   return await getInstalledServers() as ServerEntry[];
 }
 export async function installDefaultServers(): Promise<void> {
-  const servers = await getInstalledServers() as ServerEntry[];
-  const list = allBuiltInServers.filter(x => !servers.some(y => y.baseUrl === x) && x.startsWith('https://'));
-  await Promise.all(list.map(x => {
-    return addDLCByUrl(x, 'server', true);
-  }));
+  
 }
 
 export async function setActiveServer(baseUrl: string) {

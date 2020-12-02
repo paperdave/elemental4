@@ -1,4 +1,7 @@
-## Elemental 4.2.0 (2020-12-02)
+## Elemental 4.2.0 (2020-12-03)
+
+## Main Game
+- Due to an engine fix, the "Failed to connect to main.elemental4.net" should no longer happen. This was never a server issue, and is just an issue on the client-side.
 
 ## Engine
 - IndexedDB calls are now proxied through a service worker and using a different framework, so they should hopefully never fail. (@davecaruso)
@@ -11,14 +14,12 @@
 ## Other APIs
 - Nv7 Server: Various bug fixes.
 
-
 ## Elemental 4.1.1 (2020-11-26)
 ### Engine
 - Element save files are not written during loading. This is unneeded since your save file would already exist with the same element list, or be the default. (@davecaruso)</li>
 
 ### Other APIs
 - Nv7 Server: Fix a caching issue with combinations (@Nv7-GitHub)
-
 
 ## Elemental 4.1.0 (2020-11-26)
 ### Main Game
