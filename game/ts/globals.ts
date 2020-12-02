@@ -28,7 +28,6 @@ export function exposeGlobals() {
         },
         deps: {
             color: require('color'),
-            localforage: require('../../shared/localForage'),
         }
     };
 }

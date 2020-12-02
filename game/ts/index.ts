@@ -1,4 +1,3 @@
-import localForage from '../../shared/localForage';
 import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitSettings } from './settings/settings';
 import { InitElementGameUi } from './element-game';
@@ -12,6 +11,7 @@ import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 import { AlertDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
+import { getServiceWorker, setWorkerRegistration } from './service-worker';
 
 declare const $production: string;
 declare const $version: string;
@@ -47,6 +47,16 @@ async function boot(MenuAPI: MenuAPI) {
   
   ui.status('Checking Updates', 0);
 
+  if(!('serviceWorker' in navigator)) {
+    alert('Service workers not supported, game cannot start. Make sure to use a Modern Web Browser!')
+    location.reload();
+    return;
+  } else {
+    ui.status('Loading Service', 0);
+    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+    setWorkerRegistration(reg);
+  }
+
   let failedUpdateApply;
 
   // check for updates
@@ -67,8 +77,6 @@ async function boot(MenuAPI: MenuAPI) {
             caches.delete(cacheName);
           }
 
-          window.localForage = localForage;
-          
           try {
             eval(text);
 
@@ -94,15 +102,6 @@ async function boot(MenuAPI: MenuAPI) {
     console.log(error)
     SKIPPED_UPDATES = true;
     console.log("Could not check version, Updates Skipped.");
-  }
-
-  if(!('serviceWorker' in navigator)) {
-    alert('Error Loading Service!')
-    location.reload();
-    return;
-  } else {
-    ui.status('Loading Service', 0);
-    await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
   }
 
   if(!await caches.has(cacheName)) {

@@ -28,7 +28,7 @@ export class Elemental4API
              OptionsMenuAPI,
              RecentCombinationsAPI  {
   static type = 'elemental4';
-  private static DB_VERSION = 7;
+  private static DB_VERSION = 8;
 
   private dbMeta: DBMeta;
 
