@@ -104,7 +104,7 @@ function addParents(tree: Tree, x: number, y: number) {
   
   let space = Math.max(Math.min(treeComplex/1.7,maxSpace),minSpace) // bad/unclear name
   // console.log(treeComplex)
-  if (parent1Exist && tree.parent1.parent2 !== null) space = minSpace * 4;
+  if (parent1Exist && tree.parent1.parent2 !== null) space = minSpace * 7;
   if (parentIsStarterElement) space = minSpace;
   if (parentIsAlreadyDrawn) space = minSpace;
 
