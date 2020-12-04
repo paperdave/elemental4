@@ -14,6 +14,7 @@ export async function initServiceWorker(startupAPI: StartupAPI, ui: ElementalLoa
     return;
   } else {
     ui.status('Loading Service', 0);
-    reg = await navigator.serviceWorker.register('/pwa.js?v=' + startupAPI.cache);
+    await navigator.serviceWorker.register('/pwa.js');
+    reg = await navigator.serviceWorker.ready;
   }
 }

@@ -57,6 +57,18 @@ export async function initDownloadSecondary(startupAPI: StartupAPI, ui: Elementa
     Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`).concat('/p5.min.js')
       .map(async (url, i, a) => {
         await monacoCache.add(url);
+
+        if (url === '/p5.min.js') {
+          const p5tag = document.createElement('script');
+          p5tag.src = '/p5.min.js';
+          p5tag.async = true;
+          document.head.appendChild(p5tag);
+        }
       }))
+  } else {
+    const p5tag = document.createElement('script');
+    p5tag.src = '/p5.min.js';
+    p5tag.async = true;
+    document.head.appendChild(p5tag);
   }
 }
