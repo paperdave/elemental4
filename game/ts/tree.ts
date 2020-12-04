@@ -203,20 +203,23 @@ export async function initTreeCanvas(tree: Tree) {
   endTreeCanvas();
   container = document.getElementById("element-info-tree") as HTMLCanvasElement;
   currentTree = tree;
-  p5 = new P5((instance) => {
-    p5 = instance
-    p5.setup = setup;
-    p5.draw = draw;
-    p5.mouseWheel = (event: WheelEvent) => {
-      scale -= event.deltaY / 1000;
-      p5.background(200);
-      renderTree(treePosX, treePosY);
-    }
-    p5.mouseDragged = () => {
-      treePosX += (p5.mouseX - p5.pmouseX) / scale;
-      treePosY += (p5.mouseY - p5.pmouseY) / scale;
-    }
-  }, container);
+
+  if (window['p5']) {
+    p5 = new window['p5']((instance) => {
+      p5 = instance
+      p5.setup = setup;
+      p5.draw = draw;
+      p5.mouseWheel = (event: WheelEvent) => {
+        scale -= event.deltaY / 1000;
+        p5.background(200);
+        renderTree(treePosX, treePosY);
+      }
+      p5.mouseDragged = () => {
+        treePosX += (p5.mouseX - p5.pmouseX) / scale;
+        treePosY += (p5.mouseY - p5.pmouseY) / scale;
+      }
+    }, container);
+  }
 }
 export async function endTreeCanvas() {
   if (p5) {
