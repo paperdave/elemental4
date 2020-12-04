@@ -1,74 +1,22 @@
-## Elemental 4.2.0 (2020-12-02)
+# Changelog
+All notable changes to this project will be documented in this file.
 
-## Engine
-- IndexedDB calls are now proxied through a service worker and using a different framework, so they should hopefully never fail. (@davecaruso)
-- Bug: Crash due to theme not loaded. (@davecaruso)
-- Changed the text on the autoplay dialog. (@davecaruso)
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## New DLC
-- Theme: Inverted Colors (@dugo3number2)
+# 1.2.0
+- Themes
+- ... and Custom Themes!
+- Fixing the "sound engine" and making that better
+- Lots of behind the scenes changes
 
-## Other APIs
-- Nv7 Server: Various bug fixes.
+# 1.1.0
+- Fix the corner bug
+- Sounds
+- Custom Sound Packs by URL
 
+# 1.0.1
+- Fixed an edge case where combining an element with itself breaks.
+- Made errors easier to debug.
 
-## Elemental 4.1.1 (2020-11-26)
-### Engine
-- Element save files are not written during loading. This is unneeded since your save file would already exist with the same element list, or be the default. (@davecaruso)</li>
-
-### Other APIs
-- Nv7 Server: Fix a caching issue with combinations (@Nv7-GitHub)
-
-
-## Elemental 4.1.0 (2020-11-26)
-### Main Game
-- You can now change your username after it has been set, and also backup your login token. (@davecaruso)
-- Offline mode provided you have loaded the database once. (#25, @davecaruso)
-- Socket Reconnecting code, may be buggy. (@davecaruso)
-- Debug console command `repair()` to trigger a database redownload. [TEMP FIX #17] (@davecaruso)
-
-### Engine
-- Scrollbar for recent element creations. (@Zolo101)
-- Server-specific options now show up if defined. (@davecaruso)
-- Bug: If an API fails to load, it will force you to the No Server screen. (@davecaruso)
-- Bug: Null Server no longer tracks statistics. (@davecaruso)
-- Bug: Current server was not always saved in config. (#24 @davecaruso)
-- Optimizations in the loading process. (@davecaruso)
-- Support for Offline Mode on supported APIs. (#25 @davecaruso)
-- Typo: Element Info say "Uses" instead of "Usages" (#26 @davecaruso)
-
-### Other APIs
-- Nv7 Server: Security fixes, and many optimizations. (@Nv7-GitHub)
-
-### API Features
-- `loading` and `reloadSelf` UI functions. (@davecaruso)
-- `internal:blank` server is now available, this is a joke idea for the `https://zero.elemental4.net` server. (@davecaruso)
-
-## Elemental 4.0.1 (2020-11-21)
-- Refactored and split up complex chunks of code (@Nv7-GitHub)
-- Bug: Made it so the Recent Additions menu clears when changing APIs
-- Bug: Element Info closes on any click on firefox (@Nubo318)
-- Bug: Elemental Reborn: Certain combinations were not sorted, causing missing elements (@JohnSmith777779)
-- Bug: Elemental 4 API: If a recipe for a starter element exists, the game will crash when looking up it's element tree. (@JohnSmith777779 @davecaruso)
-- Bug: Text fields in a dark theme would not use a light text color (@Filip9696)
-- Bug: P5js backgrounds would not load (@davecaruso)
-
-## Elemental 4.0.0 (2020-11-19)
-
-- Completely overhauled all client code, which is now based on Elemental Lite.
-- New color system with Saturation and Lightness sliders.
-- Voting logic updated.
-
-## Old Elemental 4 v1.2
-- Custom Themes via URLs
-- Built-in Dark Theme
-- Sound related fixes
-- Behind the scenes stuff to make the game work better.
-
-## Old Elemental 4 v1.1
-- Fixed the "Corner Bug"
-- Added sounds
-- Custom Sound Packs via URLs
-
-## Old Elemental 4 v1.0
-- Initial Functioning Game
+# 1.0.0
+initial game

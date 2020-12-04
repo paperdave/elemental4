@@ -726,9 +726,6 @@ textarea.elem {
   border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
-#info canvas {
-  margin: 0;
-}
 .tab-list {
   display: flex;
   align-items: center;

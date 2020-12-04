@@ -40,7 +40,9 @@ export class ChunkedStore extends IStore {
   private writeGroup = this.createQueue(async(gid: string) => {
     if(this.dbWritingPaused) return
     if(!this.dbDirty[gid]) return;
+    console.log('GSet')
     await this.store.set('g' + gid, this.dbCache.get(gid));
+    console.log('GSetFinish')
     this.dbCache.touch(gid);
   });
   private writeAllGroups = this.createQueue(async() => {

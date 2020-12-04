@@ -1,6 +1,7 @@
 // i was doing some stuff to localForage and trying to use a simpler library, but that failed.
 // however the api was just way too nice looking, so i rewrote it.
-import {getServiceWorker }from '../game/ts/service-worker';
+
+import localForage from "./localForage";
 
 export abstract class IStore {
   abstract get(key: string): Promise<any>;
@@ -13,96 +14,40 @@ export abstract class IStore {
 }
 
 export class Store extends IStore {
+  private localForage: typeof localForage;
   private storeName: string;
 
   constructor(storeName: string) {
     super();
     this.storeName = storeName;
+    this.localForage = localForage.createInstance({
+      name: 'ELEMENTAL',
+      storeName: storeName,
+    })
   }
 
   get(key: string): Promise<any> {
-    return new Promise((resolve) => {
-      const return_id = Math.random().toString().substr(2);
-      const worker = getServiceWorker();
-
-      worker.postMessage({
-        type: 'elem4-worker:get',
-        return_id,
-        store: this.storeName,
-        key,
-      });
-
-      navigator.serviceWorker.addEventListener('message', function cb(event) {
-        if (event.data.return_id === return_id) {
-          navigator.serviceWorker.removeEventListener('message', cb);
-          resolve(event.data.return_value);
-        }
-      });
-    });
+    return this.localForage.getItem(key);
   }
   set(key: string, item: any) {
-    getServiceWorker().postMessage({
-      type: 'elem4-worker:set',
-      store: this.storeName,
-      key,
-      item
+    return this.localForage.setItem(key, item).catch((e) => {
+      console.log('Error Writing to Store');
+      console.error(e);
     });
   }
   del(key: string) {
-    getServiceWorker().postMessage({
-      type: 'elem4-worker:del',
-      store: this.storeName,
-      key,
-    });
+    return this.localForage.removeItem(key);
   }
   keys() {
-    return new Promise((resolve) => {
-      const return_id = Math.random().toString().substr(2);
-      const worker = getServiceWorker();
-
-      worker.postMessage({
-        type: 'elem4-worker:keys',
-        return_id,
-        store: this.storeName,
-      });
-
-      navigator.serviceWorker.addEventListener('message', function cb(event) {
-        if (event.data.return_id === return_id) {
-          navigator.serviceWorker.removeEventListener('message', cb);
-          resolve(event.data.return_value);
-        }
-      });
-    });
+    return this.localForage.keys();
   }
   length() {
-    return new Promise((resolve) => {
-      const return_id = Math.random().toString().substr(2);
-      const worker = getServiceWorker();
-
-      worker.postMessage({
-        type: 'elem4-worker:length',
-        return_id,
-        store: this.storeName,
-      });
-
-      navigator.serviceWorker.addEventListener('message', function cb(event) {
-        if (event.data.return_id === return_id) {
-          navigator.serviceWorker.removeEventListener('message', cb);
-          resolve(event.data.return_value);
-        }
-      });
-    });
+    return this.localForage.length();
   }
   clear() {
-    getServiceWorker().postMessage({
-      type: 'elem4-worker:clear',
-      store: this.storeName,
-    });
+    return this.localForage.clear();
   }
   bulkTransfer(x: () => Promise<void>) {
     return x();
-  }
-  static removeStore(storeName: string) {
-    throw new Error('Not Implemented');
   }
 }

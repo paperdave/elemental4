@@ -28,7 +28,7 @@ export class Elemental4API
              OptionsMenuAPI,
              RecentCombinationsAPI  {
   static type = 'elemental4';
-  private static DB_VERSION = 8;
+  private static DB_VERSION = 7;
 
   private dbMeta: DBMeta;
 
@@ -191,10 +191,9 @@ export class Elemental4API
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
-      console.log('db last updated = ', this.dbMeta.lastUpdated);
       if(errorRecovery || this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
         dbFetch = 'full';
-      } else if (formatDate(new Date(Date.now())) === formatDate(new Date(this.dbMeta.lastUpdated))) {
+      } else if (formatDate(new Date()) === formatDate(new Date(this.dbMeta.lastUpdated))) {
         dbFetch = 'today';
       } else if (Date.now() - this.dbMeta.lastUpdated > (30*ONE_DAY)) {
         dbFetch = 'full';
