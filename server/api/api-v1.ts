@@ -85,6 +85,9 @@ export default function() {
 
         if (e1.includes("..")) return next();
         if (e2.includes("..")) return next();
+        if(!e1 || !e2) {
+            res.send([])
+        }
         if (e2 < e1) {
             let c = e2;
             e2 = e1;
@@ -217,6 +220,10 @@ export default function() {
     // Get Suggestions for a combo
     router.get("/api/v1/suggestion/:query", async (req, res, next) => {
         let [e1, e2] = req.params.query.split("+");
+
+        if(!e1 || !e2) {
+            res.send([])
+        }
 
         if (e2 < e1) {
             let c = e2;

@@ -1,4 +1,3 @@
-import localForage from '../../shared/localForage';
 import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitSettings } from './settings/settings';
 import { InitElementGameUi } from './element-game';
@@ -12,6 +11,8 @@ import { getNextMusic, loadSounds, playMusicTrack, playSound } from './audio';
 import { AlertDialog } from './dialog';
 import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
+import { setWorkerRegistration } from './service-worker';
+import marked from 'marked';
 
 declare const $production: string;
 declare const $version: string;
@@ -31,6 +32,7 @@ type MenuAPI = {
 async function boot(MenuAPI: MenuAPI) {
   // Initial Stuff
   delete window["$elemental4"];
+  console.clear();
   console.log(`👋 Hello Elemental, version ${$version}`);
 
   if(typeof localStorage === 'undefined') return location.reload();
@@ -46,6 +48,16 @@ async function boot(MenuAPI: MenuAPI) {
   }
   
   ui.status('Checking Updates', 0);
+
+  if(!('serviceWorker' in navigator)) {
+    alert('Service workers not supported, game cannot start. Make sure to use a Modern Web Browser!')
+    location.reload();
+    return;
+  } else {
+    ui.status('Loading Service', 0);
+    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+    setWorkerRegistration(reg);
+  }
 
   let failedUpdateApply;
 
@@ -67,8 +79,6 @@ async function boot(MenuAPI: MenuAPI) {
             caches.delete(cacheName);
           }
 
-          window.localForage = localForage;
-          
           try {
             eval(text);
 
@@ -96,15 +106,6 @@ async function boot(MenuAPI: MenuAPI) {
     console.log("Could not check version, Updates Skipped.");
   }
 
-  if(!('serviceWorker' in navigator)) {
-    alert('Error Loading Service!')
-    location.reload();
-    return;
-  } else {
-    ui.status('Loading Service', 0);
-    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
-  }
-
   if(!await caches.has(cacheName)) {
     ui.status('Downloading Game Files', 0);
     const cache = await caches.open(cacheName)
@@ -130,6 +131,7 @@ async function boot(MenuAPI: MenuAPI) {
           '/p5_background',
           '/theme_editor',
           '/manifest.json',
+          '/changelog.md',
           '/chrome-bypass.mp3',
         ].map(async (url, i, a) => {
           await cache.add(url);
@@ -140,12 +142,14 @@ async function boot(MenuAPI: MenuAPI) {
       ]
     );
   } else {
-    MountThemeCSS()
+    await MountThemeCSS();
   }
 
   ui.status('Loading Game HTML', 0);
   const gameRoot = document.getElementById('game');
   gameRoot.innerHTML = await fetch('/game').then((x) => x.text());
+  const changelogRoot = document.getElementById('changelog-root');
+  changelogRoot.innerHTML = marked(await fetch('/changelog.md').then((x) => x.text()));
 
   const versionInfo = {
     'version': $version,
@@ -192,8 +196,8 @@ async function boot(MenuAPI: MenuAPI) {
   while (Howler.ctx.state === 'suspended') {
     await AlertDialog({
       title: 'Autoplay Disabled',
-      text: 'Your browser does not allow autoplaying audio until the page has been clicked. Please click the button. [Learn More](/chrome_autoplay)',
-    })
+      text: 'Click OK on this dialog to enable audio autoplay. [Learn More](/chrome_autoplay)',
+    });
     await delay(350);
   }
 

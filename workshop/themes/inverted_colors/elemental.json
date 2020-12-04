@@ -1,0 +1,88 @@
+{
+  "$schema": "../../../res/theme.schema.json",
+  "type": "elemental4:theme",
+  "format_version": 1,
+  "id": "inverted_colors",
+  "version": 1,
+  "name": "Inverted Colors",
+  "description": "A simple theme made for accessibility.",
+  "author": "DavidDGTNT",
+  "colors": {
+    "white": {
+      "color": "#000000",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "black": {
+      "color": "#ffffff",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "grey": {
+      "color": "#808080",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "brown": {
+      "color": "#4a7eb7",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "red": {
+      "color": "#1cabab",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "orange": {
+      "color": "#1c7bab",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "yellow": {
+      "color": "#1c34ab",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "yellow-green": {
+      "color": "#4c1cab",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "green": {
+      "color": "#ab1c9f",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "aqua": {
+      "color": "#ab1c4c",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "blue": {
+      "color": "#ab1c4c",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "dark-blue": {
+      "color": "#ab8a1c",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "purple": {
+      "color": "#79ab1c",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "magenta": {
+      "color": "#2fab1c",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    },
+    "hot-pink": {
+      "color": "#1cab5d",
+      "lightnessMultiplier": 1,
+      "saturationMultiplier": 1
+    }
+  },
+  "icon": "icon.png"
+}

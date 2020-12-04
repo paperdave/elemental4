@@ -167,7 +167,7 @@ export async function storageClose() {
 
 function get32DaysAgo() {
   const x = new Date(new Date().getTime() - (32 * 24 * 60 * 60 * 1000))
-  return `${x.getFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
+  return `${x.getUTCFullYear()}-${(x.getUTCMonth()+1).toString().padStart(2,'0')}-${x.getUTCDate().toString().padStart(2, '0')}`;
 }
 
 function getToday() {

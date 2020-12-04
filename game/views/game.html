@@ -129,9 +129,9 @@
 
       </div>
     </div>
-    <canvas class="info-section info-section-tree" id='element-info-tree'>
+    <div class="info-section info-section-tree" id='element-info-tree'>
 
-    </canvas>
+    </div>
     <div class="info-section info-section-debug" style='user-select:text'>
       <h2>Element JSON</h2>
       <pre><code id='element-data-json'></code></pre>
@@ -356,82 +356,8 @@
         Built on <strong data-build-info='build-date'></strong>
       </p>
     </div>
-    <div class="settings-content settings-changelog" data-settings='changelog'>
-      <h2>Elemental 4.1.1 (2020-11-26)</h2>
-      <h3>Engine</h3>
-      <ul>
-        <li>Element save files are not written during loading. This is unneeded since your save file would already exist with the same element list, or be the default. (@davecaruso)</li>
-      </ul>
-      <h3>Other APIs</h3>
-      <ul>
-        <li>NV7 Server: Fix a caching issue with combinations (@Nv7-GitHub)</li>
-      </ul>
-
-      <h2>Elemental 4.1.0 (2020-11-26)</h2>
-      <h3>Main Game</h3>
-      <ul>
-        <li>You can now change your username after it has been set, and also backup your login token. (@davecaruso)</li>
-        <li>Offline mode provided you have loaded the database once. (#25, @davecaruso)</li>
-        <li>Socket Reconnecting code, may be buggy. (@davecaruso)</li>
-        <li>Debug console command <code>repair()</code> to trigger a database redownload. [TEMP FIX #17] (@davecaruso)</li>
-      </ul>
-      <h3>Engine</h3>
-      <ul>
-        <li>Scrollbar for recent element creations. (@Zolo101)</li>
-        <li>Server specific options now show up if defined. (@davecaruso)</li>
-        <li>Bug: If an API fails to load, it will force you to the No Server screen. (@davecaruso)</li>
-        <li>Bug: Null Server no longer tracks statistics. (@davecaruso)</li>
-        <li>Bug: Current server was not always saved in config. (#24 @davecaruso)</li>
-        <li>Optimizations in the loading process. (@davecaruso)</li>
-        <li>Support for Offline Mode on supported APIs. (#25 @davecaruso)</li>
-        <li>Typo: Element Info say "Uses" instead of "Usages" (#26 @davecaruso)</li>
-      </ul>
-      <h3>Other APIs</h3>
-      <ul>
-        <li>NV7 Server: Security fixes, and many optimizations. (@Nv7-GitHub)</li>
-      </ul>
-      <h3>API Features</h3>
-      <ul>
-        <li><code>loading</code> and <code>reloadSelf</code> UI functions. (@davecaruso)</li>
-        <li><code>internal:blank</code> server is now available, this is a joke idea for the <code>https://zero.elemental4.net</code> server. (@davecaruso)</li>
-      </ul>
-
-      <h2>Elemental 4.0.1 (2020-11-21)</h2>
-      <ul>
-        <li>Refactored and split up complex chunks of code (@Nv7-GitHub)</li>
-        <li>Bug: Made it so the Recent Additions menu clears when changing APIs</li>
-        <li>Bug: Element Info closes on any click on firefox (@Nubo318)</li>
-        <li>Bug: Elemental Reborn: Certain combinations were not sorted, causing missing elements (@JohnSmith777779)</li>
-        <li>Bug: Elemental 4 API: If a recipe for a starter element exists, the game will crash when looking up it's element tree. (@JohnSmith777779 @davecaruso)</li>
-        <li>Bug: Text fields in a dark theme would not use a light text color (@Filip9696)</li>
-        <li>Bug: P5js backgrounds would not load (@davecaruso)</li>
-      </ul>
-
-      <h2>Elemental 4.0.0 (2020-11-19)</h2>
-      <ul>
-        <li>Completely overhauled all client code, which is now based on Elemental Lite.</li>
-        <li>New color system with saturation and lightness sliders.</li>
-        <li>Voting logic updated.</li>
-      </ul>
-      <br>
-      <h2>Old Elemental 4 v1.2</h2>
-      <ul>
-        <li>Custom Themes via URLs</li>
-        <li>Built in Dark Theme</li>
-        <li>Sound related fixes</li>
-        <li>Behind the scenes stuff to make the game work better.</li>
-      </ul>
-      <h2>Old Elemental 4 v1.1</h2>
-      <ul>
-        <li>Fixed the "Corner Bug"</li>
-        <li>Added sounds</li>
-        <li>Custom Sound Packs via URLs</li>
-      </ul>
-      <h2>Old Elemental 4 v1.0</h2>
-      <ul>
-        <li>Initial Functioning Game</li>
-      </ul>
-      <br>
+    <div id='changelog-root' class="settings-content settings-changelog" data-settings='changelog'>
+      
     </div>
     <div class="settings-content settings-singleplayer" data-settings='singleplayer'>
       <p>

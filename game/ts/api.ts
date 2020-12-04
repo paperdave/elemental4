@@ -13,7 +13,6 @@ import { canCreateSaveFile, canDeleteSaveFile, canRenameSaveFile, getActiveSaveF
 import { endStatistics, startStatistics } from "./statistics";
 import { RebornElementalAPI } from "../../shared/api/reborn";
 import { allBuiltInServers, setActiveServer } from "./server-manager";
-import { ChunkedStore } from "../../shared/store-chunk";
 import { LedomElementalAPI } from "../../shared/api/ledom";
 import { resolve } from "url";
 import { InternalNullAPI, IsNullAPI } from "../../shared/api/internal/internal-null";
@@ -21,6 +20,8 @@ import { InternalStressTestAPI } from "../../shared/api/internal/internal-stress
 import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors";
 import { BlankExampleAPI } from "../../shared/api/blank";
 import { disposeServerConfigGui, reRenderServerConfigGui } from "./settings-server-config";
+import { Store } from "../../shared/store";
+import { ChunkedStore } from "../../shared/store-chunk";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -117,11 +118,8 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
       || (await fetch(baseUrl + '/elemental.json')
         .then(x => x.json())
         .catch(async() => {
-          console.log(baseUrl);
           return (await getServer(baseUrl)).config;
         }));
-        
-        console.log(json);
 
     if (!json) {
       throw new Error('Could not find Server.');

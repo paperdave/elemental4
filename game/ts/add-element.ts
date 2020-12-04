@@ -161,111 +161,117 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, du
   });
 
   dom.addEventListener('contextmenu', async(ev) => {
-    incrementStatistic('infoOpened');
-    
-    infoContainer.classList.remove('animate-in');
+    try {
+      incrementStatistic('infoOpened');
+      
+      infoContainer.classList.remove('animate-in');
 
-    dropHoldingElement();
-    ev.preventDefault();
+      dropHoldingElement();
+      ev.preventDefault();
 
-    if(!element.stats) element.stats = {};
+      if(!element.stats) element.stats = {};
 
-    dom.style.height = '150px';
-    dom.style.top = '-10px';
-    dom.scrollIntoView({ block: 'nearest' });
-    dom.style.height = '';
-    dom.style.top = '';
-    await delay(0);
+      dom.style.height = '150px';
+      dom.style.top = '-10px';
+      dom.scrollIntoView({ block: 'nearest' });
+      dom.style.height = '';
+      dom.style.top = '';
+      await delay(0);
 
-    infoContainer.style.display = 'flex';
-    const box = dom.getBoundingClientRect();
-    const x = Math.max(8, Math.min(window.innerWidth - 462 - 8, box.left - 17));
-    const y = Math.max(38, Math.min(window.innerHeight - 402 - 8, box.top - 17));
-    infoContainer.style.left = x + 'px';
-    infoContainer.style.top = y + 'px';
-    infoContainer.classList.add('animate-in');
-    setInfoOpen(true);
+      infoContainer.style.display = 'flex';
+      const box = dom.getBoundingClientRect();
+      const x = Math.max(8, Math.min(window.innerWidth - 462 - 8, box.left - 17));
+      const y = Math.max(38, Math.min(window.innerHeight - 402 - 8, box.top - 17));
+      infoContainer.style.left = x + 'px';
+      infoContainer.style.top = y + 'px';
+      infoContainer.classList.add('animate-in');
+      setInfoOpen(true);
 
-    infoContainer.querySelectorAll('.info-tab,.info-section')
-      .forEach(x => x.classList.remove('selected'));
+      infoContainer.querySelectorAll('.info-tab,.info-section')
+        .forEach(x => x.classList.remove('selected'));
 
-    infoContainer.querySelector('.info-section-info').classList.add('selected');
-    infoContainer.querySelector('[data-info-tab="info"]').classList.add('selected');
+      infoContainer.querySelector('.info-section-info').classList.add('selected');
+      infoContainer.querySelector('[data-info-tab="info"]').classList.add('selected');
 
-    infoContainer.querySelector('.elem').innerHTML = escapeHTML(element.display.text);
-    infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`;
-    infoContainer.querySelector('#element-info-title').innerHTML = isNaN(Number(element.id)) ? 'Element Info' : `Element #${Number(element.id)}`;
+      infoContainer.querySelector('.elem').innerHTML = escapeHTML(element.display.text);
+      infoContainer.querySelector('.elem').className = `elem ${getClassFromDisplay(element.display)}`;
+      infoContainer.querySelector('#element-info-title').innerHTML = isNaN(Number(element.id)) ? 'Element Info' : `Element #${Number(element.id)}`;
 
-    (infoContainer.querySelector('#element-created-date-root') as HTMLElement).style.display = element.createdOn ? '' : 'none';
-    if (element.createdOn) {
-      infoContainer.querySelector('#element-created-date').innerHTML = `${formatDate(new Date(element.createdOn))}`;
-    }
-    (infoContainer.querySelector('#info-tier') as HTMLElement).style.display = element.stats.treeComplexity !== undefined ? '' : 'none';
-    if (element.stats.treeComplexity !== undefined) {
-      infoContainer.querySelector('#info-tier').innerHTML = element.stats.treeComplexity ? `Tier ${element.stats.treeComplexity}` : 'Starter';
-      infoContainer.querySelector('#info-tier').setAttribute('data-tier-level', Math.floor(element.stats.treeComplexity / 5).toString());
-    }
-    
-    if (typeof element.stats.recipeCount === 'number') {
-      infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
-    }
-    if (typeof element.stats.usageCount === 'number') {
-      infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Uses');
-    }
-
-    infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
-      if (x.author) {
-        // elem4 doesnt properly decode authors
-        return `<p>"${x.comment}" - Error</p>`;
+      (infoContainer.querySelector('#element-created-date-root') as HTMLElement).style.display = element.createdOn ? '' : 'none';
+      if (element.createdOn) {
+        infoContainer.querySelector('#element-created-date').innerHTML = `${formatDate(new Date(element.createdOn))}`;
       }
-      return `<p>${x.comment}</p>`;
-    }).join('');
-    infoContainer.querySelector('#element-data-json').innerHTML = JSON.stringify(element, null, 2);
-    infoContainer.querySelector('#element-css-class').innerHTML = `.${getClassFromDisplay(element.display)}`;
-    infoContainer.querySelector('#element-css-color').innerHTML = Color(getComputedStyle(dom).backgroundColor).hex();
+      (infoContainer.querySelector('#info-tier') as HTMLElement).style.display = element.stats.treeComplexity !== undefined ? '' : 'none';
+      if (element.stats.treeComplexity !== undefined) {
+        infoContainer.querySelector('#info-tier').innerHTML = element.stats.treeComplexity ? `Tier ${element.stats.treeComplexity}` : 'Starter';
+        infoContainer.querySelector('#info-tier').setAttribute('data-tier-level', Math.floor(element.stats.treeComplexity / 5).toString());
+      }
+      
+      if (typeof element.stats.recipeCount === 'number') {
+        infoContainer.querySelector('#element-recipe-count').innerHTML = element.stats.recipeCount + ' ' + plural(element.stats.recipeCount, 'Recipe');
+      }
+      if (typeof element.stats.usageCount === 'number') {
+        infoContainer.querySelector('#element-usage-count').innerHTML = element.stats.usageCount + ' ' + plural(element.stats.usageCount, 'Use');
+      }
 
-    const fundamentalsDiv = document.getElementById('element-fundamentals');
-    fundamentalsDiv.innerHTML = '';
-    const fundamentalsWithImages = ['fire', 'water', 'air', 'earth'];
-    if(element.stats.fundamentals) {
-      Object.keys(element.stats.fundamentals).forEach((key) => {
-        const root = document.createElement('div');
-        root.classList.add('data-row')
-  
-        if (fundamentalsWithImages.includes(key)) {
-          const img = document.createElement('img');
-          img.src = '/' + key + '.svg';
-          root.appendChild(img);
-        } else {
-          const text = document.createElement('strong');
-          text.innerHTML = escapeHTML(capitalize(key));
-          root.appendChild(text);
+      infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
+        if (x.author) {
+          // elem4 doesnt properly decode authors
+          return `<p>"${x.comment}" - Error</p>`;
         }
-  
-        const text = document.createElement('span');
-        text.innerHTML = compactMiniNumber(element.stats.fundamentals[key]);
-        root.appendChild(text);
-  
-        fundamentalsDiv.appendChild(root);
-      });
-    }
+        return `<p>${x.comment}</p>`;
+      }).join('');
+      infoContainer.querySelector('#element-data-json').innerHTML = JSON.stringify(element, null, 2);
+      infoContainer.querySelector('#element-css-class').innerHTML = `.${getClassFromDisplay(element.display)}`;
+      infoContainer.querySelector('#element-css-color').innerHTML = Color(getComputedStyle(dom).backgroundColor).hex();
 
-    (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
-
-    getElementTree(element).then((tree) => {
-      if (tree.parent1) {
-        let left = tree.parent1;
-        let right = tree.parent2 || tree.parent1;
-        (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
-        infoContainer.querySelector('#info-left-element').innerHTML = escapeHTML(left.elem.display.text);
-        infoContainer.querySelector('#info-left-element').setAttribute('style', getCSSFromDisplay(left.elem.display));
-        infoContainer.querySelector('#info-right-element').innerHTML = escapeHTML(right.elem.display.text);
-        infoContainer.querySelector('#info-right-element').setAttribute('style', getCSSFromDisplay(right.elem.display));
-        initTreeCanvas(tree);
-      } else {
-        (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = 'none';
+      const fundamentalsDiv = document.getElementById('element-fundamentals');
+      fundamentalsDiv.innerHTML = '';
+      const fundamentalsWithImages = ['fire', 'water', 'air', 'earth'];
+      if(element.stats.fundamentals) {
+        Object.keys(element.stats.fundamentals).forEach((key) => {
+          const root = document.createElement('div');
+          root.classList.add('data-row')
+    
+          if (fundamentalsWithImages.includes(key)) {
+            const img = document.createElement('img');
+            img.src = '/' + key + '.svg';
+            root.appendChild(img);
+          } else {
+            const text = document.createElement('strong');
+            text.innerHTML = escapeHTML(capitalize(key));
+            root.appendChild(text);
+          }
+    
+          const text = document.createElement('span');
+          text.innerHTML = compactMiniNumber(element.stats.fundamentals[key]);
+          root.appendChild(text);
+    
+          fundamentalsDiv.appendChild(root);
+        });
       }
-    });
+
+      (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
+
+      getElementTree(element).then((tree) => {
+        console.log('Tree for #' + element.id);
+        console.log(tree);
+        if (tree.parent1) {
+          let left = tree.parent1;
+          let right = tree.parent2 || tree.parent1;
+          (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = '';
+          infoContainer.querySelector('#info-left-element').innerHTML = escapeHTML(left.elem.display.text);
+          infoContainer.querySelector('#info-left-element').setAttribute('style', getCSSFromDisplay(left.elem.display));
+          infoContainer.querySelector('#info-right-element').innerHTML = escapeHTML(right.elem.display.text);
+          infoContainer.querySelector('#info-right-element').setAttribute('style', getCSSFromDisplay(right.elem.display));
+          initTreeCanvas(tree);
+        } else {
+          (infoContainer.querySelector('.info-equation-container') as HTMLElement).style.display = 'none';
+        }
+      });
+    } catch(e) {
+      console.error(e)
+    }
   });
 
   dom.setAttribute('data-element', element.id);

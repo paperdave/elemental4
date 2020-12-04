@@ -1,7 +1,6 @@
 import { ElementalBaseAPI, SaveFileAPI, getSubAPI, ServerSavefileEntry } from '../../shared/elem';
 import { debounce, throttle } from '@reverse/debounce';
 import { Store } from '../../shared/store';
-import localForage from '../../shared/localForage';
 import { escapeHTML } from '../../shared/shared';
 import { connectApi, builtInApis } from './api';
 import { allBuiltInServers, builtInOfficialServers, builtInThirdPartyServers, builtInInternalServers, builtInDevInternalServers, serverOrder } from './server-manager';
@@ -124,7 +123,7 @@ export async function uninstallServer(baseUrl: string) {
   }).filter(Boolean))
 
   const opts = { name: 'ELEMENTAL', storeName: server.config.type + ':' + processBaseUrl(baseUrl) };
-  await localForage.createInstance({...opts}).dropInstance({...opts});
+  // TODO: Delete Data with Service Worker Method
 }
 
 export async function resetAllThemes() {
