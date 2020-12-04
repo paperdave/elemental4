@@ -199,7 +199,7 @@ export class Elemental4API
     })
   }
 
-  async open(ui?: ElementalLoadingUi, errorRecovery: boolean = false): Promise<boolean> {
+  async open(ui?: ElementalLoadingUi, errorRecovery: boolean = false): Promise<boolean> {  
     (window as any).repair = this.ui.loading.bind(this.ui, this.resetDatabase.bind(this));
 
     if (this.saveFile.get('clientSecret', '[unset]') === '[unset]') {
@@ -210,7 +210,10 @@ export class Elemental4API
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
-      if (this.dbMeta.lastEntry !== await this.store.get('last-entry')) {
+      if (this.dbMeta.lastUpdated < 1607103532524) {
+        dbFetch = 'full';
+        this.store.clear();
+      } else if (this.dbMeta.lastEntry !== await this.store.get('last-entry')) {
         console.warn("Database Corruption Detected");
         dbFetch = 'full';
       } else if(errorRecovery || this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
@@ -360,7 +363,7 @@ export class Elemental4API
   }
   async close(): Promise<void> {
     this.running = false;
-    this.socket.close();
+    this.socket && this.socket.close();
     delete (window as any).repair;
   }
   async getStats(): Promise<ServerStats> {
