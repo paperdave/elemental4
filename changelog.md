@@ -1,12 +1,22 @@
-## Elemental 4.2.0 (2020-12-03)
+## Elemental 4.2.1 (2020-12-04)
+Fixes some minor bugs in some of 4.2
+
+## Engine
+- Bug: Changelog was not exported.
+- Bug: Did not wait for the service worker to initialize before using it.
+- Bug: Queue error causing ChunkedStores to fail.
+
+## Elemental 4.2.0 (2020-12-04)
+Fixes some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
 
 ## Main Game
-- Due to an engine fix, the "Failed to connect to main.elemental4.net" should no longer happen. This was never a server issue, and is just an issue on the client-side.
+- Bug: Entries that were added on the server during the client's load were ignored.
 
 ## Engine
 - IndexedDB calls are now proxied through a service worker and using a different framework, so they should hopefully never fail. (@davecaruso)
-- Bug: Crash due to theme not loaded. (@davecaruso)
+- Element Recipe Trees now are rendered (@Zolo101) 
 - Changed the text on the autoplay dialog. (@davecaruso)
+- Bug: Crash due to theme not loaded. (@davecaruso)
 
 ## New DLC
 - Theme: Inverted Colors (@dugo3number2)

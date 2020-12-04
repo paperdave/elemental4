@@ -143,6 +143,7 @@ process.chdir(__dirname);
         fs.copySync(path.join(__dirname, monacoEditor.base, f), path.join('dist_client/vs/', f));
     })
     fs.writeFileSync('dist_client/version', version);
+    fs.copyFileSync('changelog.md', 'dist_client/changelog.md');
     fs.appendFileSync('dist_client/_redirects',
         '\n' +
         workshopManifest.packs
