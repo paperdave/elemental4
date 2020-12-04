@@ -3,7 +3,7 @@ import { CacheMap } from "./cache";
 import { delay } from "./shared";
 import { Store, IStore } from "./store";
 
-function getGroupId(s: string) {
+export function getGroupId(s: string) {
   for(var i = 0, h = 0; i < s.length; i++)
     h = Math.imul(17, h) + s.charCodeAt(i) | 0;
   return (Math.abs(h) % 256).toString(16);
@@ -40,7 +40,9 @@ export class ChunkedStore extends IStore {
   private writeGroup = this.createQueue(async(gid: string) => {
     if(this.dbWritingPaused) return
     if(!this.dbDirty[gid]) return;
+    console.log('write group')
     await this.store.set('g' + gid, this.dbCache.get(gid));
+    console.log('write group done')
     this.dbCache.touch(gid);
   });
   private writeAllGroups = this.createQueue(async() => {
@@ -58,7 +60,6 @@ export class ChunkedStore extends IStore {
     } else {
       const group = (await this.store.get('g' + gid) || {}) as any;
       this.dbCache.set(gid, group);
-      this.dbDirty[gid] = true;
       return group[id];
     }
   });
@@ -74,10 +75,10 @@ export class ChunkedStore extends IStore {
       this.dbDirty[gid] = true;
       group[id] = entry;
     }
-    this.writeGroup(gid);
-    // if we batch A TON of set calls, ui can lag a lot, so we request a ui update every 1000 calls
+    if(!this.dbWritingPaused) await this.writeGroup.callLater(gid);
+    // if we batch A TON of set calls, ui can lag a lot, so we request a ui update every 2000 calls
     this.entryWriteCounter++;
-    if(this.entryWriteCounter > 1000) {
+    if(this.entryWriteCounter > 2000) {
       this.entryWriteCounter = 0;
       await delay(0);
     }

@@ -1,7 +1,7 @@
 var cacheName = 'ELEMENTAL';
 
 // this worker is different from others, since all the cache management is done in
-// the actual game, not the worker. all this worker does is 
+// the actual game, not the worker. all this worker does is fetch data and manage stores.
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
@@ -18,6 +18,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(clients.claim());
 });
 
+// Store stuff.
 class Store {
   constructor(dbName = 'keyval-store', storeName = 'keyval') {
     const connection = (version) => new Promise((resolve, reject) => {
@@ -29,6 +30,12 @@ class Store {
         db.result.onversionchange = () => {
           db.result.close();
           this._dbp = connection();
+        }
+        db.result.onabort = (e) => {
+          console.error('IDB Aborted', e);
+        }
+        db.result.onclose = (e) => {
+          console.error('IDB Closed', e);
         }
         // If this database has been opened before, but never with this
         // storeName, the objectStore won't exist yet. In which case,
@@ -112,10 +119,16 @@ self.addEventListener('message', (ev) => {
   const data = ev.data;
   switch (data.type) {
     case 'elem4-worker:set':
+      if(!data.item) {
+        console.error('null item', data)
+      }
       set(data.key, data.item, store(data.store)).then(() => {
         ev.source.postMessage({
           return_id: data.return_id,
         });
+      }).catch((e) => {
+        console.error('IDB Write Failure.')
+        console.error(e);
       });
       break;
     case 'elem4-worker:del':
@@ -130,6 +143,9 @@ self.addEventListener('message', (ev) => {
         ev.source.postMessage({
           return_id: data.return_id,
         });
+      }).catch((e) => {
+        console.error('IDB Write Failure.')
+        console.error(e);
       });
       break;
     case 'elem4-worker:get':
@@ -138,6 +154,9 @@ self.addEventListener('message', (ev) => {
           return_id: data.return_id,
           return_value: item,
         });
+      }).catch((e) => {
+        console.error('IDB Write Failure.')
+        console.error(e);
       });
       break;
     case 'elem4-worker:keys':
@@ -146,6 +165,9 @@ self.addEventListener('message', (ev) => {
           return_id: data.return_id,
           return_value: item,
         });
+      }).catch((e) => {
+        console.error('IDB Write Failure.')
+        console.error(e);
       });
       break;
     case 'elem4-worker:length':
@@ -154,9 +176,13 @@ self.addEventListener('message', (ev) => {
           return_id: data.return_id,
           return_value: item,
         });
+      }).catch((e) => {
+        console.error('IDB Write Failure.')
+        console.error(e);
       });
       break;
     default:
+      console.log('Oh Hell', data)
       break;
   }
 });
