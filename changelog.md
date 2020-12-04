@@ -1,4 +1,4 @@
-## Elemental 4.2.0 (2020-12-02)
+## Elemental 4.2.0 (2020-12-04)
 Fixing some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
 
 ## Main Game
