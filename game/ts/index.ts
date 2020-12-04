@@ -1,5 +1,5 @@
-import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitSettings } from './settings/settings';
+import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
 import { fetchWithProgress } from '../../shared/fetch-progress';
@@ -42,7 +42,7 @@ async function boot(MenuAPI: MenuAPI) {
   if(MenuAPI.upgraded) {
     ui.status('Finalizing Updates', 0);
     if (window.navigator && navigator.serviceWorker) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => Promise.all(registrations.map(x => x.unregister())));
+      await navigator.serviceWorker.getRegistrations().then((registrations) => Promise.all(registrations.map(x => x.unregister())));
     }
     await caches.delete('ELEMENTAL')
   }
@@ -55,11 +55,13 @@ async function boot(MenuAPI: MenuAPI) {
     return;
   } else {
     ui.status('Loading Service', 0);
-    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+    await navigator.serviceWorker.register('/pwa.js');
+    const reg = await navigator.serviceWorker.ready;
     setWorkerRegistration(reg);
   }
-
+  
   let failedUpdateApply;
+  ui.status('Checking Updates', 0);
 
   // check for updates
   try {
@@ -217,14 +219,28 @@ async function boot(MenuAPI: MenuAPI) {
   if (await caches.has('monaco_editor')) {
     caches.delete('monaco_editor');
   }
+  if (await caches.has('secondary_cache')) {
+    caches.delete('secondary_cache');
+  }
 
-  if(!await caches.has('secondary_cache')) {
-    const monacoCache = await caches.open('secondary_cache');
+  if(!await caches.has('secondary_cache_v2')) {
+    const monacoCache = await caches.open('secondary_cache_v2');
 
     Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`).concat('/p5.min.js')
       .map(async (url, i, a) => {
         await monacoCache.add(url);
+        if (url === '/p5.min.js') {
+          const p5tag = document.createElement('script');
+          p5tag.src = '/p5.min.js';
+          p5tag.async = true;
+          document.head.appendChild(p5tag);
+        }
       }))
+  } else {
+    const p5tag = document.createElement('script');
+    p5tag.src = '/p5.min.js';
+    p5tag.async = true;
+    document.head.appendChild(p5tag);
   }
 }
 async function kill() {
