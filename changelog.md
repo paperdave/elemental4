@@ -1,5 +1,11 @@
+## Elemental 4.2.1 (2020-12-04)
+Fixes some minor bugs in some of 4.2
+
+## Engine
+- Bug: Changelog was not exported.
+
 ## Elemental 4.2.0 (2020-12-04)
-Fixing some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
+Fixes some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
 
 ## Main Game
 - Bug: Entries that were added on the server during the client's load were ignored.
