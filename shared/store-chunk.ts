@@ -40,9 +40,7 @@ export class ChunkedStore extends IStore {
   private writeGroup = this.createQueue(async(gid: string) => {
     if(this.dbWritingPaused) return
     if(!this.dbDirty[gid]) return;
-    console.log('write group')
     await this.store.set('g' + gid, this.dbCache.get(gid));
-    console.log('write group done')
     this.dbCache.touch(gid);
   });
   private writeAllGroups = this.createQueue(async() => {
@@ -75,7 +73,7 @@ export class ChunkedStore extends IStore {
       this.dbDirty[gid] = true;
       group[id] = entry;
     }
-    if(!this.dbWritingPaused) await this.writeGroup.callLater(gid);
+    if(!this.dbWritingPaused) this.writeGroup.callLater(gid);
     // if we batch A TON of set calls, ui can lag a lot, so we request a ui update every 2000 calls
     this.entryWriteCounter++;
     if(this.entryWriteCounter > 2000) {

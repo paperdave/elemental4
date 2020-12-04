@@ -1,5 +1,5 @@
-import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitSettings } from './settings/settings';
+import { MountThemeCSS, updateMountedCss, resetBuiltInThemes, showThemeAddDialog } from './theme';
 import { InitElementGameUi } from './element-game';
 import { delay } from '../../shared/shared';
 import { fetchWithProgress } from '../../shared/fetch-progress';
@@ -13,7 +13,6 @@ import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
 import { setWorkerRegistration } from './service-worker';
 import marked from 'marked';
-import p5 from 'p5';
 
 declare const $production: string;
 declare const $version: string;
@@ -43,7 +42,7 @@ async function boot(MenuAPI: MenuAPI) {
   if(MenuAPI.upgraded) {
     ui.status('Finalizing Updates', 0);
     if (window.navigator && navigator.serviceWorker) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => Promise.all(registrations.map(x => x.unregister())));
+      await navigator.serviceWorker.getRegistrations().then((registrations) => Promise.all(registrations.map(x => x.unregister())));
     }
     await caches.delete('ELEMENTAL')
   }
@@ -56,11 +55,13 @@ async function boot(MenuAPI: MenuAPI) {
     return;
   } else {
     ui.status('Loading Service', 0);
-    const reg = await navigator.serviceWorker.register('/pwa.js?v=' + MenuAPI.cache);
+    await navigator.serviceWorker.register('/pwa.js');
+    const reg = await navigator.serviceWorker.ready;
     setWorkerRegistration(reg);
   }
-
+  
   let failedUpdateApply;
+  ui.status('Checking Updates', 0);
 
   // check for updates
   try {

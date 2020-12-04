@@ -6,7 +6,6 @@ import Color from 'color';
 import { SimpleEmitter } from '@reverse/emitter';
 import io from 'socket.io-client';
 import { createQueueExec } from '../async-queue-exec';
-import { getGroupId } from "../store-chunk";
 
 const ONE_DAY = 24*60*60*1000;
 
