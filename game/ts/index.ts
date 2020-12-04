@@ -13,7 +13,6 @@ import { getConfigBoolean } from './savefile';
 import { Howler } from 'howler';
 import { setWorkerRegistration } from './service-worker';
 import marked from 'marked';
-import p5 from 'p5';
 
 declare const $production: string;
 declare const $version: string;
@@ -218,28 +217,14 @@ async function boot(MenuAPI: MenuAPI) {
   if (await caches.has('monaco_editor')) {
     caches.delete('monaco_editor');
   }
-  if (await caches.has('secondary_cache')) {
-    caches.delete('secondary_cache');
-  }
 
-  if(!await caches.has('secondary_cache_v2')) {
-    const monacoCache = await caches.open('secondary_cache_v2');
+  if(!await caches.has('secondary_cache')) {
+    const monacoCache = await caches.open('secondary_cache');
 
     Promise.all(require('../../monaco-editor-files.json').files.map(x => `/vs/${x}`).concat('/p5.min.js')
       .map(async (url, i, a) => {
         await monacoCache.add(url);
-        if (url === '/p5.min.js') {
-          const p5tag = document.createElement('script');
-          p5tag.src = '/p5.min.js';
-          p5tag.async = true;
-          document.head.appendChild(p5tag);
-        }
       }))
-  } else {
-    const p5tag = document.createElement('script');
-    p5tag.src = '/p5.min.js';
-    p5tag.async = true;
-    document.head.appendChild(p5tag);
   }
 }
 async function kill() {

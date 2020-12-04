@@ -7,7 +7,6 @@ export function exposeGlobals() {
         'theme': require('./theme'),
         'server': require('./server-manager'),
         'game': require('./element-game'),
-        'add': require('./add-element'),
         'color': require('./element-color'),
         'loading': require('./loading'),
         'iframe': require('./iframe'),
