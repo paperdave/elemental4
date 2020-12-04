@@ -6,7 +6,6 @@ import Color from 'color';
 import { SimpleEmitter } from '@reverse/emitter';
 import io from 'socket.io-client';
 import { createQueueExec } from '../async-queue-exec';
-import { getGroupId } from "../store-chunk";
 
 const ONE_DAY = 24*60*60*1000;
 
@@ -63,11 +62,7 @@ export class Elemental4API
       }
     }
   }
-
-  loading?: Promise<void>;
-  
-  private processEntry = createQueueExec(async(entry: Entry) => {    
-    if(entry === null) return
+  private processEntry = createQueueExec(async(entry: Entry) => {
     if (entry.entry <= this.dbMeta.lastEntry) {
       console.log('[E4API] Skipping Entry ' + entry.entry + '; ' + entry.type)
       return;
@@ -166,8 +161,7 @@ export class Elemental4API
       await this.store.set(entry.id, x);
     }
     this.dbMeta.lastEntry = entry.entry;
-    await this.store.set('last-entry', this.dbMeta.lastEntry);
-    await this.saveFile.set('meta', this.dbMeta);
+    this.saveFile.set('meta', this.dbMeta);
     this.waitNewEntryEmitter.emit(entry);
   });
   private async notifyUsername() {
@@ -186,19 +180,6 @@ export class Elemental4API
     }
   }
 
-  // debug!!!
-  private async debugUnlockAll() {
-    this.store.bulkTransfer(async() => {
-      const keys = await this.store.keys();
-      const elements = keys.filter(key => !key.includes('+'));
-      console.log(keys)
-      console.log(elements)
-      elements.forEach(async(key) => {
-        window['$ts'].add.addElementToGame(await this.getElement(key));
-      })
-    })
-  }
-
   async open(ui?: ElementalLoadingUi, errorRecovery: boolean = false): Promise<boolean> {
     (window as any).repair = this.ui.loading.bind(this.ui, this.resetDatabase.bind(this));
 
@@ -210,10 +191,8 @@ export class Elemental4API
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
-      if (this.dbMeta.lastEntry !== await this.store.get('last-entry')) {
-        console.warn("Database Corruption Detected");
-        dbFetch = 'full';
-      } else if(errorRecovery || this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
+      console.log('db last updated = ', this.dbMeta.lastUpdated);
+      if(errorRecovery || this.dbMeta.version !== Elemental4API.DB_VERSION || this.dbMeta.dbId !== this.config.dbId) {
         dbFetch = 'full';
       } else if (formatDate(new Date(Date.now())) === formatDate(new Date(this.dbMeta.lastUpdated))) {
         dbFetch = 'today';
@@ -227,9 +206,6 @@ export class Elemental4API
     }
 
     this.running = true;
-
-    let unlockDynamicEntries;
-    let loading = new Promise((resolve) => unlockDynamicEntries = resolve)
 
     try {
       ui?.status('Updating Database');
@@ -256,15 +232,7 @@ export class Elemental4API
                 : '/api/v1/db/from-date/' + dbFetch
             const f = await fetch(this.baseUrl + endpoint)
             const progress = fetchWithProgress(f, true);
-       
-            this.socket = io(this.baseUrl);
-            this.socket.on('new-entry', async(entry) => {
-              if (loading) {
-                await loading;
-              }
-              this.processEntry(entry);
-            });
-
+            
             let downloadProgress = 0;
             let processProgress = 0;
             let totalEntryCount = parseInt(f.headers.get('Elem4-Entry-Length'));
@@ -322,23 +290,19 @@ export class Elemental4API
           }
         })).catch(() => {})
         this.dbMeta.lastUpdated = Date.now();
-      } else {
-        this.socket = io(this.baseUrl);
-        this.socket.on('new-entry', async (entry) => {
-          if (loading) {
-            await loading;
-          }
-          this.processEntry(entry);
-        });
       }
 
       await this.saveFile.set('meta', this.dbMeta);
 
       await this.notifyUsername();
 
+      this.socket = io(this.baseUrl);
       this.socket.on('disconnect', () => {
         console.log('[E4API] Disconnected');
         this.onAPIDisconnect();
+      });
+      this.socket.on('new-entry', (entry) => {
+        this.processEntry(entry);
       });
     } catch(e) {
       // you need at least the first four elements.
@@ -350,11 +314,6 @@ export class Elemental4API
       }
       this.onAPIDisconnect();
     }
-
-    unlockDynamicEntries();
-    loading = null;
-
-    await this.processEntry(null);
 
     return true;
   }

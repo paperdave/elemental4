@@ -1,20 +1,16 @@
-## Elemental 4.2.0 (2020-12-04)
-Fixing some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
-
-## Main Game
-- Bug: Entries that were added on the server during the client's load were ignored.
+## Elemental 4.2.0 (2020-12-02)
 
 ## Engine
 - IndexedDB calls are now proxied through a service worker and using a different framework, so they should hopefully never fail. (@davecaruso)
-- Element Recipe Trees now are rendered (@Zolo101) 
-- Changed the text on the autoplay dialog. (@davecaruso)
 - Bug: Crash due to theme not loaded. (@davecaruso)
+- Changed the text on the autoplay dialog. (@davecaruso)
 
 ## New DLC
 - Theme: Inverted Colors (@dugo3number2)
 
 ## Other APIs
-- Nv7 Server: Various bug fixes. (@Nv7-GitHub)
+- Nv7 Server: Various bug fixes.
+
 
 ## Elemental 4.1.1 (2020-11-26)
 ### Engine
@@ -22,6 +18,7 @@ Fixing some major bugs and adding the first version of the recipe trees! Big tha
 
 ### Other APIs
 - Nv7 Server: Fix a caching issue with combinations (@Nv7-GitHub)
+
 
 ## Elemental 4.1.0 (2020-11-26)
 ### Main Game

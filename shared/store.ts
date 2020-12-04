@@ -40,48 +40,22 @@ export class Store extends IStore {
       });
     });
   }
-  set(key: string, item: any): Promise<void> {
-    return new Promise((resolve) => {
-      const return_id = Math.random().toString().substr(2);
-      const worker = getServiceWorker();
-
-      worker.postMessage({
-        type: 'elem4-worker:set',
-        return_id,
-        store: this.storeName,
-        key,
-        item,
-      });
-
-      navigator.serviceWorker.addEventListener('message', function cb(event) {
-        if (event.data.return_id === return_id) {
-          navigator.serviceWorker.removeEventListener('message', cb);
-          resolve(event.data.return_value);
-        }
-      });
+  set(key: string, item: any) {
+    getServiceWorker().postMessage({
+      type: 'elem4-worker:set',
+      store: this.storeName,
+      key,
+      item
     });
   }
-  del(key: string): Promise<void> {
-    return new Promise((resolve) => {
-      const return_id = Math.random().toString().substr(2);
-      const worker = getServiceWorker();
-
-      worker.postMessage({
-        type: 'elem4-worker:del',
-        return_id,
-        store: this.storeName,
-        key,
-      });
-
-      navigator.serviceWorker.addEventListener('message', function cb(event) {
-        if (event.data.return_id === return_id) {
-          navigator.serviceWorker.removeEventListener('message', cb);
-          resolve(event.data.return_value);
-        }
-      });
+  del(key: string) {
+    getServiceWorker().postMessage({
+      type: 'elem4-worker:del',
+      store: this.storeName,
+      key,
     });
   }
-  keys(): Promise<string[]> {
+  keys() {
     return new Promise((resolve) => {
       const return_id = Math.random().toString().substr(2);
       const worker = getServiceWorker();
@@ -100,8 +74,7 @@ export class Store extends IStore {
       });
     });
   }
-  length(): Promise<number> {
-    console.log('Length will fail')
+  length() {
     return new Promise((resolve) => {
       const return_id = Math.random().toString().substr(2);
       const worker = getServiceWorker();
@@ -120,23 +93,10 @@ export class Store extends IStore {
       });
     });
   }
-  clear(): Promise<void> {
-    return new Promise((resolve) => {
-      const return_id = Math.random().toString().substr(2);
-      const worker = getServiceWorker();
-
-      worker.postMessage({
-        type: 'elem4-worker:clear',
-        return_id,
-        store: this.storeName,
-      });
-
-      navigator.serviceWorker.addEventListener('message', function cb(event) {
-        if (event.data.return_id === return_id) {
-          navigator.serviceWorker.removeEventListener('message', cb);
-          resolve(event.data.return_value);
-        }
-      });
+  clear() {
+    getServiceWorker().postMessage({
+      type: 'elem4-worker:clear',
+      store: this.storeName,
     });
   }
   bulkTransfer(x: () => Promise<void>) {
