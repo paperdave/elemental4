@@ -6,7 +6,7 @@
   "id": "vepro_snow",
   "name": "Snow",
   "author": "VeproGames",
-  "description": "Snow!! (goes well with dark theme)",
+  "description": "An animated Snow Background! (goes well with dark theme)",
   "sketch": "main.js",
   "icon": "./icon.png",
   "sound_merge_mode": "override",
