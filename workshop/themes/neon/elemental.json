@@ -1,0 +1,91 @@
+{
+  "$schema": "../../../res/theme.schema.json",
+  "type": "elemental4:theme",
+  "format_version": 1,
+  "version": 1,
+  "id": "neon",
+  "name": "Neon",
+  "author": "VeproGames",
+  "description": "Strong Colors and Glowing Text.",
+  "styles": "./style.css",
+  "icon": "./icon.png",
+  "sound_merge_mode": "override",
+  "music_merge_mode": "combine",
+  "colors": {
+    "white": {
+      "color": "#FFFFFF",
+      "saturationMultiplier": 0,
+      "lightnessMultiplier": 0
+    },
+    "black": {
+      "color": "#000000",
+      "saturationMultiplier": 0,
+      "lightnessMultiplier": 0
+    },
+    "grey": {
+      "color": "#7F7F7F",
+      "saturationMultiplier": 0,
+      "lightnessMultiplier": 1.95
+    },
+    "brown": {
+      "color": "#ff8500",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "red": {
+      "color": "#ff0000",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "orange": {
+      "color": "#ff5600",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "yellow": {
+      "color": "#ffd400",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "yellow-green": {
+      "color": "#a9ff00",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "green": {
+      "color": "#00ff15",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "aqua": {
+      "color": "#00ffa9",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "blue": {
+      "color": "#00a9ff",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "dark-blue": {
+      "color": "#003bff",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "purple": {
+      "color": "#5900ff",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "magenta": {
+      "color": "#dd00ff",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    },
+    "hot-pink": {
+      "color": "#ff008b",
+      "saturationMultiplier": 1,
+      "lightnessMultiplier": 1
+    }
+  }
+}

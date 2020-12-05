@@ -1,0 +1,107 @@
+:root {
+    --text-main: #ffffff;
+    --background-main: #000000;
+    --background-element-game: #0c0c0c;
+    --text-warning: #ff0000;
+    --primary: #00ff00;
+    --link-click: #00ffee;
+
+    --background-hover: rgba(127,127,127,0.15);
+    --background-active: rgba(127,127,127,0.4);
+    --background-selected: rgba(127,127,127,0.3);
+    --text-hover: rgba(127,127,127,0.15);
+    --text-active: rgba(127,127,127,0.4);
+    --text-selected: rgba(127,127,127,0.3);
+
+    --text-top-bar: var(--text-main);
+    --background-top-bar: var(--background-main);
+    --background-button: var(--primary);
+    --background-button-discord: #7289DA;
+    --background-button-source: #7eda72;
+    --background-button-more-content: #daca72;
+
+    --text-info: var(--text-main);
+    --background-info:var(--background-main);
+
+    --text-dialog: var(--text-main);
+    --background-dialog: var(--background-main);
+    --text-suggest: var(--text-dialog);
+    --background-suggest: var(--background-dialog);
+    --background-suggest-title: var(--background-top-bar);
+    --text-suggest-title: var(--text-top-bar);
+
+    --border-info: 1px solid #000000;
+
+    --popup-background: rgba(0, 0, 0, .25);
+
+    --element-scale: 1;
+}
+
+p, span, div, h1, h2, h3, h4, h5, h6{
+    text-shadow: 0 0 0.3rem currentColor;
+}
+
+button, select{
+    background-color: var(--background-main);
+    transition: filter 250ms, background-color 250ms, border-color 250ms;
+}
+
+button:not(:disabled):hover, select:not(:disabled):hover{
+    background-color: #202020;
+    border-color: var(--primary);
+}
+
+button:not(:disabled):active, select:not(:disabled):active{
+    background-color: #202020;
+    border-color: var(--primary);
+    filter: brightness(1.25);
+}
+
+input:not([type="range"]){
+    background-color: var(--background-main);
+}
+
+#info{
+    background-color: var(--background-main);
+    border: 1px solid var(--text-main);
+}
+
+.info-tab{
+    border-radius: 50%;
+    background-color: var(--text-main);
+    box-shadow: 0 0 0.5rem 0.3rem var(--text-main);
+}
+
+[data-tier-level="0"]{
+    background-color: black;
+}
+[data-tier-level="1"]{
+    background-color: #184700;
+}
+[data-tier-level="2"]{
+    background-color: #164253;
+}
+[data-tier-level="3"]{
+    background-color: #452f2f;
+}
+[data-tier-level="4"]{
+    background-color: #723800;
+}
+[data-tier-level="5"]{
+    background-color: #0f2d4a;
+}
+[data-tier-level="6"]{
+    background-color: #4e0000;
+}
+[data-tier-level="7"]{
+    background-color: #7e007c;
+}
+[data-tier-level="8"]{
+    background-color: #005b31;
+}
+[data-tier-level="9"]{
+    background-color: #836c00;
+}
+[data-tier-level="10"]{
+    background-color: #666666;
+}
