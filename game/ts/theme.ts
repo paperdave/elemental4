@@ -103,7 +103,7 @@ export function getEnabledThemeList(): string[] {
 }
 
 export function resetBuiltInThemes() {
-  return builtin_theme_urls.map((x) => uninstallTheme(x[0]));
+  return Promise.all(builtin_theme_urls.map((x) => uninstallTheme(x[0])));
 }
 
 export function calculateTheme() {
@@ -221,7 +221,7 @@ export async function installTheme(theme: ThemeEntry, switchTo: boolean) {
   }
 }
 export function uninstallTheme(id) {
-  uninstallThemes(id);
+  return uninstallThemes(id);
 }
 
 function getCSS() {
