@@ -2,9 +2,11 @@
 
 ## Engine
 - Fix HTML injection on element comments (@veprogames)
+- Fix p5.js backgrounds from not working under certain cases. (@davecaruso)
 
 ## New DLC
 - Theme: Neon (@veprogames)
+- Theme: Snow (@veprogames)
 
 ## Elemental 4.2.1 (2020-12-04)
 Fixes some minor bugs in some of 4.2
@@ -18,7 +20,7 @@ Fixes some minor bugs in some of 4.2
 Fixes some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
 
 ## Main Game
-- Bug: Entries that were added on the server during the client's load were ignored.
+- Bug: Entries that were added on the server during the client's load were ignored. (@davecaruso)
 
 ## Engine
 - IndexedDB calls are now proxied through a service worker and using a different framework, so they should hopefully never fail. (@davecaruso)

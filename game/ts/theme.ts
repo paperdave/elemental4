@@ -1,4 +1,5 @@
 import Color from "color";
+import sha256 from "sha256";
 import { ElementalColorPalette } from "../../shared/elem";
 import { E4ColorPalette } from "../../shared/elemental4-types";
 import { delay } from "../../shared/shared";
@@ -334,7 +335,9 @@ export async function updateMountedCss(animate = true) {
   }
   const p5 = document.getElementById('p5_background') as HTMLIFrameElement;
   if (sketchURL) {
-    p5.src = '/p5_background?sketch=' + btoa(await fetch(sketchURL).then(x => x.text()));
+    const text = await fetch(sketchURL).then(x => x.text());
+    localStorage.setItem('p5', text);
+    p5.src = '/p5_background?sha=' + sha256(text);
   } else {
     p5.src = 'about:blank';
   }
