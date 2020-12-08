@@ -3,12 +3,12 @@ import {Elem} from "../../elem";
 import { NV7ElementalAPI } from "./nv7";
 
 export async function getElem(api: NV7ElementalAPI, id: string): Promise<Elem> {
-  var elemData: Element = await api.store.get(id)
-  if (!elemData) {
-    const elemDataResp = await fetch(api.prefix + "get_elem/" + encodeURIComponent(id));
-    elemData = (await elemDataResp.json() as Element)
-    await api.store.set(id, elemData);
+  const url = api.prefix + "get_elem/" + encodeURIComponent(id);
+  var cache = await window.caches.open("Nv7Elemental")
+  if (!('json' in cache.match(url))) {
+    await cache.add(url);
   }
+  const elemData: Element = await (await cache.match(url)).json() as Element;
 
   return {
     id: elemData.name,
