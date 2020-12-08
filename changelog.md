@@ -1,4 +1,4 @@
-## Elemental 4.2.2 (2020-12-04)
+## Elemental 4.2.2 (2020-12-08)
 
 ## Engine
 - Fix HTML injection on element comments (@veprogames)
