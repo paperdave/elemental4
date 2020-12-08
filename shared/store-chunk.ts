@@ -4,6 +4,9 @@ import { delay } from "./shared";
 import { Store, IStore } from "./store";
 
 export function getGroupId(s: string) {
+  if(!s) {
+    return '01';
+  }
   for(var i = 0, h = 0; i < s.length; i++)
     h = Math.imul(17, h) + s.charCodeAt(i) | 0;
   return (Math.abs(h) % 256).toString(16);

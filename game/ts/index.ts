@@ -55,8 +55,8 @@ async function boot(MenuAPI: MenuAPI) {
     return;
   } else {
     ui.status('Loading Service', 0);
-    await navigator.serviceWorker.register('/pwa.js');
-    const reg = await navigator.serviceWorker.ready;
+    const reg = await navigator.serviceWorker.register('/pwa.js');
+    await navigator.serviceWorker.ready;
     setWorkerRegistration(reg);
   }
   
