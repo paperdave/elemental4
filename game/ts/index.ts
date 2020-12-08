@@ -55,8 +55,8 @@ async function boot(MenuAPI: MenuAPI) {
     return;
   } else {
     ui.status('Loading Service', 0);
-    await navigator.serviceWorker.register('/pwa.js');
-    const reg = await navigator.serviceWorker.ready;
+    const reg = await navigator.serviceWorker.register('/pwa.js');
+    await navigator.serviceWorker.ready;
     setWorkerRegistration(reg);
   }
   
@@ -67,7 +67,6 @@ async function boot(MenuAPI: MenuAPI) {
   try {
     const latestVersion = await fetch('/version').then(x => x.text());
     if (latestVersion !== $version || (!$production && !MenuAPI.upgraded)) {
-      resetBuiltInThemes();
       if(await new Promise(async(resolve) => {
         const cacheKey = latestVersion + '-' + Math.random().toFixed(6).substr(2);
         const progress = fetchWithProgress(await fetch('/elemental.js?v=' + cacheKey));
@@ -78,8 +77,9 @@ async function boot(MenuAPI: MenuAPI) {
           localStorage.cache = cacheKey;
           
           if (await caches.has(cacheName)) {
-            caches.delete(cacheName);
+            await caches.delete(cacheName);
           }
+          await resetBuiltInThemes();
 
           try {
             eval(text);
@@ -144,6 +144,7 @@ async function boot(MenuAPI: MenuAPI) {
       ]
     );
   } else {
+    ui.status('Loading Themes', 0);
     await MountThemeCSS();
   }
 

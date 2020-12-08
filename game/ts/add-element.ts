@@ -217,9 +217,9 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, du
       infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
         if (x.author) {
           // elem4 doesnt properly decode authors
-          return `<p>"${x.comment}" - Error</p>`;
+          return `<p>"${escapeHTML(x.comment)}" - Error</p>`;
         }
-        return `<p>${x.comment}</p>`;
+        return `<p>${escapeHTML(x.comment)}</p>`;
       }).join('');
       infoContainer.querySelector('#element-data-json').innerHTML = JSON.stringify(element, null, 2);
       infoContainer.querySelector('#element-css-class').innerHTML = `.${getClassFromDisplay(element.display)}`;

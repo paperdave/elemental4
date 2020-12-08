@@ -12,27 +12,31 @@
 </head>
 <body>
   <script>
-    delete window.fetch;
-    delete window.XMLHttpRequest;
+    let DISABLE_P5 = false;
     delete window.indexedDB;
     delete window.parent;
     delete window.caches;
-    delete window.localStorage;
     delete window.sessionStorage;
-    eval(atob(new URLSearchParams(location.search).get('sketch')));
-    window.setup = ((f) => () => {
-      const c = createCanvas(windowWidth, windowHeight);
-      window.createCanvas = () => c;
-      f && f();
-    })(window.setup);
-    window.windowResized = ((f) => () => {
-      resizeCanvas(windowWidth, windowHeight);
-      f && f();
-    })(window.windowResized);
-
-    const scriptElement = document.createElement('script');
-    scriptElement.src = '/p5.min.js';
-    document.body.appendChild(scriptElement)
+    eval((() => {
+      const x = localStorage.p5;
+      delete window.localStorage;
+      return x;
+    })());
+    if(!window.DISABLE_P5) {
+      window.setup = ((f) => () => {
+        const c = createCanvas(windowWidth, windowHeight);
+        window.createCanvas = () => c;
+        f && f();
+      })(window.setup);
+      window.windowResized = ((f) => () => {
+        resizeCanvas(windowWidth, windowHeight);
+        f && f();
+      })(window.windowResized);
+  
+      const scriptElement = document.createElement('script');
+      scriptElement.src = '/p5.min.js';
+      document.body.appendChild(scriptElement)
+    }
   </script>
 </body>
 </html>

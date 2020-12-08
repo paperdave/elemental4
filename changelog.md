@@ -1,3 +1,13 @@
+## Elemental 4.2.2 (2020-12-04)
+
+## Engine
+- Fix HTML injection on element comments (@veprogames)
+- Fix p5.js backgrounds from not working under certain cases. (@davecaruso)
+
+## New DLC
+- Theme: Neon (@veprogames)
+- Theme: Snow (@veprogames)
+
 ## Elemental 4.2.1 (2020-12-04)
 Fixes some minor bugs in some of 4.2
 
@@ -10,7 +20,7 @@ Fixes some minor bugs in some of 4.2
 Fixes some major bugs and adding the first version of the recipe trees! Big thanks to Zelo(@Zolo101) for helping out.
 
 ## Main Game
-- Bug: Entries that were added on the server during the client's load were ignored.
+- Bug: Entries that were added on the server during the client's load were ignored. (@davecaruso)
 
 ## Engine
 - IndexedDB calls are now proxied through a service worker and using a different framework, so they should hopefully never fail. (@davecaruso)
@@ -60,7 +70,7 @@ Fixes some major bugs and adding the first version of the recipe trees! Big than
 - Bug: Made it so the Recent Additions menu clears when changing APIs
 - Bug: Element Info closes on any click on firefox (@Nubo318)
 - Bug: Elemental Reborn: Certain combinations were not sorted, causing missing elements (@JohnSmith777779)
-- Bug: Elemental 4 API: If a recipe for a starter element exists, the game will crash when looking up it's element tree. (@JohnSmith777779 @davecaruso)
+- Bug: Elemental 4 API: If a recipe for a starter element exists, the game will crash when looking up it's element tree. (@JohnSmith777779)
 - Bug: Text fields in a dark theme would not use a light text color (@Filip9696)
 - Bug: P5js backgrounds would not load (@davecaruso)
 
