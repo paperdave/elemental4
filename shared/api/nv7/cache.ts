@@ -77,7 +77,6 @@ export class Cache  {
   }
 
   async saveFound(found: string[]): Promise<void> {
-    console.log("saveFound")
     var transaction: IDBTransaction = this.db.transaction(["Found"], "readwrite");
     var objectStore: IDBObjectStore = transaction.objectStore("Found");
     var finished = 0;
@@ -91,7 +90,6 @@ export class Cache  {
         request.onsuccess = function(event) {
           finished++;
           if (finished == (found.length-1)) {
-            console.log("Saved!");
             resolve();
           }
         };
