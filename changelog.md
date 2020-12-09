@@ -1,3 +1,8 @@
+## Elemental 4.2.3 (2020-12-09)
+
+## Engine
+- Fix combination sorter from changing ids that start with numbers (@Nv7-GitHub)
+
 ## Elemental 4.2.2 (2020-12-08)
 
 ## Engine
