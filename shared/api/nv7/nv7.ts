@@ -6,8 +6,7 @@ import {getElem, getCombination} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
 import {getRecents, waitForNew} from "./recents";
 import { IStore } from "../../store";
-
-declare const $production: string;
+import { Cache } from "./cache";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
 	public uid: string
@@ -17,11 +16,14 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public ref;
 	public store: IStore;
 	public prefix: string;
+	public cache: Cache;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		if (this.baseUrl == "https://nv7haven.tk") {
 			this.prefix = "https://api.nv7haven.tk/";
 		}
+		this.cache = new Cache();
+		await this.cache.init();
 		return login(this, ui);
   }
   async close(): Promise<void> {
