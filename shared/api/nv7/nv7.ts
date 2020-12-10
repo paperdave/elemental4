@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, OptionsSection, OptionTypes } from "../../elem";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
@@ -8,7 +8,7 @@ import {getRecents, waitForNew} from "./recents";
 import { IStore } from "../../store";
 import { Cache } from "./cache";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI {
 	public uid: string
 	public saveFile;
 	public ui;
@@ -93,5 +93,25 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		const [saturation, lightness] = x.map(y => parseFloat(y));
 
     return applyColorTransform(basePalette[base], saturation, lightness);
-  }
+	}
+	
+	getOptionsMenu(): OptionsSection[] {
+		return [
+			{
+				title: "Nv7's Elemental",
+				desc: this.config.description,
+				items: [
+					{
+						type: "button",
+						label: "Log Out",
+						onChange: async () => {
+							await this.saveFile.set("email", "default");
+							await this.saveFile.set("password", "default");
+							await this.ui.reloadSelf();
+						}
+					}
+				]
+			},
+		];
+	}
 }
