@@ -75,40 +75,4 @@ export class Cache  {
       };
     });
   }
-
-  async saveFound(found: string[]): Promise<void> {
-    var transaction: IDBTransaction = this.db.transaction(["Found"], "readwrite");
-    var objectStore: IDBObjectStore = transaction.objectStore("Found");
-    var finished = 0;
-    return new Promise<void>((resolve, reject) => {
-      transaction.onerror = function(event) {
-        reject(event.target);
-      };
-
-      found.forEach((val) => {
-        var request = objectStore.put({name: val});
-        request.onsuccess = function(event) {
-          finished++;
-          if (finished == (found.length-1)) {
-            resolve();
-          }
-        };
-      });
-    });
-  }
-
-  async isNotFound(name: string): Promise<boolean> {
-    var transaction: IDBTransaction = this.db.transaction(["Found"], "readwrite");
-    return new Promise<boolean>((resolve, reject) => {
-      transaction.onerror = function(event) {
-        reject(event.target);
-      };
-
-      var objectStore: IDBObjectStore = transaction.objectStore("Found");
-      var request = objectStore.get(name);
-      request.onsuccess = function(event: any) {
-        resolve(request.result == null);
-      };
-    });
-  }
 }
