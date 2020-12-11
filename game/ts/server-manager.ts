@@ -25,7 +25,7 @@ export const builtInDevInternalServers = [
 ];
 export const builtInThirdPartyServers = [
   'https://elemental-reborn.tk',      // cannot suggest, need google auth
-  'https://dev.elemental5.net/api',   // cannot suggest, uses a very different system
+  // 'https://dev.elemental5.net/api',// cannot suggest, uses a very different system, server too unstable to default
   // 'https://e4api.ledomsoft.com',   // api isn't written
   'https://nv7haven.tk',              // api is working
 ];
