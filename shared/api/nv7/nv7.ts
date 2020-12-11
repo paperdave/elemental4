@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination} from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, OptionsSection, OptionTypes } from "../../elem";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
@@ -6,10 +6,9 @@ import {getElem, getCombination} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
 import {getRecents, waitForNew} from "./recents";
 import { IStore } from "../../store";
+import { Cache } from "./cache";
 
-declare const $production: string;
-
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI {
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI {
 	public uid: string
 	public saveFile;
 	public ui;
@@ -17,11 +16,15 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public ref;
 	public store: IStore;
 	public prefix: string;
+	public cache: Cache;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
-		if (this.baseUrl == "https://nv7haven.tk") {
+		this.prefix = this.baseUrl;
+		if (this.baseUrl.includes("https://nv7haven.tk")) {
 			this.prefix = "https://api.nv7haven.tk/";
 		}
+		this.cache = new Cache();
+		await this.cache.init();
 		return login(this, ui);
   }
   async close(): Promise<void> {
@@ -91,5 +94,25 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		const [saturation, lightness] = x.map(y => parseFloat(y));
 
     return applyColorTransform(basePalette[base], saturation, lightness);
-  }
+	}
+	
+	getOptionsMenu(): OptionsSection[] {
+		return [
+			{
+				title: "Nv7's Elemental",
+				desc: this.config.description,
+				items: [
+					{
+						type: "button",
+						label: "Log Out",
+						onChange: async () => {
+							await this.saveFile.set("email", "default");
+							await this.saveFile.set("password", "default");
+							await this.ui.reloadSelf();
+						}
+					}
+				]
+			},
+		];
+	}
 }
