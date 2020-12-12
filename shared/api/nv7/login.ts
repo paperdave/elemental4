@@ -71,23 +71,46 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
             "title": "Error",
             "button": "Ok",
           });
+          return false;
         }
       } else if (creds["button"] == 0) {
         registering = !registering;
       } else if (creds["button"] == -2) {
-        ui.status("Sending Password Reset Email", 0);
-        let resp = await fetch(api.prefix + "reset_password/" + encodeURIComponent(creds["email"]))
-        ui.status("Sending Password Reset Email", 0.5);
-        var text = await resp.text();
-        if (text != "") {
+        ui.status("Generating username", 0)
+        var resp = await fetch(api.prefix + "new_anonymous_user")
+        ui.status("Generating username", 0.5)
+        var response = await resp.json();
+        ui.status("Generating username", 1)
+        if (!response.success) {
           ui.status("Showing Error", 0);
-          api.ui.alert({
-            "text": text,
+          await api.ui.alert({
+            "text": response.data,
             "title": "Error",
             "button": "Ok",
           });
+          return false;
         }
-        ui.status("Sending Password Reset Email", 1)
+        ui.status("Creating account", 0);
+        const username = response.data;
+        resp = await fetch(api.prefix + "create_user/" + encodeURIComponent(username) + "/" + encodeURIComponent("password"));
+        ui.status("Creating account", 0.5);
+        response = await resp.json();
+        ui.status("Creating account", 1);
+        if (response.success == true) {
+          api.uid = response.data;
+          api.saveFile.set("email", username)
+          api.saveFile.set("password", "password")
+          ui.status("Loading Game", 0);
+          return true;
+        } else {
+          ui.status("Showing Error", 0);
+          await api.ui.alert({
+            "text": data.data,
+            "title": "Error",
+            "button": "Ok",
+          });
+          return false;
+        }
       } else if (creds["button"] == -1) {
         return false;
       }
@@ -109,6 +132,9 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
         "title": "Error",
         "button": "Ok",
       });
+      await api.saveFile.set("email", "default");
+      await api.saveFile.set("password", "default");
+      await api.ui.reloadSelf();
     }
   }
 }
