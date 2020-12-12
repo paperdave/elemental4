@@ -1,3 +1,13 @@
+## Elemental 4.2.3 (2020-12-12)
+
+## Engine
+- Try to fix the Store API but I don't think it is truly fixed yet.
+- Fix combination sorter from changing ids that start with numbers (@Nv7-GitHub)
+- Remove Elemental 5 Official as a built in server as it has slow response times, you can still add it manually.
+
+## Other APIs
+- Nv7 Server: Bug Fixes
+
 ## Elemental 4.2.2 (2020-12-08)
 
 ## Engine
