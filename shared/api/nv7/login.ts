@@ -34,7 +34,7 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           },
           !registering && {
             id: -2,
-            label: "Forgot?"
+            label: "Anonymous"
           },
           {
             id: -1,
