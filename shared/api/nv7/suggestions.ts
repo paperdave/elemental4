@@ -111,8 +111,35 @@ export async function newSuggestion(elem1: string, elem2: string, request: Sugge
   }
 
   let resp = await fetch(api.prefix + "new_suggestion/" + encodeURIComponent(elem1) + "/" + encodeURIComponent(elem2) + "/" + encodeURIComponent(JSON.stringify(newSuggest)))
-  const text = await resp.text();
+  let text = await resp.text();
   if (text != "") {
+    if (text == "create") {
+      let commentData = await api.ui.prompt({
+        title: "Confirm Creator Mark",
+        text: "Enter below what you want to use for your creator mark. You are responsible for the creation of this element!"
+      });
+      var comment = "No comment."
+      if (commentData) {
+        comment = commentData;
+      }
+      resp = await fetch(api.prefix + "create_suggestion/" + encodeURIComponent(elem1) + "/" + encodeURIComponent(elem2) + "/" + encodeURIComponent(request.text) + "/" + encodeURIComponent(comment) + "/" + encodeURIComponent(api.saveFile.get("email", "anonymous")));
+      text = await resp.text();
+      if (text != "") {
+        await api.ui.alert({
+          "text": text,
+          "title": "Error",
+          "button": "Ok",
+        });
+        return {
+          suggestType: "failed"
+        }
+      }
+  
+      return {
+        suggestType: "vote",
+        newElements: [request.text]
+      }
+    }
     await api.ui.alert({
       "text": text,
       "title": "Error",
