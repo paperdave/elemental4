@@ -208,6 +208,20 @@ export class Elemental4API
       this.saveFile.set('clientName', '[Ask on Element Suggestion]');
     }
 
+    try {
+      ui.status("Updating Profiles", 0.25);
+      var resp = await fetch(this.baseUrl + "/api/v1/profiles")
+      ui.status("Updating Profiles", 0.5);
+      this.profiles = await resp.json();
+      ui.status("Updating Profiles", 0.75);
+      await this.store.set("profiles", this.profiles);
+      ui.status("Updating Profiles", 1);
+    } catch (e) {
+      ui.status("Updating Profiles", 0);
+      this.profiles = await this.store.get("profiles");
+      ui.status("Updating Profiles", 1);
+    }
+
     let dbFetch: string;
     try {
       this.dbMeta = await this.saveFile.get('meta');
@@ -355,20 +369,6 @@ export class Elemental4API
       this.onAPIDisconnect();
     }
 
-    try {
-      ui.status("Updating Profiles", 0.25);
-      var resp = await fetch(this.baseUrl + "/api/v1/profiles")
-      ui.status("Updating Profiles", 0.5);
-      this.profiles = await resp.json();
-      ui.status("Updating Profiles", 0.75);
-      await this.store.set("profiles", this.profiles);
-      ui.status("Updating Profiles", 1);
-    } catch (e) {
-      ui.status("Updating Profiles", 0);
-      this.profiles = await this.store.get("profiles");
-      ui.status("Updating Profiles", 1);
-    }
-    
 
     unlockDynamicEntries();
     loading = null;
@@ -393,18 +393,18 @@ export class Elemental4API
 
   async getElement(id: string): Promise<Elem> {
     var element = await this.getRawElement(id);
-    for (var i = 0; i < element.stats.comments.length; i++) {
-      element.stats.comments[i].author = await this.getProfile(element.stats.comments[i].author);
+    for (var i = 0; i < element.stats.creators.length; i++) {
+      var uid = element.stats.creators[i];
+      var name = this.profiles[uid];
+      if (!name) {
+        name = "Anonymous";
+      }
+      element.stats.creators[i] = name;
+    }
+    if (element.stats.comments.length > 0) {
+      element.stats.comments[0].author = element.stats.creators[1]; 
     }
     return element;
-  }
-
-  private async getProfile(id: string): Promise<string> {
-    if (id in this.profiles) {
-      return this.profiles[id];
-    } else {
-      return "Anonymous";
-    }
   }
 
   async getCombo(ids: string[]): Promise<string[]> {
