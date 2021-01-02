@@ -37,10 +37,12 @@ export class Elemental4API
 
   private socket: SocketIOClient.Socket;
 
+  private profiles: Record<string, string>;
+
   private async calculateFundamentals(eLeftI: string | Elem, eRightI: string | Elem, eResultI: string | Elem) {
-    const eLeft = typeof eLeftI === 'string' ? await this.getElement(eLeftI) : eLeftI;
-    const eRight = typeof eRightI === 'string' ? await this.getElement(eRightI) : eRightI;
-    const eResult = typeof eResultI === 'string' ? await this.getElement(eResultI) : eResultI;
+    const eLeft = typeof eLeftI === 'string' ? await this.getRawElement(eLeftI) : eLeftI;
+    const eRight = typeof eRightI === 'string' ? await this.getRawElement(eRightI) : eRightI;
+    const eResult = typeof eResultI === 'string' ? await this.getRawElement(eResultI) : eResultI;
     
     const complexity = Math.max(eLeft.stats.treeComplexity, eRight.stats.treeComplexity) + 1;
     if ((complexity < eResult.stats.treeComplexity || (eResult.stats.treeComplexity === 0 && eResult.stats.usageCount === 0))) {
@@ -138,18 +140,18 @@ export class Elemental4API
       await this.store.set(entry.recipe, entry.result);
       this.waitNewComboEmitter.emit();
       
-      const eResult = await this.getElement(entry.result);
+      const eResult = await this.getRawElement(entry.result);
       eResult.stats.recipeCount++;
       eResult.stats.recipeList.push(recipe);
 
-      const eLeft = await this.getElement(recipe[0]);
+      const eLeft = await this.getRawElement(recipe[0]);
       
       eLeft.stats.usageCount++;
       eLeft.stats.usageList.push({ recipe, result: [entry.result] });
 
       let eRight = eLeft;
       if (recipe[0] !== recipe[1]) {
-        eRight = await this.getElement(recipe[1]);
+        eRight = await this.getRawElement(recipe[1]);
         eRight.stats.usageCount++;
         eRight.stats.usageList.push({ recipe, result: [entry.result] });
         await this.store.set(eRight.id, eRight);
@@ -193,7 +195,7 @@ export class Elemental4API
       console.log(keys)
       console.log(elements)
       elements.forEach(async(key) => {
-        window['$ts'].add.addElementToGame(await this.getElement(key));
+        window['$ts'].add.addElementToGame(await this.getRawElement(key));
       })
     })
   }
@@ -204,6 +206,20 @@ export class Elemental4API
     if (this.saveFile.get('clientSecret', '[unset]') === '[unset]') {
       this.saveFile.set('clientSecret', randomString(32));
       this.saveFile.set('clientName', '[Ask on Element Suggestion]');
+    }
+
+    try {
+      ui.status("Updating Profiles", 0.25);
+      var resp = await fetch(this.baseUrl + "/api/v1/profiles")
+      ui.status("Updating Profiles", 0.5);
+      this.profiles = await resp.json();
+      ui.status("Updating Profiles", 0.75);
+      await this.store.set("profiles", this.profiles);
+      ui.status("Updating Profiles", 1);
+    } catch (e) {
+      ui.status("Updating Profiles", 0);
+      this.profiles = await this.store.get("profiles");
+      ui.status("Updating Profiles", 1);
     }
 
     let dbFetch: string;
@@ -344,7 +360,7 @@ export class Elemental4API
       });
     } catch(e) {
       // you need at least the first four elements.
-      if(!await this.getElement('4')) {
+      if(!await this.getRawElement('4')) {
         await this.ui.alert({
           title: 'Database is Outdated',
           text: 'To play Elemental 4, you will need to go online to download the database.'
@@ -352,6 +368,7 @@ export class Elemental4API
       }
       this.onAPIDisconnect();
     }
+
 
     unlockDynamicEntries();
     loading = null;
@@ -370,9 +387,36 @@ export class Elemental4API
       totalElements: await this.store.length()
     }
   }
-  async getElement(id: string): Promise<Elem> {
+  private async getRawElement(id: string): Promise<Elem> {
     return await this.store.get(id) || null;
   }
+
+  async getElement(id: string): Promise<Elem> {
+    const element = await this.getRawElement(id);
+    return {
+      ...element,
+      stats: {
+        ...element.stats,
+        creators: element.stats.creators
+          && element.stats.creators.map(
+            (id) => this.getProfile(id)
+          ),
+        comments: element.stats.comments
+          && element.stats.comments.map(
+            ({ author, comment }) => ({ author: this.getProfile(author), comment })
+          ),
+      }
+    }
+  }
+
+  private getProfile(id: string): string {
+    var name = this.profiles[id];
+    if (!name) {
+      name = "Anonymous";
+    }
+    return name;
+  }
+
   async getCombo(ids: string[]): Promise<string[]> {
     const str = await this.store.get(ids.join('+')) as string;
     return str ? [str] : [];
@@ -615,7 +659,7 @@ export class Elemental4API
   }
   waitForElement(id: string) {
     return new Promise<void>((done) => {
-      this.getElement(id).then(x => {
+      this.getRawElement(id).then(x => {
         if(!x) {
           const f = (entry: Entry) => {
             if(entry.type === 'element' && entry.id === id) {

@@ -1,3 +1,14 @@
+## Elemental 4.3.0 (2021-01-02)
+
+## Engine
+- Show the comment authors instead of the hardcoded string "Error"
+
+## Main Game
+- Decode comment authors correctly. (@Nv7-GitHub)
+
+## Other APIs
+- Nv7 Server: Better Anarchy Support
+
 ## Elemental 4.2.3 (2020-12-12)
 
 ## Engine
