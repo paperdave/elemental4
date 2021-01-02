@@ -217,7 +217,7 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, du
       infoContainer.querySelector('#element-comments').innerHTML = (element.stats?.comments || []).map(x => {
         if (x.author) {
           // elem4 doesnt properly decode authors
-          return `<p>"${escapeHTML(x.comment)}" - Error</p>`;
+          return `<p>"${escapeHTML(x.comment)}" - ${escapeHTML(x.author)}</p>`;
         }
         return `<p>${escapeHTML(x.comment)}</p>`;
       }).join('');
