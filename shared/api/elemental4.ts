@@ -40,9 +40,9 @@ export class Elemental4API
   private profiles: Record<string, string>;
 
   private async calculateFundamentals(eLeftI: string | Elem, eRightI: string | Elem, eResultI: string | Elem) {
-    const eLeft = typeof eLeftI === 'string' ? await this.getElement(eLeftI) : eLeftI;
-    const eRight = typeof eRightI === 'string' ? await this.getElement(eRightI) : eRightI;
-    const eResult = typeof eResultI === 'string' ? await this.getElement(eResultI) : eResultI;
+    const eLeft = typeof eLeftI === 'string' ? await this.getRawElement(eLeftI) : eLeftI;
+    const eRight = typeof eRightI === 'string' ? await this.getRawElement(eRightI) : eRightI;
+    const eResult = typeof eResultI === 'string' ? await this.getRawElement(eResultI) : eResultI;
     
     const complexity = Math.max(eLeft.stats.treeComplexity, eRight.stats.treeComplexity) + 1;
     if ((complexity < eResult.stats.treeComplexity || (eResult.stats.treeComplexity === 0 && eResult.stats.usageCount === 0))) {
@@ -140,18 +140,18 @@ export class Elemental4API
       await this.store.set(entry.recipe, entry.result);
       this.waitNewComboEmitter.emit();
       
-      const eResult = await this.getElement(entry.result);
+      const eResult = await this.getRawElement(entry.result);
       eResult.stats.recipeCount++;
       eResult.stats.recipeList.push(recipe);
 
-      const eLeft = await this.getElement(recipe[0]);
+      const eLeft = await this.getRawElement(recipe[0]);
       
       eLeft.stats.usageCount++;
       eLeft.stats.usageList.push({ recipe, result: [entry.result] });
 
       let eRight = eLeft;
       if (recipe[0] !== recipe[1]) {
-        eRight = await this.getElement(recipe[1]);
+        eRight = await this.getRawElement(recipe[1]);
         eRight.stats.usageCount++;
         eRight.stats.usageList.push({ recipe, result: [entry.result] });
         await this.store.set(eRight.id, eRight);
@@ -195,7 +195,7 @@ export class Elemental4API
       console.log(keys)
       console.log(elements)
       elements.forEach(async(key) => {
-        window['$ts'].add.addElementToGame(await this.getElement(key));
+        window['$ts'].add.addElementToGame(await this.getRawElement(key));
       })
     })
   }
@@ -360,7 +360,7 @@ export class Elemental4API
       });
     } catch(e) {
       // you need at least the first four elements.
-      if(!await this.getElement('4')) {
+      if(!await this.getRawElement('4')) {
         await this.ui.alert({
           title: 'Database is Outdated',
           text: 'To play Elemental 4, you will need to go online to download the database.'
@@ -392,19 +392,29 @@ export class Elemental4API
   }
 
   async getElement(id: string): Promise<Elem> {
-    var element = await this.getRawElement(id);
-    for (var i = 0; i < element.stats.creators.length; i++) {
-      var uid = element.stats.creators[i];
-      var name = this.profiles[uid];
-      if (!name) {
-        name = "Anonymous";
+    const element = await this.getRawElement(id);
+    return {
+      ...element,
+      stats: {
+        ...element.stats,
+        creators: element.stats.creators
+          && element.stats.creators.map(
+            (id) => this.getProfile(id)
+          ),
+        comments: element.stats.comments
+          && element.stats.comments.map(
+            ({ author, comment }) => ({ author: this.getProfile(author), comment })
+          ),
       }
-      element.stats.creators[i] = name;
     }
-    if (element.stats.comments.length > 0) {
-      element.stats.comments[0].author = element.stats.creators[1]; 
+  }
+
+  private getProfile(id: string): string {
+    var name = this.profiles[id];
+    if (!name) {
+      name = "Anonymous";
     }
-    return element;
+    return name;
   }
 
   async getCombo(ids: string[]): Promise<string[]> {
@@ -649,7 +659,7 @@ export class Elemental4API
   }
   waitForElement(id: string) {
     return new Promise<void>((done) => {
-      this.getElement(id).then(x => {
+      this.getRawElement(id).then(x => {
         if(!x) {
           const f = (entry: Entry) => {
             if(entry.type === 'element' && entry.id === id) {
