@@ -37,6 +37,8 @@ export class Elemental4API
 
   private socket: SocketIOClient.Socket;
 
+  private profiles: Record<string, string>;
+
   private async calculateFundamentals(eLeftI: string | Elem, eRightI: string | Elem, eResultI: string | Elem) {
     const eLeft = typeof eLeftI === 'string' ? await this.getElement(eLeftI) : eLeftI;
     const eRight = typeof eRightI === 'string' ? await this.getElement(eRightI) : eRightI;
@@ -353,6 +355,21 @@ export class Elemental4API
       this.onAPIDisconnect();
     }
 
+    try {
+      ui.status("Updating Profiles", 0.25);
+      var resp = await fetch(this.baseUrl + "/api/v1/profiles")
+      ui.status("Updating Profiles", 0.5);
+      this.profiles = await resp.json();
+      ui.status("Updating Profiles", 0.75);
+      await this.store.set("profiles", this.profiles);
+      ui.status("Updating Profiles", 1);
+    } catch (e) {
+      ui.status("Updating Profiles", 0);
+      this.profiles = await this.store.get("profiles");
+      ui.status("Updating Profiles", 1);
+    }
+    
+
     unlockDynamicEntries();
     loading = null;
 
@@ -370,9 +387,26 @@ export class Elemental4API
       totalElements: await this.store.length()
     }
   }
-  async getElement(id: string): Promise<Elem> {
+  private async getRawElement(id: string): Promise<Elem> {
     return await this.store.get(id) || null;
   }
+
+  async getElement(id: string): Promise<Elem> {
+    var element = await this.getRawElement(id);
+    for (var i = 0; i < element.stats.comments.length; i++) {
+      element.stats.comments[i].author = await this.getProfile(element.stats.comments[i].author);
+    }
+    return element;
+  }
+
+  private async getProfile(id: string): Promise<string> {
+    if (id in this.profiles) {
+      return this.profiles[id];
+    } else {
+      return "Anonymous";
+    }
+  }
+
   async getCombo(ids: string[]): Promise<string[]> {
     const str = await this.store.get(ids.join('+')) as string;
     return str ? [str] : [];
