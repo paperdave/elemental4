@@ -1,18 +1,20 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionColorInformation, SuggestionRequest, SuggestionResponse, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, OptionsMenuAPI, OptionsSection } from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, Suggestion, SuggestionAPI, SuggestionColorInformation, SuggestionRequest, SuggestionResponse, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, OptionsMenuAPI, OptionsSection, ElementalRuntimeUI, SaveFileAPI } from "../../elem";
 import { Cache } from "./cache";
 import { getElem, getCombination } from "./elements";
 import Color from 'color';
 import { createElem } from './suggestions';
+import { createOptions } from './ui';
 
 export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, OptionsMenuAPI {
   public pack: string;
   public cache: Cache;
-  public ui;
+  public ui: ElementalRuntimeUI;
+  public saveFile: SaveFileAPI;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
     ui.status("Loading pack", 0);
     if (this.saveFile.get("packs", "default") == "default") {
-      this.saveFile.set("packs", ["default"]);
+      this.saveFile.set("packs", [{title: "Default", description: "The default pack.", id: "default"}]);
       this.saveFile.set("pack", "default");
     }
     this.pack = this.saveFile.get("pack", "default");
@@ -61,6 +63,6 @@ export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dyn
   };
   async downvoteSuggestion(ids: string[], suggestion: SuggestionRequest<"dynamic-elemental4">): Promise<void> { return; };  
   getOptionsMenu(): OptionsSection[] {
-    return [];
+    return createOptions(this);
   }
 }

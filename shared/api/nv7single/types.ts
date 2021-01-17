@@ -4,3 +4,9 @@ export interface Element {
   comment: string,
   parents: string[],
 }
+
+export class PackInfo {
+  title: string
+  description: string
+  id: string
+}
