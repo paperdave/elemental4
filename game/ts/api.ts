@@ -1,6 +1,7 @@
 import { Elemental4API } from "../../shared/api/elemental4";
 import { Elemental5API } from "../../shared/api/elemental5";
 import { NV7ElementalAPI } from "../../shared/api/nv7/nv7";
+import { Nv7SingleAPI } from "../../shared/api/nv7single/nv7single";
 import { ElementalBaseAPI, ElementalConfig, ElementalLoadingUi, ElementalSubAPIs, getSubAPI, SaveFileAPI, ServerSavefileEntry } from "../../shared/elem";
 import { delay, delayFrame, escapeHTML } from "../../shared/shared";
 import { SingleplayerAPI } from "./api-singleplayer";
@@ -40,6 +41,7 @@ const apiTypeMap: Record<string, typeof IHateTypescript> = {
   'e4': LedomElementalAPI,
   'le4': LedomElementalAPI,
   'nv7': NV7ElementalAPI,
+  'nv7single': Nv7SingleAPI,
 };
 
 let currentAPI: ElementalBaseAPI;
