@@ -4,6 +4,10 @@ import { Nv7SingleAPI } from "./nv7single";
 
 export async function getElem(api: Nv7SingleAPI, id: string): Promise<Elem> {
   var elemData: Element = await api.cache.get(api.pack, id);
+  while (!elemData) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    elemData = await api.cache.get(api.pack, id);
+  }
 
   return {
     id: elemData.name,
