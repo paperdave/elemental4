@@ -71,7 +71,15 @@ export function  listUI(api: Nv7SingleAPI): OptionsItem[] {
             }
             ui.status("Setting Up Pack", 0);
             let packs = api.saveFile.get("packs", []) as PackInfo[]
-            packs.push(info);
+            let isIn = false;
+            for (let j = 0; j < packs.length; j++) {
+              if (packs[j].id == info.id) {
+                isIn = true;
+              }
+            }
+            if (!isIn) {
+              packs.push(info);
+            }
             ui.status("Setting Up Pack", 0.1);
             api.pack = item.id;
             ui.status("Setting Up Pack", 0.2);
