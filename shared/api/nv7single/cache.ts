@@ -113,4 +113,27 @@ export class Cache  {
       };
     });
   }
+
+  async getAll(pack: string): Promise<Record<string, any>> {
+    var transaction: IDBTransaction = this.db.transaction([pack], "readwrite");
+    return new Promise<any>((resolve, reject) => {
+      transaction.onerror = function(event) {
+        reject(event.target);
+      };
+
+      var objectStore: IDBObjectStore = transaction.objectStore(pack);
+      var request = objectStore.getAll();
+      request.onsuccess = function(event: any) {
+        let output: Record<string, any> = {}
+        if (request.result == null) {
+          resolve(output);
+        } else {
+          for (let i = 0; i < request.result.length; i++) {
+            output[request.result[i].index] = request.result[i].val;
+          }
+          resolve(output);
+        }
+      };
+    });
+  }
 }

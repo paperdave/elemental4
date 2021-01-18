@@ -4,7 +4,6 @@ import { getElem, getCombination } from "./elements";
 import Color from 'color';
 import { createElem } from './suggestions';
 import { createOptions } from './ui';
-import apiV1 from "../../../server/api/api-v1";
 
 export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, OptionsMenuAPI, ServerSavefileAPI {
   public pack: string;

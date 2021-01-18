@@ -75,14 +75,23 @@ export function createOptions(api: Nv7SingleAPI): OptionsSection[] {
       title: packs[i].title,
       choices: [
         {
+          label: "Upload",
+          id: "upload",
+        },
+        {
           label: "Select",
           id: "select",
         }
       ],
-      onChange: (id: string) => {
-        api.saveFile.set("pack", packs[i].id);
-        api.pack = packs[i].id;
-        api.ui.reloadSelf();
+      onChange: async (id: string) => {
+        if (id == "select") {
+          api.saveFile.set("pack", packs[i].id);
+          api.pack = packs[i].id;
+          await api.ui.reloadSelf();
+        } else if (id == "upload") {
+          let vals = await api.cache.getAll(packs[i].id);
+          console.log(JSON.stringify(vals));
+        }
       }
     })
   }
