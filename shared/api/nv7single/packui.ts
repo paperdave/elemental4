@@ -66,9 +66,76 @@ export function  packUI(api: Nv7SingleAPI): OptionsItem[] {
         api.saveFile.set("found", found);
         await api.ui.reloadSelf();
       }
+    },
+    {
+      type: "button",
+      label: "Upload Pack",
+      onChange: async () => {
+        const upload = document.createElement('input');
+        upload.type = "file";
+        upload.accept = ".pack";
+        upload.value = null;
+        document.body.appendChild(upload)
+        upload.click();
+        upload.onchange = (e) => {
+          const reader = new FileReader();
+          reader.onerror = (ev) => {console.error(ev.target)};
+          reader.onload = async (ev) => {
+            const res: PackData = JSON.parse(ev.target.result as string);
+            let dat = JSON.parse(res.data);
+            await api.ui.loading(async (ui: ElementalLoadingUi) => {
+              ui.status("Creating Pack", 0)
+              try {
+                await api.cache.newPack(res.id);
+              } catch (a) {
+                await api.cache.init(api);
+              }
+              ui.status("Installing Pack", 0)
+              let keys = Object.keys(dat);
+              for (let j = 0; j < keys.length; j++) {
+                await api.cache.add(res.id, keys[j], dat[keys[j]]);
+                ui.status("Installing Pack", j/keys.length);
+              }
+              ui.status("Setting Up Pack", 0);
+              packs = api.saveFile.get("packs", []) as PackInfo[]
+              let isIn = false;
+              for (let j = 0; j < packs.length; j++) {
+                if (packs[j].id == res.id) {
+                  isIn = true;
+                }
+              }
+              if (!isIn) {
+                packs.push({
+                  title: res.title,
+                  description: res.description,
+                  id: res.id,
+                });
+              }
+              ui.status("Setting Up Pack", 0.1);
+              api.pack = res.id;
+              ui.status("Setting Up Pack", 0.2);
+              api.saveFile.set("packs", packs);
+              ui.status("Setting Up Pack", 0.4);
+              api.saveFile.set("pack", api.pack);
+              ui.status("Setting Up Pack", 0.8);
+              let found = api.saveFile.get("found", {"default": ["Air", "Earth", "Water", "Fire"]});
+              found[api.pack] = ["Air", "Earth", "Fire", "Water"];
+              api.saveFile.set("found", found);
+              ui.status("Setting Up Pack", 1);
+            })
+            await api.ui.reloadSelf();
+          }
+          reader.readAsText(upload.files[0])
+        }
+        document.body.removeChild(upload);
+      }
     }
   ];
   let choices = [
+    {
+      label: "Export",
+      id: "export",
+    },
     {
       label: "Select",
       id: "select",
@@ -126,7 +193,36 @@ export function  packUI(api: Nv7SingleAPI): OptionsItem[] {
               xhr.send(dat);
             })
             await api.ui.reloadSelf();
-          })
+          });
+        } else if (id == "export") {
+          api.ui.loading(async (ui: ElementalLoadingUi) => {
+            ui.status("Converting Data", 0);
+            let output = JSON.stringify(await api.cache.getAll(packs[i].id));
+            ui.status("Converting Data", 0.5);
+            let packdat: PackData = {
+              id: packs[i].id,
+              title: packs[i].title,
+              description: packs[i].description,
+              data: output,
+              uid: api.uid,
+            }
+            let dat = JSON.stringify(packdat);
+            
+            ui.status("Downloading Pack", 0);
+            var element = document.createElement('a'); 
+            ui.status("Downloading Pack", 0.2);
+            element.setAttribute('href',  
+            'data:text/plain;charset=utf-8, ' 
+            + encodeURIComponent(dat));
+            ui.status("Downloading Pack", 0.4);
+            element.setAttribute('download', packdat.id + ".pack"); 
+            ui.status("Downloading Pack", 0.6);
+            document.body.appendChild(element); 
+            ui.status("Downloading Pack", 0.8);
+            element.click();
+            ui.status("Downloading Pack", 1);
+            document.body.removeChild(element); 
+          });
         }
       }
     })
