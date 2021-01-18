@@ -94,7 +94,7 @@ export function  listUI(api: Nv7SingleAPI): OptionsItem[] {
 
 export async function initListUI(api: Nv7SingleAPI, ui: ElementalLoadingUi): Promise<void> {
   ui.status("Getting Pack List", 0)
-  let res = await fetch(api.prefix + "single_list/" + api.saveFile.get("kind", "likes"));
+  let res = await fetch(api.prefix + "single_list/" + api.saveFile.get("kind", "likes") + "/" + api.saveFile.get("search", ""));
   if (res.status == 500) {
     ui.status("Loading Error", 0);
     let text = await res.text();

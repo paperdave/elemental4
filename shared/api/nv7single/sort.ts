@@ -1,4 +1,4 @@
-import { ElementalLoadingUi, OptionsItem } from "../../elem";
+import { OptionsItem } from "../../elem";
 import { Nv7SingleAPI } from "./nv7single";
 
 export function sortUI(api: Nv7SingleAPI): OptionsItem[] {
@@ -27,6 +27,21 @@ export function sortUI(api: Nv7SingleAPI): OptionsItem[] {
     defaultValue: api.saveFile.get("kind"),
     onChange: async (id: string) => {
       api.saveFile.set("kind", id);
+      await api.ui.reloadSelf();
+    }
+  })
+  items.push({
+    type: "string",
+    label: "Query: ",
+    defaultValue: api.saveFile.get("search", ""),
+    onChange: (text: string) => {
+      api.saveFile.set("search", text);
+    }
+  })
+  items.push({
+    type: "button",
+    label: "Search",
+    onChange: async () => {
       await api.ui.reloadSelf();
     }
   })

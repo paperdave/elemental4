@@ -33,6 +33,7 @@ export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dyn
       this.saveFile.set("dbVers", 1);
       this.saveFile.set("found", {"default": ["Air", "Earth", "Water", "Fire"]});
       this.saveFile.set("kind", "likes");
+      this.saveFile.set("search", "");
     }
     this.pack = this.saveFile.get("pack", "default");
     ui.status("Initializing cache", 0);
