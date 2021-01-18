@@ -2,6 +2,7 @@ import { OptionsSection } from '../../elem';
 import { listUI } from './listui';
 import { Nv7SingleAPI } from './nv7single';
 import { packUI } from './packui';
+import { sortUI } from './sort';
 
 export function createOptions(api: Nv7SingleAPI): OptionsSection[] {
   let items: OptionsSection[] = [];
@@ -13,7 +14,8 @@ export function createOptions(api: Nv7SingleAPI): OptionsSection[] {
   });
   if (api.hasWifi) {
     try {
-      let listitems = listUI(api);
+      let listitems = sortUI(api);
+      listitems = listitems.concat(listUI(api));
       items.push({ 
         title: "Available Packs",
         desc: "A list of packs that people have uploaded!",

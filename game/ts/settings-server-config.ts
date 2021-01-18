@@ -105,7 +105,27 @@ export function OptionSwitchDOM(v: SimpleState<boolean>, item: OptionsItem<'swit
   return document.createTextNode(JSON.stringify(item));
 }
 export function OptionSelectDOM(v: SimpleState<string>, item: OptionsItem<'select'>) {
-  return document.createTextNode(JSON.stringify(item));
+  const select = document.createElement('select');
+  const label = document.createElement('option');
+  label.innerHTML = escapeHTML(item.label);
+  label.disabled = true;
+  label.value = "default";
+  select.appendChild(label);
+  for (let i = 0; i < item.choices.length; i++) {
+    const option = document.createElement('option');
+    option.innerHTML = escapeHTML(item.choices[i].label);
+    option.value = item.choices[i].id;
+    select.appendChild(option);
+  }
+  if (!item.defaultValue) {
+    select.value = "default";
+  } else {
+    select.value = item.defaultValue;
+  }
+  select.onchange = (e) => {
+    item.onChange(select.value);
+  }
+  return select;
 }
 export function OptionCheckboxGroupDOM(v: SimpleState<string[]>, item: OptionsItem<'checkboxGroup'>) {
   return document.createTextNode(JSON.stringify(item));
