@@ -5,6 +5,8 @@ import Color from 'color';
 import { createElem } from './suggestions';
 import { createOptions } from './ui';
 import { login } from './login';
+import { initListUI } from "./listui";
+import { PackInfo, PackItem } from "./types";
 
 export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, OptionsMenuAPI, ServerSavefileAPI {
   public pack: string;
@@ -13,15 +15,18 @@ export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dyn
   public saveFile: SaveFileAPI;
   public uid: string;
   public prefix: string = "https://api.nv7haven.tk/";
+  public items: PackItem[];
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
     await login(this, ui);
+    await initListUI(this, ui);
     ui.status("Loading packs", 0);
     if (this.saveFile.get("packs", "default") == "default") {
       this.saveFile.set("packs", [{title: "Default", description: "The default pack.", id: "default"}]);
       this.saveFile.set("pack", "default");
       this.saveFile.set("dbVers", 1);
       this.saveFile.set("found", {"default": ["Air", "Earth", "Water", "Fire"]});
+      this.saveFile.set("kind", "likes");
     }
     this.pack = this.saveFile.get("pack", "default");
     ui.status("Initializing cache", 0);

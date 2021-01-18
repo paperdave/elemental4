@@ -1,4 +1,3 @@
-import { resolve } from "path";
 import { ElementalLoadingUi, OptionsItem } from "../../elem";
 import { Nv7SingleAPI } from "./nv7single";
 import { PackData, PackInfo } from "./types";

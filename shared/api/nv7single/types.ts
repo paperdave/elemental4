@@ -18,3 +18,10 @@ export class PackData {
   data: string
   uid: string
 }
+
+export class PackItem {
+  title: string
+  description: string
+  id: string
+  uid: string
+}

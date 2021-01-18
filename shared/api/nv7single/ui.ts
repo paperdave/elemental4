@@ -14,7 +14,7 @@ export function createOptions(api: Nv7SingleAPI): OptionsSection[] {
     },
     { 
       title: "Available Packs",
-      desc: "These are packs people have uploaded:",
+      desc: "A list of packs that people have uploaded!",
       items: listitems,
     }
   ];
