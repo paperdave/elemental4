@@ -68,21 +68,24 @@ export function  packUI(api: Nv7SingleAPI): OptionsItem[] {
       }
     }
   ];
+  let choices = [
+    {
+      label: "Select",
+      id: "select",
+    }
+  ];
+  if (api.hasWifi) {
+    choices.splice(0, 0, {
+      label: "Upload",
+      id: "upload",
+    })
+  }
   for (let i = 0; i < packs.length; i++) {
     items.push({
       type: "listItem",
       label: packs[i].description,
       title: packs[i].title,
-      choices: [
-        {
-          label: "Upload",
-          id: "upload",
-        },
-        {
-          label: "Select",
-          id: "select",
-        }
-      ],
+      choices: choices,
       onChange: async (id: string) => {
         if (id == "select") {
           api.saveFile.set("pack", packs[i].id);
