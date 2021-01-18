@@ -10,3 +10,11 @@ export class PackInfo {
   description: string
   id: string
 }
+
+export class PackData {
+  id: string
+  title: string
+  description: string
+  data: string
+  uid: string
+}
