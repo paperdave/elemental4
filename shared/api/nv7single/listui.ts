@@ -1,6 +1,6 @@
 import { ElementalLoadingUi, OptionsItem } from "../../elem";
 import { Nv7SingleAPI } from "./nv7single";
-import { PackInfo, PackItem } from "./types";
+import { PackInfo } from "./types";
 
 export function  listUI(api: Nv7SingleAPI): OptionsItem[] {
   let items: OptionsItem[] = [];

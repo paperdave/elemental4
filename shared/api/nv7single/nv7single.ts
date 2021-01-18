@@ -6,7 +6,7 @@ import { createElem } from './suggestions';
 import { createOptions } from './ui';
 import { login } from './login';
 import { initListUI } from "./listui";
-import { PackInfo, PackItem } from "./types";
+import { PackItem } from "./types";
 
 export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, OptionsMenuAPI, ServerSavefileAPI {
   public pack: string;
