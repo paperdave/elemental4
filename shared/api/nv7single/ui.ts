@@ -89,8 +89,18 @@ export function createOptions(api: Nv7SingleAPI): OptionsSection[] {
           api.pack = packs[i].id;
           await api.ui.reloadSelf();
         } else if (id == "upload") {
-          let vals = await api.cache.getAll(packs[i].id);
-          console.log(JSON.stringify(vals));
+          let output = JSON.stringify(await api.cache.getAll(packs[i].id));
+          
+          var blob = new Blob([output], { type: "application/json" });
+          var a = document.createElement('a');
+          a.download = "export.json";
+          a.href = URL.createObjectURL(blob);
+          a.dataset.downloadurl = ["application/json", a.download, a.href].join(':');
+          a.style.display = "none";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
         }
       }
     })
