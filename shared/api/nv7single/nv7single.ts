@@ -14,10 +14,11 @@ export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dyn
   public ui: ElementalRuntimeUI;
   public saveFile: SaveFileAPI;
   public uid: string;
-  public prefix: string = "https://api.nv7haven.tk/";
+  public prefix: string;
   public items: PackItem[];
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
+    this.prefix = this.config.prefix;
     await login(this, ui);
     await initListUI(this, ui);
     ui.status("Loading packs", 0);
