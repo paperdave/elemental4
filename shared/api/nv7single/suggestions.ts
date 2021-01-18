@@ -13,7 +13,7 @@ export async function createElem(api: Nv7SingleAPI, sugg: SuggestionRequest<"dyn
   }
   var elem: Element = {
     name: sugg.text,
-    color: sugg.color.base + "_" + sugg.color.lightness + "_" + sugg.color.saturation,
+    color: sugg.color.base + "_" + sugg.color.saturation + "_" + sugg.color.lightness,
     comment: comment,
     parents: [elem1, elem2],
   }

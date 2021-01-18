@@ -28,7 +28,7 @@ export const builtInThirdPartyServers = [
   // 'https://dev.elemental5.net/api',// cannot suggest, uses a very different system, server too unstable to default
   // 'https://e4api.ledomsoft.com',   // api isn't written
   'https://nv7haven.tk',              // api is working
-  'https://nv7haven.tk/elemental_single.json',
+  'https://nv7haven.tk/single',
 ];
 export const allBuiltInServers = [
   ...builtInOfficialServers,
