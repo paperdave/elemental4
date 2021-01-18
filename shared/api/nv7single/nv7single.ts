@@ -4,14 +4,18 @@ import { getElem, getCombination } from "./elements";
 import Color from 'color';
 import { createElem } from './suggestions';
 import { createOptions } from './ui';
+import { login } from './login';
 
 export class Nv7SingleAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, OptionsMenuAPI, ServerSavefileAPI {
   public pack: string;
   public cache: Cache;
   public ui: ElementalRuntimeUI;
   public saveFile: SaveFileAPI;
+  public uid: string;
+  public prefix: string = "https://api.nv7haven.tk/";
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
+    await login(this, ui);
     ui.status("Loading packs", 0);
     if (this.saveFile.get("packs", "default") == "default") {
       this.saveFile.set("packs", [{title: "Default", description: "The default pack.", id: "default"}]);
