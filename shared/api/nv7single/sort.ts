@@ -25,8 +25,9 @@ export function sortUI(api: Nv7SingleAPI): OptionsItem[] {
       },
     ],
     defaultValue: api.saveFile.get("kind"),
-    onChange: (id: string) => {
-      console.log(id);
+    onChange: async (id: string) => {
+      api.saveFile.set("kind", id);
+      await api.ui.reloadSelf();
     }
   })
   return items;
