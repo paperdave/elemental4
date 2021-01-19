@@ -116,8 +116,15 @@ func main() {
 	rBase := regexp.MustCompile(`\n([a-zA-Z0-9_]+) \((.+)\)`)
 	bases := rBase.FindAllStringSubmatch(data, -1)
 	for _, val := range bases {
-		ev, _ := edat[val[1]].(elem)
+		ev, exists := edat[val[1]].(elem)
+		if !exists {
+			ev = elem{
+				Name:    val[1],
+				Comment: "",
+			}
+		}
 		ev.Color = eMap[val[2]]
+		ev.Name = val[1]
 		edat[val[1]] = ev
 	}
 
