@@ -1,7 +1,5 @@
 package main
 
-// Converts packs - change file and outFile for changing input and output
-
 import (
 	"encoding/json"
 	"fmt"
@@ -44,12 +42,15 @@ func calcColor(input string) string {
 	var index int
 	for i, val := range hMap {
 		if val.h > h {
-			index = i - 1
+			index = i
+			if val.h-h > hMap[i-1].h-h {
+				index--
+			}
 			break
 		}
 	}
 	base := hMap[index].col
-	return fmt.Sprintf("%s_%0.2f_%0.2f", base, s, l)
+	return fmt.Sprintf("%s_%0.2f_%0.2f", base, s*2-1, l*2-1)
 }
 
 func main() {
