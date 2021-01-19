@@ -19,10 +19,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public cache: Cache;
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
-		this.prefix = this.baseUrl;
-		if (this.baseUrl.includes("https://nv7haven.tk")) {
-			this.prefix = "https://api.nv7haven.tk/";
-		}
+		this.prefix = this.config.prefix;
 		this.cache = new Cache();
 		await this.cache.init();
 		return login(this, ui);

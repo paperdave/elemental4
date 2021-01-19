@@ -366,6 +366,7 @@ export interface OptionTypes {
   checkboxGroup: string[];
   button: undefined;
   label: undefined;
+  listItem: string;
 }
 export interface OptionChoice {
   label: string;
@@ -376,6 +377,9 @@ export interface OptionsItem<Type extends keyof OptionTypes = keyof OptionTypes>
   type: Type;
 
   label: string;
+  
+  /** Title is in strong in a listItem */
+  title?: string;
 
   /** If your api needs to restart when changing this option, set to true. Restart happens after
    * closing the options menu or pressing Apply. Not immediately.
