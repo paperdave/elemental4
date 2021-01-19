@@ -133,6 +133,10 @@ export function  packUI(api: Nv7SingleAPI): OptionsItem[] {
   ];
   let choices = [
     {
+      label: "Edit",
+      id: "edit",
+    },
+    {
       label: "Export",
       id: "export",
     },
@@ -223,6 +227,34 @@ export function  packUI(api: Nv7SingleAPI): OptionsItem[] {
             ui.status("Downloading Pack", 1);
             document.body.removeChild(element); 
           });
+        } else if (id == "edit") {
+          let title = await api.ui.prompt({
+            title: "Pack Name",
+            text: "Enter the name of the pack below!"
+          });
+          let desc = await api.ui.prompt({
+            title: "Pack Description",
+            text: "Enter the description of the pack below!"
+          });
+          if (title == "" || desc == "") {
+            return;
+          }
+          let info: PackInfo = {
+            title: title,
+            description: desc,
+            id: encodeURIComponent(title.toLowerCase()),
+          }
+          if (packs.includes(info)) {
+            await api.ui.alert({
+              title: "Pack Already Exists",
+              text: "That pack already exists!",
+            })
+            return;
+          }
+          packs[i].title = info.title;
+          packs[i].description = info.description;
+          api.saveFile.set("packs", packs);
+          await api.ui.reloadSelf();
         }
       }
     })
