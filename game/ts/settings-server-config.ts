@@ -70,6 +70,7 @@ const optionsItemTypeMap: Record<keyof OptionTypes, Function> = {
   checkboxGroup: OptionCheckboxGroupDOM,
   button: OptionButtonDOM,
   label: OptionLabelDOM,
+  listItem: OptionListItemDOM,
 }
 export function OptionsItemDOM(v: SimpleState<any>, item: OptionsItem) {
   return optionsItemTypeMap[item.type](v, item);
@@ -104,7 +105,27 @@ export function OptionSwitchDOM(v: SimpleState<boolean>, item: OptionsItem<'swit
   return document.createTextNode(JSON.stringify(item));
 }
 export function OptionSelectDOM(v: SimpleState<string>, item: OptionsItem<'select'>) {
-  return document.createTextNode(JSON.stringify(item));
+  const select = document.createElement('select');
+  const label = document.createElement('option');
+  label.innerHTML = escapeHTML(item.label);
+  label.disabled = true;
+  label.value = "default";
+  select.appendChild(label);
+  for (let i = 0; i < item.choices.length; i++) {
+    const option = document.createElement('option');
+    option.innerHTML = escapeHTML(item.choices[i].label);
+    option.value = item.choices[i].id;
+    select.appendChild(option);
+  }
+  if (!item.defaultValue) {
+    select.value = "default";
+  } else {
+    select.value = item.defaultValue;
+  }
+  select.onchange = (e) => {
+    item.onChange(select.value);
+  }
+  return select;
 }
 export function OptionCheckboxGroupDOM(v: SimpleState<string[]>, item: OptionsItem<'checkboxGroup'>) {
   return document.createTextNode(JSON.stringify(item));
@@ -119,4 +140,38 @@ export function OptionLabelDOM(v: SimpleState<undefined>, item: OptionsItem<'lab
   const p = document.createElement('p');
   p.innerHTML = escapeHTML(item.label);
   return p;
+}
+export function OptionListItemDOM(v: SimpleState<string[]>, item: OptionsItem<'listItem'>) {
+  const div = document.createElement('div');
+  div.classList.add("theme-item");
+
+  const info = document.createElement('div');
+  info.classList.add("theme-info");
+
+  const title = document.createElement('div');
+  title.classList.add("theme-title")
+  const titleText = document.createElement('strong');
+  titleText.innerHTML = escapeHTML(item.title);
+  title.appendChild(titleText);
+
+  const desc = document.createElement('div');
+  desc.classList.add("theme-description");
+  desc.innerHTML = escapeHTML(item.label);
+
+  info.appendChild(title);
+  info.appendChild(desc);
+  div.appendChild(info); 
+
+  for (let i = 0; i < item.choices.length; i++) {
+    const button = document.createElement("button");
+    button.classList.add("huge");
+    button.innerHTML = escapeHTML(item.choices[i].label);
+    if (i != item.choices.length-1) {
+      button.style.marginRight = "5px";
+    }
+    button.onclick = function() { item.onChange(item.choices[i].id) };
+    div.appendChild(button);
+  }
+
+  return div;
 }

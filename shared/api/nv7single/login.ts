@@ -1,7 +1,7 @@
 import { ElementalLoadingUi} from "../../elem";
-import {NV7ElementalAPI} from "./nv7";
+import { Nv7SingleAPI } from "./nv7single";
 
-export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Promise<boolean> {
+export async function login(api: Nv7SingleAPI, ui?: ElementalLoadingUi): Promise<boolean> {
   var email = api.saveFile.get("email", "default")
   var password = api.saveFile.get("password", "default")
   if (email == "default" || password == "default") {
@@ -14,30 +14,28 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           {
             id: "email",
             type: "email",
-            placholder: "example@example.com",
-            required: true,
+            placeholder: "example@example.com",
           },
           {
             id: "password",
             type: "password",
-            required: true,
           }
         ],
         buttons: [
           {
-            id: 1,
+            id: "login",
             label: (!registering && "Log In") || (registering && "Register"),
           },
           {
-            id: 0,
+            id: "switch",
             label: (!registering && "Register") || (registering && "Log In"),
           },
           !registering && {
-            id: -2,
+            id: "anonymous",
             label: "Anonymous"
           },
           {
-            id: -1,
+            id: "cancel",
             label: "Cancel",
           }
         ].filter(Boolean)
@@ -45,7 +43,7 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
 
       ui.status("Processing Login Info", 0);
 
-      if (creds["button"] == 1) {
+      if (creds["button"] == "login") {
         ui.status("Authenticating", 0);
         if (registering) {
           resp = await fetch(api.prefix + "create_user/" + encodeURIComponent(creds["email"]) + "/" + encodeURIComponent(creds["password"]))
@@ -68,13 +66,12 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           await api.ui.alert({
             "text": data.data,
             "title": "Error",
-            "button": "Ok",
           });
           return false;
         }
-      } else if (creds["button"] == 0) {
+      } else if (creds["button"] == "switch") {
         registering = !registering;
-      } else if (creds["button"] == -2) {
+      } else if (creds["button"] == "anonymous") {
         ui.status("Generating username", 0)
         var resp = await fetch(api.prefix + "new_anonymous_user")
         ui.status("Generating username", 0.5)
@@ -85,7 +82,6 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           await api.ui.alert({
             "text": response.data,
             "title": "Error",
-            "button": "Ok",
           });
           return false;
         }
@@ -106,11 +102,10 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
           await api.ui.alert({
             "text": data.data,
             "title": "Error",
-            "button": "Ok",
           });
           return false;
         }
-      } else if (creds["button"] == -1) {
+      } else if (creds["button"] == "cancel") {
         return false;
       }
     }
@@ -129,10 +124,9 @@ export async function login(api: NV7ElementalAPI, ui?: ElementalLoadingUi): Prom
       await api.ui.alert({
         "text": data.data,
         "title": "Error",
-        "button": "Ok",
       });
-      await api.saveFile.set("email", "default");
-      await api.saveFile.set("password", "default");
+      api.saveFile.set("email", "default");
+      api.saveFile.set("password", "default");
       await api.ui.reloadSelf();
     }
   }
