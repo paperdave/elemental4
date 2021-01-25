@@ -1,3 +1,11 @@
+## Elemental 4.3.1 (2021-01-25)
+
+## Engine
+- Fix the unsupported browser message
+
+## Elemental 4 Server
+- Log voting errors
+
 ## Elemental 4.3.0 (2021-01-02)
 
 ## Engine

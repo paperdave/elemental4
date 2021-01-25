@@ -348,6 +348,8 @@ async function logicSuggestElement2({ recipe, suggest, userId, userName, ip, isU
       }
     }
   } catch (error) {
+    console.error('Voting Error');
+    console.error(error);
     return {
       result: 'internal-error',
     }
