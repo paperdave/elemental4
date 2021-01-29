@@ -2,11 +2,12 @@ import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI,
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
-import {getElem, getCombination} from "./elements";
+import {getElem, getCombination, downloadElems} from "./elements";
 import {getSuggests, downSuggestion, newSuggestion} from "./suggestions";
 import {getRecents, waitForNew} from "./recents";
 import { IStore } from "../../store";
 import { Cache } from "./cache";
+import {Element} from "./types";
 
 export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI {
 	public uid: string
@@ -17,12 +18,15 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 	public store: IStore;
 	public prefix: string;
 	public cache: Cache;
+	public elemCache: Record<string, Element> = {};
 
   async open(ui?: ElementalLoadingUi): Promise<boolean> {
 		this.prefix = this.config.prefix;
 		this.cache = new Cache();
 		await this.cache.init();
-		return login(this, ui);
+		await login(this, ui);
+		await downloadElems(this, ui);
+		return true;
   }
   async close(): Promise<void> {
 		this.ref.close();
