@@ -45,14 +45,21 @@ export async function getCombination(api: NV7ElementalAPI, elem1: string, elem2:
 }
 
 export async function downloadElems(api: NV7ElementalAPI, ui: ElementalLoadingUi) {
+  ui.status("Reading Elements", 0);
+  var i: any;
+  let elems = await api.cache.getAllElements();
+  ui.status("Reading Elements", 0.5);
+  for (i in elems) {
+    api.elemCache[elems[i].name] = elems[i];
+    ui.status("Reading Elements", 0.5+(i+1/elems.length/2));
+  }
   ui.status("Loading Savefile", 0)
   let found = await getFound(api);
-  ui.status("Reading Elements", 0)
+  ui.status("Downloading Elements", 0);
   var id: string;
-  var i: any;
   for (i in found) {
     id = found[i];
-    ui.status("Reading Elements", i/found.length);
+    ui.status("Downloading Elements", i/found.length);
     if (!(id in api.elemCache)) {
       var elemData: Element = await api.cache.get(id);
       if (!elemData) {
