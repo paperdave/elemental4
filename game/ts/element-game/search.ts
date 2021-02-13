@@ -28,13 +28,19 @@ export async function startSearch() {
 
       if (ev.key == "Escape" && isSearching) {
         isSearching = false;
-
+        
+        var ui = createLoadingUi();
+        ui.show();
+        ui.status("Loading Elements", 0);
         ClearElementGameUi();
         const ownedElements = await getOwnedElements(es);
+        ui.status("Loading Elements", 0.1);
         const elementsToAdd = await Promise.all(ownedElements.map(id => es.getElement(id)));
         for (var j = 0; j < elementsToAdd.length; j++) {
           addElementToGame(elementsToAdd[j], null, true);
+          ui.status("Loading Elements", 0.1+((j+1)/elementsToAdd.length * 0.9));
         }
+        ui.dispose();
 
         hideInput();
       } else if (isSearching) {

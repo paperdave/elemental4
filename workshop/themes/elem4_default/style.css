@@ -45,12 +45,12 @@ body[data-element-scale="large"] { --element-scale: 1.35; }
   to{transform:translateY(0)}
 }
 @keyframes search-bar-slide-in{
-  from{transform:translateY(-30px); right: 100%;}
+  from{transform:translateY(-60px); right: 100%;}
   to{transform:translateY(0); right: 350px;}
 }
 @keyframes search-bar-slide-out {
   from{transform:translateY(0); right: 350px;}
-  to{transform:translateY(-30px); right: 100%;}
+  to{transform:translateY(-60px); right: 100%;}
 }
 @keyframes element-restock {
   0% {
