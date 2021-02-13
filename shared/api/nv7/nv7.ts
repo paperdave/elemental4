@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, OptionsSection, OptionTypes } from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, OptionsSection, OptionTypes, ElementSearchAPI } from "../../elem";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
@@ -9,7 +9,7 @@ import { IStore } from "../../store";
 import { Cache } from "./cache";
 import {Element} from "./types";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI {
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI, ElementSearchAPI {
 	public uid: string
 	public saveFile;
 	public ui;
@@ -88,6 +88,19 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 
 	async waitForNewRecent(): Promise<void> {
 		return waitForNew(this);
+	}
+
+	async searchForElement(query: string): Promise<string[]> {
+		if (query.length == 0) {
+			return [];
+		}
+		var results = [];
+		Object.keys(this.elemCache).forEach((name) => {
+			if (name.toLowerCase().startsWith(query)) {
+				results.push(name);
+			}
+		})
+		return results;
 	}
 
 	lookupCustomPaletteColor(basePalette: Record<ElementalColorPalette, ThemedPaletteEntry>, string: string): Color {
