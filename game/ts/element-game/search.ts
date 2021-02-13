@@ -23,6 +23,7 @@ export async function startSearch() {
     document.addEventListener("keyup", async (ev: KeyboardEvent) => {
       if (ev.key.length == 1 && !isSearching) {
         isSearching = true;
+        (searchBar.children[0] as HTMLInputElement).value = ev.key;
         showInput();
       }
 
@@ -57,7 +58,6 @@ export async function startSearch() {
 function showInput() {
   searchBar.style.animationName = "search-bar-slide-in";
   searchBar.style.removeProperty("display"); // Show
-  (searchBar.children[0] as HTMLInputElement).value = "";
   (searchBar.children[0] as HTMLInputElement).focus();
 }
 
