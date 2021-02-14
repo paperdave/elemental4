@@ -85,51 +85,7 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, du
         
         const api = getAPI('suggestion');
         if (api) {
-          const [base, saturation, lightness] = randomOf([element, element2]).display.color.split('_');
-          
-          setSuggestResult({
-            color: {
-              base: base as any,
-              lightness: parseFloat(lightness),
-              saturation: parseFloat(saturation),
-            },
-            text:'New Element'
-          }, element, element2)
-
-          suggestLeftElem.innerHTML = escapeHTML(element.display.text);
-          suggestLeftElem.className = `elem ${getClassFromDisplay(element.display)}`;
-          suggestRightElem.innerHTML = escapeHTML(element2.display.text);
-          suggestRightElem.className = `elem ${getClassFromDisplay(element2.display)}`;
-
-          document.querySelector('[data-suggest-prompt="left"]').innerHTML = escapeHTML(element.display.text);
-          document.querySelector('[data-suggest-prompt="right"]').innerHTML = escapeHTML(element2.display.text);
-
-          suggestResultElem.style.display = '';
-
-          updateSuggestion();
-
-          suggestContainer.classList.add('animate-prompt');
-          suggestContainer.style.width = '';
-          suggestContainer.style.width = (suggestContainer.offsetWidth+5) + 'px'
-
-          suggestOtherHeader.classList.add('no');
-          suggestOther1Elem.classList.add('no');
-          suggestOther1Downvote.classList.add('no');
-          suggestOther2Elem.classList.add('no');
-          suggestOther2Downvote.classList.add('no');
-          suggestOther3Elem.classList.add('no');
-          suggestOther3Downvote.classList.add('no');
-
-          suggestHint.classList.add('animate-in');
-          if (!getConfigBoolean('tutorial2', false)) {
-            setTutorial2Visible(true);
-            document.querySelector('#tutorial2').classList.add('tutorial-visible');
-            (document.querySelector('#tutorial2') as HTMLElement).style.display = 'block';
-          }
-          if (getConfigBoolean('always-suggest', false)) {
-            suggestContainer.style.width = '486px'
-            document.querySelector('.suggest-label').dispatchEvent(new MouseEvent('click'));
-          }
+          showSuggestion(element, element2);
         }
       }
     } else {
@@ -301,5 +257,53 @@ export function addElementToGame(element: Elem, sourceLocation?: HTMLElement, du
     elementPopAnimation(element, sourceLocation, dom, true).then(() => {
       dom.style.opacity = '1';
     })
+  }
+}
+
+export function showSuggestion(element: Elem, element2: Elem) {
+  const [base, saturation, lightness] = randomOf([element, element2]).display.color.split('_');
+          
+  setSuggestResult({
+    color: {
+      base: base as any,
+      lightness: parseFloat(lightness),
+      saturation: parseFloat(saturation),
+    },
+    text:'New Element'
+  }, element, element2)
+
+  suggestLeftElem.innerHTML = escapeHTML(element.display.text);
+  suggestLeftElem.className = `elem ${getClassFromDisplay(element.display)}`;
+  suggestRightElem.innerHTML = escapeHTML(element2.display.text);
+  suggestRightElem.className = `elem ${getClassFromDisplay(element2.display)}`;
+
+  document.querySelector('[data-suggest-prompt="left"]').innerHTML = escapeHTML(element.display.text);
+  document.querySelector('[data-suggest-prompt="right"]').innerHTML = escapeHTML(element2.display.text);
+
+  suggestResultElem.style.display = '';
+
+  updateSuggestion();
+
+  suggestContainer.classList.add('animate-prompt');
+  suggestContainer.style.width = '';
+  suggestContainer.style.width = (suggestContainer.offsetWidth+5) + 'px'
+
+  suggestOtherHeader.classList.add('no');
+  suggestOther1Elem.classList.add('no');
+  suggestOther1Downvote.classList.add('no');
+  suggestOther2Elem.classList.add('no');
+  suggestOther2Downvote.classList.add('no');
+  suggestOther3Elem.classList.add('no');
+  suggestOther3Downvote.classList.add('no');
+
+  suggestHint.classList.add('animate-in');
+  if (!getConfigBoolean('tutorial2', false)) {
+    setTutorial2Visible(true);
+    document.querySelector('#tutorial2').classList.add('tutorial-visible');
+    (document.querySelector('#tutorial2') as HTMLElement).style.display = 'block';
+  }
+  if (getConfigBoolean('always-suggest', false)) {
+    suggestContainer.style.width = '486px'
+    document.querySelector('.suggest-label').dispatchEvent(new MouseEvent('click'));
   }
 }

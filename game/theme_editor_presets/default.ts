@@ -34,6 +34,7 @@ const style = `:root {
   --background-button: var(--primary);
   --background-button-discord: #7289DA;
   --background-button-source: #7eda72;
+  --background-button-random: #ff9e7a;
 
   --text-info: var(--text-main);
   --background-info:var(--background-main);

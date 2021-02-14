@@ -450,6 +450,11 @@ export interface ElementSearchAPI {
   searchForElement(query: string): Promise<string[]>; // Returns the ids of the results
 }
 
+export interface RandomSuggestionsAPI {
+  randomLonelySuggestion(): Promise<string[]>; // Return 2 elements to combine
+  upAndComingSuggestion(): Promise<string[]>; // Return 2 elements to combine
+}
+
 export interface ElementalSubAPIs {
   suggestion: SuggestionAPI<any>;
   customPalette: CustomPaletteAPI;
@@ -458,6 +463,7 @@ export interface ElementalSubAPIs {
   recentCombinations: RecentCombinationsAPI;
   hint: HintAPI;
   search: ElementSearchAPI;
+  randomSuggestions: RandomSuggestionsAPI;
 }
 
 const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
@@ -468,6 +474,7 @@ const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
   recentCombinations: ['getRecentCombinations'],
   hint: ['getHint'],
   search: ['searchForElement'],
+  randomSuggestions: ['randomLonelySuggestion', 'upAndComingSuggestion'],
 }
 
 export function getSubAPI(api: ElementalBaseAPI): ElementalBaseAPI
