@@ -17,7 +17,7 @@ export async function startSearch() {
   searchBar = document.querySelector(".search");
   searchBar.style.display = "none"; // Hide
 
-  const es = getAPI("search");
+  const es = getAPI();
   var isSearching = false;
   if (es) {
     document.addEventListener("keyup", async (ev: KeyboardEvent) => {
@@ -45,9 +45,21 @@ export async function startSearch() {
 
         hideInput();
       } else if (isSearching) {
-        var ids = await es.searchForElement((searchBar.children[0] as HTMLInputElement).value);
+        var api = getAPI("search");
+        var ids = [];
+        if (api) {
+          ids = await api.searchForElement((searchBar.children[0] as HTMLInputElement).value);
+        } else {
+          var query = (searchBar.children[0] as HTMLInputElement).value;
+          var owned = await getOwnedElements(es);
+          for (var i = 0; i < owned.length; i++) {
+            if (owned[i].startsWith(query)) {
+              ids.push(owned[i]);
+            }
+          }
+        }
         ClearElementGameUi();
-        for (var i = 0; i < ids.length; i++) {
+        for (i = 0; i < ids.length; i++) {
           addElementToGame(await es.getElement(ids[i]), null);
         }
       }
