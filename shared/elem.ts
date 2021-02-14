@@ -296,22 +296,22 @@ export abstract class ElementalBaseAPI<Config extends ElementalConfig = Elementa
   }
   
   /** Called to setup everything. */
-  abstract async open(ui?: ElementalLoadingUi): Promise<boolean>;
+  abstract open(ui?: ElementalLoadingUi): Promise<boolean>;
 
   /** Called to stop everything. Most cases you probably wont have anything to stop. */
-  abstract async close(): Promise<void>;
+  abstract close(): Promise<void>;
 
   /** Get list of elements you start with. */
-  abstract async getStartingInventory(): Promise<string[]>;
+  abstract getStartingInventory(): Promise<string[]>;
 
   /** Get various stats. */
-  abstract async getStats(): Promise<ServerStats>;
+  abstract getStats(): Promise<ServerStats>;
 
   /** Fetch element data. */
-  abstract async getElement(id: string): Promise<Elem>;
+  abstract getElement(id: string): Promise<Elem>;
 
   /** Fetch combination data. */
-  abstract async getCombo(ids: string[]): Promise<string[]>;
+  abstract getCombo(ids: string[]): Promise<string[]>;
 }
 
 export interface SuggestionColorInformation<Type extends SuggestionColorType> {
@@ -446,6 +446,15 @@ export interface ServerSavefileAPI {
   renameSaveFile(id: string, name: string): Promise<boolean>;
 }
 
+export interface ElementSearchAPI {
+  searchForElement(query: string): Promise<string[]>; // Returns the ids of the results
+}
+
+export interface RandomSuggestionsAPI {
+  randomLonelySuggestion(): Promise<string[]>; // Return 2 elements to combine
+  upAndComingSuggestion(): Promise<string[]>; // Return 2 elements to combine
+}
+
 export interface ElementalSubAPIs {
   suggestion: SuggestionAPI<any>;
   customPalette: CustomPaletteAPI;
@@ -453,6 +462,8 @@ export interface ElementalSubAPIs {
   serverSaveFile: ServerSavefileAPI;
   recentCombinations: RecentCombinationsAPI;
   hint: HintAPI;
+  search: ElementSearchAPI;
+  randomSuggestions: RandomSuggestionsAPI;
 }
 
 const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
@@ -462,6 +473,8 @@ const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
   serverSaveFile: ['getSaveFiles'],
   recentCombinations: ['getRecentCombinations'],
   hint: ['getHint'],
+  search: ['searchForElement'],
+  randomSuggestions: ['randomLonelySuggestion', 'upAndComingSuggestion'],
 }
 
 export function getSubAPI(api: ElementalBaseAPI): ElementalBaseAPI
