@@ -97,7 +97,7 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 		}
 		var results = [];
 		Object.keys(this.elemCache).forEach((name) => {
-			if (name.toLowerCase().startsWith(query)) {
+			if (name.toLowerCase().startsWith(query.toLowerCase())) {
 				results.push(name);
 			}
 		})

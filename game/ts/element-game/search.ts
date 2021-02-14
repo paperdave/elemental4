@@ -53,7 +53,8 @@ export async function startSearch() {
           var query = (searchBar.children[0] as HTMLInputElement).value;
           var owned = await getOwnedElements(es);
           for (var i = 0; i < owned.length; i++) {
-            if (owned[i].startsWith(query)) {
+            var elem = await es.getElement(owned[i]);
+            if (elem.display.text.toLowerCase().startsWith(query.toLowerCase())) {
               ids.push(owned[i]);
             }
           }
