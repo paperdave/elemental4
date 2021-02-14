@@ -21,7 +21,7 @@ export async function startSearch() {
   var isSearching = false;
   if (es) {
     document.addEventListener("keyup", async (ev: KeyboardEvent) => {
-      if (ev.key.length == 1 && !isSearching) {
+      if (ev.key.length == 1 && !isSearching && document.activeElement == document.body) {
         isSearching = true;
         (searchBar.children[0] as HTMLInputElement).value = ev.key;
         showInput();
