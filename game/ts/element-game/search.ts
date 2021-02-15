@@ -13,7 +13,7 @@ export async function startSearch() {
   const searchInput = document.querySelector("#search") as HTMLInputElement;
 
   document.addEventListener("keyup", (ev: KeyboardEvent) => {
-    if ((ev.key.length == 1 || ev.key === 'Backspace') && !ev.ctrlKey && !ev.altKey && document.activeElement !== searchInput) {
+    if ((ev.key.length == 1 || ev.key === 'Backspace') && !ev.ctrlKey && !ev.altKey && document.activeElement !== document.body && !document.querySelector('.dialog-open')) {
       ev.preventDefault();
       if (ev.key === 'Backspace') {
         searchInput.value = searchInput.value.slice(0, -1);
