@@ -1,3 +1,8 @@
+## Elemental 4.4.1 (2021-02-15)
+
+### i am stupid.
+- you can now type in the text fields
+
 ## Elemental 4.4.0 (2021-02-15)
 
 ## Engine
