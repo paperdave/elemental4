@@ -1,49 +1,41 @@
-let searchBar: HTMLDivElement;
+import { delay } from "../../../shared/shared";
 
 function filterVisibleElements(str: string = '') {
-  console.log(str);
   document.querySelectorAll('#element-game-root .elem')
     .forEach((elem: HTMLElement) => {
+      elem.classList.remove('restock');
       elem.style.display = elem.innerHTML.toLowerCase().includes(str) ? '' : 'none';
     });
 }
 
 export async function startSearch() {
-  searchBar = document.querySelector(".search");
-  searchBar.style.display = "none"; // Hide
+  const searchContainer = document.querySelector("#search-container") as HTMLDivElement;
+  const searchInput = document.querySelector("#search") as HTMLInputElement;
 
-  var isSearching = false;
-  document.addEventListener("keyup", async (ev: KeyboardEvent) => {
-    if (ev.key.length == 1 && !isSearching && document.activeElement == document.body) {
-      isSearching = true;
-      (searchBar.children[0] as HTMLInputElement).value = ev.key;
-      showInput();
+  document.addEventListener("keyup", (ev: KeyboardEvent) => {
+    if ((ev.key.length == 1 || ev.key === 'Backspace') && !ev.ctrlKey && !ev.altKey && document.activeElement !== searchInput) {
+      ev.preventDefault();
+      if (ev.key === 'Backspace') {
+        searchInput.value = searchInput.value.slice(0, -1);
+      } else {
+        searchInput.value += ev.key;
+      }
+      searchContainer.classList.add('animate-in');
+      searchInput.disabled = false;
+      searchInput.focus();
+      // delay to prevent a small lag spike
+      delay(10).then(() => filterVisibleElements(searchInput.value.toLowerCase()));
     }
-
-    if (ev.key == "Escape" && isSearching) {
-      isSearching = false;
-      filterVisibleElements()
-      hideInput();
-    } else if (isSearching) {
-      filterVisibleElements(searchBar.children[0].value.toLowerCase());
+  });
+  searchInput.addEventListener("input", (ev: KeyboardEvent) => {
+    filterVisibleElements(searchInput.value.toLowerCase());
+  });
+  document.addEventListener("keydown", (ev: KeyboardEvent) => {
+    if (ev.key === "Escape" && !searchInput.disabled) {
+      searchInput.value = '';
+      searchInput.disabled = true;
+      searchContainer.classList.remove('animate-in');
+      filterVisibleElements();
     }
-  })
-}
-
-function showInput() {
-  searchBar.style.animationName = "search-bar-slide-in";
-  searchBar.style.removeProperty("display"); // Show
-  (searchBar.children[0] as HTMLInputElement).focus();
-}
-
-async function hideInput() {
-  searchBar.style.animationName = "search-bar-slide-out";
-
-  var dupl: HTMLDivElement = searchBar.cloneNode(true) as HTMLDivElement;
-  searchBar.before(dupl);
-  searchBar.remove();
-  searchBar = dupl;
-  setTimeout(() => {
-    searchBar.style.display = "none"; // Hide
-  }, 400);
+  });
 }
