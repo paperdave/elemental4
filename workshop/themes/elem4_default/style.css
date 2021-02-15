@@ -706,8 +706,8 @@ textarea.elem {
 }
 #info {
   position: fixed;
-  background: white;
-  border: 1px solid black;
+  background: var(--background-info);
+  border: 1px solid var(--border-info);
   display: flex;
 }
 #info .left {
@@ -728,6 +728,8 @@ textarea.elem {
   text-align: center;
   margin: 4px 7.5px;
   border-radius: 5px;
+  color: black;
+  background-color: white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 #info canvas {
@@ -1449,7 +1451,8 @@ button.secondary {
 #search {
   padding: 8px;
   width: 100%;
-  border: 1px solid white;
+  border: 1px solid var(--background-element-game);
+  background-color: var(--background-element-game);
   height: 48px;
   font-size: 18px;
   border-radius: 0;
