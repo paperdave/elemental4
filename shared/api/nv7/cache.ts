@@ -75,4 +75,19 @@ export class Cache  {
       };
     });
   }
+
+  async getAllElements(): Promise<Element[]> {
+    var transaction: IDBTransaction = this.db.transaction(["Elements"], "readwrite");
+    return new Promise<Element[]>((resolve, reject) => {
+      transaction.onerror = function(event) {
+        reject(event.target);
+      };
+
+      var objectStore: IDBObjectStore = transaction.objectStore("Elements");
+      var request = objectStore.getAll();
+      request.onsuccess = function(event: any) {
+        resolve(request.result);
+      };
+    });
+  }
 }

@@ -21,7 +21,6 @@ import { InternalStressTestAPI } from "../../shared/api/internal/internal-stress
 import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors";
 import { BlankExampleAPI } from "../../shared/api/blank";
 import { disposeServerConfigGui, reRenderServerConfigGui } from "./settings-server-config";
-import { Store } from "../../shared/store";
 import { ChunkedStore } from "../../shared/store-chunk";
 
 // @ts-ignore

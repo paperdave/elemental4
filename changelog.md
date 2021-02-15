@@ -1,3 +1,9 @@
+## Elemental 4.4.0 (2021-02-15)
+
+## Engine
+- Supports element searching
+- Fix some css bugs causing dark themes to break menus (white on white text)
+
 ## Elemental 4.3.1 (2021-01-25)
 
 ## Engine

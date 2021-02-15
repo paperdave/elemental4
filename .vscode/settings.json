@@ -24,5 +24,6 @@
         "savefile",
         "vari"
     ],
-    "workspace.isHidden": false
+    "workspace.isHidden": false,
+    "cSpell.enabled": true
 }

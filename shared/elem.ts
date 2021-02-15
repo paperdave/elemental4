@@ -296,22 +296,22 @@ export abstract class ElementalBaseAPI<Config extends ElementalConfig = Elementa
   }
   
   /** Called to setup everything. */
-  abstract async open(ui?: ElementalLoadingUi): Promise<boolean>;
+  abstract open(ui?: ElementalLoadingUi): Promise<boolean>;
 
   /** Called to stop everything. Most cases you probably wont have anything to stop. */
-  abstract async close(): Promise<void>;
+  abstract close(): Promise<void>;
 
   /** Get list of elements you start with. */
-  abstract async getStartingInventory(): Promise<string[]>;
+  abstract getStartingInventory(): Promise<string[]>;
 
   /** Get various stats. */
-  abstract async getStats(): Promise<ServerStats>;
+  abstract getStats(): Promise<ServerStats>;
 
   /** Fetch element data. */
-  abstract async getElement(id: string): Promise<Elem>;
+  abstract getElement(id: string): Promise<Elem>;
 
   /** Fetch combination data. */
-  abstract async getCombo(ids: string[]): Promise<string[]>;
+  abstract getCombo(ids: string[]): Promise<string[]>;
 }
 
 export interface SuggestionColorInformation<Type extends SuggestionColorType> {

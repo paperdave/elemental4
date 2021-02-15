@@ -11,6 +11,7 @@ import { IsNullAPI } from "../../shared/api/internal/internal-null";
 import { updateSuggestion } from "./utils";
 import { getElementMargin } from "./utils";
 import { closeSuggestionMenu, openSuggestionMenu, shareSuggestion, submitSuggestion } from "./element-game/listeners";
+import { startSearch } from "./element-game/search";
 
 export let elementContainer: HTMLElement;
 export let infoContainer: HTMLElement;
@@ -247,7 +248,9 @@ export function InitElementGameUi() {
       infoContainer.querySelector('.info-section-' + tab).classList.add('selected');
       infoContainer.querySelector('[data-info-tab="'  + tab + '"]').classList.add('selected');
     })
-  })
+  });
+
+  startSearch();
 }
 export function ClearElementGameUi() {
   elementContainer.querySelectorAll('[data-category],h3').forEach((x) => {
