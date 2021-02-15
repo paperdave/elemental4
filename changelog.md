@@ -1,7 +1,5 @@
 ## Elemental 4.4.0 (2021-02-15)
 
-The Elemental 4 Main server currently does not have a way to inspect
-
 ## Engine
 - Supports element searching
 - Fix some css bugs causing dark themes to break menus (white on white text)
