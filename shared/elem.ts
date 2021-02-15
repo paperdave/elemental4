@@ -446,11 +446,6 @@ export interface ServerSavefileAPI {
   renameSaveFile(id: string, name: string): Promise<boolean>;
 }
 
-export interface RandomSuggestionsAPI {
-  randomLonelySuggestion(): Promise<string[]>; // Return 2 elements to combine
-  upAndComingSuggestion(): Promise<string[]>; // Return 2 elements to combine
-}
-
 export interface ElementalSubAPIs {
   suggestion: SuggestionAPI<any>;
   customPalette: CustomPaletteAPI;
@@ -458,7 +453,6 @@ export interface ElementalSubAPIs {
   serverSaveFile: ServerSavefileAPI;
   recentCombinations: RecentCombinationsAPI;
   hint: HintAPI;
-  randomSuggestions: RandomSuggestionsAPI;
 }
 
 const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
@@ -468,7 +462,6 @@ const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
   serverSaveFile: ['getSaveFiles'],
   recentCombinations: ['getRecentCombinations'],
   hint: ['getHint'],
-  randomSuggestions: ['randomLonelySuggestion', 'upAndComingSuggestion'],
 }
 
 export function getSubAPI(api: ElementalBaseAPI): ElementalBaseAPI
