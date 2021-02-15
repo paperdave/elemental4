@@ -1,71 +1,33 @@
-import { addElementToGame } from "../add-element";
-import { getAPI } from "../api";
-import { getOwnedElements } from "../savefile";
-import { ClearElementGameUi } from "../element-game";
-import { createLoadingUi } from "../loading";
-
-function scrollElementIntoView(id: string) {
-  const element = document.querySelector(`[data-element=${id}]`)
-  element.scrollIntoView();
-}
-
 let searchBar: HTMLDivElement;
 
-// To clear UI - do ClearElementGameUi from ../element-game
-// To add elements back - Look into the code in onSaveFileLoad in ../api.ts
+function filterVisibleElements(str: string = '') {
+  console.log(str);
+  document.querySelectorAll('#element-game-root .elem')
+    .forEach((elem: HTMLElement) => {
+      elem.style.display = elem.innerHTML.toLowerCase().includes(str) ? '' : 'none';
+    });
+}
+
 export async function startSearch() {
   searchBar = document.querySelector(".search");
   searchBar.style.display = "none"; // Hide
 
-  const es = getAPI();
   var isSearching = false;
-  if (es) {
-    document.addEventListener("keyup", async (ev: KeyboardEvent) => {
-      if (ev.key.length == 1 && !isSearching && document.activeElement == document.body) {
-        isSearching = true;
-        (searchBar.children[0] as HTMLInputElement).value = ev.key;
-        showInput();
-      }
+  document.addEventListener("keyup", async (ev: KeyboardEvent) => {
+    if (ev.key.length == 1 && !isSearching && document.activeElement == document.body) {
+      isSearching = true;
+      (searchBar.children[0] as HTMLInputElement).value = ev.key;
+      showInput();
+    }
 
-      if (ev.key == "Escape" && isSearching) {
-        isSearching = false;
-        
-        var ui = createLoadingUi();
-        ui.show();
-        ui.status("Loading Elements", 0);
-        ClearElementGameUi();
-        const ownedElements = await getOwnedElements(es);
-        ui.status("Loading Elements", 0.1);
-        const elementsToAdd = await Promise.all(ownedElements.map(id => es.getElement(id)));
-        for (var j = 0; j < elementsToAdd.length; j++) {
-          addElementToGame(elementsToAdd[j], null, true);
-          ui.status("Loading Elements", 0.1+((j+1)/elementsToAdd.length * 0.9));
-        }
-        ui.dispose();
-
-        hideInput();
-      } else if (isSearching) {
-        var api = getAPI("search");
-        var ids = [];
-        if (api) {
-          ids = await api.searchForElement((searchBar.children[0] as HTMLInputElement).value);
-        } else {
-          var query = (searchBar.children[0] as HTMLInputElement).value;
-          var owned = await getOwnedElements(es);
-          for (var i = 0; i < owned.length; i++) {
-            var elem = await es.getElement(owned[i]);
-            if (elem.display.text.toLowerCase().startsWith(query.toLowerCase())) {
-              ids.push(owned[i]);
-            }
-          }
-        }
-        ClearElementGameUi();
-        for (i = 0; i < ids.length; i++) {
-          addElementToGame(await es.getElement(ids[i]), null);
-        }
-      }
-    })
-  }
+    if (ev.key == "Escape" && isSearching) {
+      isSearching = false;
+      filterVisibleElements()
+      hideInput();
+    } else if (isSearching) {
+      filterVisibleElements(searchBar.children[0].value.toLowerCase());
+    }
+  })
 }
 
 function showInput() {

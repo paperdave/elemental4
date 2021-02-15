@@ -446,10 +446,6 @@ export interface ServerSavefileAPI {
   renameSaveFile(id: string, name: string): Promise<boolean>;
 }
 
-export interface ElementSearchAPI {
-  searchForElement(query: string): Promise<string[]>; // Returns the ids of the results
-}
-
 export interface RandomSuggestionsAPI {
   randomLonelySuggestion(): Promise<string[]>; // Return 2 elements to combine
   upAndComingSuggestion(): Promise<string[]>; // Return 2 elements to combine
@@ -462,7 +458,6 @@ export interface ElementalSubAPIs {
   serverSaveFile: ServerSavefileAPI;
   recentCombinations: RecentCombinationsAPI;
   hint: HintAPI;
-  search: ElementSearchAPI;
   randomSuggestions: RandomSuggestionsAPI;
 }
 
@@ -473,7 +468,6 @@ const subAPIChecks: Record<keyof ElementalSubAPIs, string[]> = {
   serverSaveFile: ['getSaveFiles'],
   recentCombinations: ['getRecentCombinations'],
   hint: ['getHint'],
-  search: ['searchForElement'],
   randomSuggestions: ['randomLonelySuggestion', 'upAndComingSuggestion'],
 }
 

@@ -1,3 +1,9 @@
+## Elemental 4.4.0 (2021-01-25
+
+## Engine
+- Supports element searching
+- Supports randomized suggestions
+
 ## Elemental 4.3.1 (2021-01-25)
 
 ## Engine

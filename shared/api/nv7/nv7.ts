@@ -1,4 +1,4 @@
-import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, OptionsSection, OptionTypes, ElementSearchAPI, RandomSuggestionsAPI } from "../../elem";
+import { Elem, ElementalBaseAPI, ElementalLoadingUi, ServerStats, SuggestionAPI, SuggestionResponse, SuggestionRequest, Suggestion, ServerSavefileAPI, ServerSavefileEntry, SuggestionColorInformation, ElementalColorPalette, ThemedPaletteEntry, applyColorTransform, RecentCombinationsAPI, RecentCombination, OptionsMenuAPI, OptionsSection, OptionTypes, RandomSuggestionsAPI } from "../../elem";
 import Color from 'color';
 import {login} from "./login";
 import {foundElement, getFound} from "./savefile";
@@ -10,7 +10,7 @@ import { Cache } from "./cache";
 import {Element} from "./types";
 import { randomLonelySugg, upAndComingSugg } from "./randomSuggestions";
 
-export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI, ElementSearchAPI, RandomSuggestionsAPI {
+export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'dynamic-elemental4'>, RecentCombinationsAPI,  ServerSavefileAPI, OptionsMenuAPI, RandomSuggestionsAPI {
 	public uid: string
 	public saveFile;
 	public ui;
@@ -89,19 +89,6 @@ export class NV7ElementalAPI extends ElementalBaseAPI implements SuggestionAPI<'
 
 	async waitForNewRecent(): Promise<void> {
 		return waitForNew(this);
-	}
-
-	async searchForElement(query: string): Promise<string[]> {
-		if (query.length == 0) {
-			return [];
-		}
-		var results = [];
-		Object.keys(this.elemCache).forEach((name) => {
-			if (name.toLowerCase().startsWith(query.toLowerCase())) {
-				results.push(name);
-			}
-		})
-		return results;
 	}
 
 	async randomLonelySuggestion(): Promise<string[]> {
