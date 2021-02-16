@@ -22,6 +22,7 @@ import { DebugAllColorsAPI } from "../../shared/api/internal/internal-all-colors
 import { BlankExampleAPI } from "../../shared/api/blank";
 import { disposeServerConfigGui, reRenderServerConfigGui } from "./settings-server-config";
 import { ChunkedStore } from "../../shared/store-chunk";
+import { startRandomSuggestions } from "./element-game/randomSuggestions";
 
 // @ts-ignore
 class IHateTypescript extends ElementalBaseAPI {
@@ -196,6 +197,9 @@ export async function connectApi(baseUrl: string, config: ElementalConfig, ui?: 
     await InitElementNews();
 
     await onSaveFileLoad(ui);
+
+    ui.status("Starting Random Suggestions");
+    await startRandomSuggestions();
 
     ui.status('Starting Statistics');
 
