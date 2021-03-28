@@ -1,3 +1,5 @@
+Elemental 4 will no longer be updated by dave caruso, due to lack of motivation and the overwhelming amount of bugs that this game has when it is used in practice vs on paper. tracking the sources of issues is near impossible; and isn't fun.
+
 # [Elemental 4](https://elemental4.net)
 Elemental 4 is a fan made recreation of [Elemental 3](http://htwins.net/elem3/), built on modern web
 technologies, and with many client customization features.
